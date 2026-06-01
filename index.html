@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="SnowPath">
+<title>❄️ SnowPath</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #07090f;
+    --surface:  #0d1320;
+    --surface2: #111a2e;
+    --border:   #1a2840;
+    --text:     #e8edf5;
+    --muted:    #4a6080;
+    --ice:      #a5f3fc;
+    --sky:      #60a5fa;
+    --lavender: #818cf8;
+    --teal:     #2dd4bf;
+    --green:    #34d399;
+    --amber:    #fbbf24;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    overflow-x: hidden;
+  }
+
+  /* ── Background ── */
+  .bg-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .bg-layer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 10%, rgba(96,165,250,0.07) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 80% 80%, rgba(129,140,248,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 60% 30%, rgba(165,243,252,0.04) 0%, transparent 60%);
+  }
+  /* Subtle grid */
+  .bg-layer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(165,243,252,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(165,243,252,0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+  }
+
+  /* ── Layout ── */
+  .page {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px 60px;
+  }
+
+  /* ── Header ── */
+  .header {
+    width: 100%;
+    max-width: 480px;
+    padding: 52px 0 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .logo-wrap {
+    position: relative;
+    margin-bottom: 20px;
+    animation: floatIn 1s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  @keyframes floatIn {
+    from { opacity: 0; transform: translateY(-16px) scale(0.92); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .logo-glow {
+    position: absolute;
+    inset: -20px;
+    background: radial-gradient(circle, rgba(165,243,252,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: pulse 4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50%       { opacity: 1;   transform: scale(1.1); }
+  }
+
+  .logo-svg { position: relative; display: block; }
+
+  .wordmark {
+    font-family: 'Fraunces', serif;
+    font-size: 48px;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    background: linear-gradient(135deg, #a5f3fc 0%, #60a5fa 45%, #818cf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: floatIn 1s 0.1s cubic-bezier(0.16,1,0.3,1) both;
+    margin-bottom: 8px;
+  }
+
+  .tagline {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    animation: floatIn 1s 0.2s cubic-bezier(0.16,1,0.3,1) both;
+    margin-bottom: 28px;
+  }
+
+  /* Status strip */
+  .status-strip {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    animation: floatIn 1s 0.3s cubic-bezier(0.16,1,0.3,1) both;
+  }
+  .status-dot {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    color: var(--muted);
+  }
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+  }
+  .dot.green  { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .dot.amber  { background: var(--amber); }
+  .dot.blue   { background: var(--sky); }
+  .sep { color: #1a2840; }
+
+  /* ── Section label ── */
+  .section-label {
+    width: 100%;
+    max-width: 480px;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-left: 2px;
+  }
+
+  /* ── App cards ── */
+  .cards {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .app-card {
+    display: block;
+    text-decoration: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px 20px 18px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s cubic-bezier(0.16,1,0.3,1),
+                border-color 0.2s,
+                box-shadow 0.2s;
+    animation: floatIn 1s cubic-bezier(0.16,1,0.3,1) both;
+  }
+  .app-card:nth-child(1) { animation-delay: 0.35s; }
+  .app-card:nth-child(2) { animation-delay: 0.45s; }
+
+  .app-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .app-card.snow::before {
+    background: radial-gradient(ellipse 80% 60% at 0% 50%, rgba(165,243,252,0.06), transparent);
+  }
+  .app-card.budget::before {
+    background: radial-gradient(ellipse 80% 60% at 0% 50%, rgba(52,211,153,0.06), transparent);
+  }
+  .app-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .app-card.snow:hover  { border-color: rgba(165,243,252,0.3); }
+  .app-card.budget:hover { border-color: rgba(52,211,153,0.25); }
+  .app-card:hover::before { opacity: 1; }
+  .app-card:active { transform: translateY(0) scale(0.99); }
+
+  /* accent bar */
+  .card-bar {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 18px 0 0 18px;
+  }
+  .snow   .card-bar { background: linear-gradient(180deg, var(--ice), var(--lavender)); }
+  .budget .card-bar { background: linear-gradient(180deg, var(--green), var(--teal)); }
+
+  .card-inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .card-icon {
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .snow   .card-icon { background: rgba(165,243,252,0.08); border: 1px solid rgba(165,243,252,0.15); }
+  .budget .card-icon { background: rgba(52,211,153,0.08);  border: 1px solid rgba(52,211,153,0.15); }
+
+  .card-text { flex: 1; min-width: 0; }
+
+  .card-name {
+    font-family: 'Fraunces', serif;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 4px;
+  }
+  .snow   .card-name { color: var(--ice); }
+  .budget .card-name { color: var(--green); }
+
+  .card-desc {
+    font-size: 10px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .card-arrow {
+    font-size: 16px;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+  .snow   .card-arrow { color: rgba(165,243,252,0.3); }
+  .budget .card-arrow { color: rgba(52,211,153,0.25); }
+  .app-card:hover .card-arrow { transform: translateX(3px); }
+
+  /* pill tags */
+  .card-tags {
+    display: flex;
+    gap: 6px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    padding: 3px 8px;
+    border-radius: 20px;
+    text-transform: uppercase;
+  }
+  .snow .tag   { background: rgba(165,243,252,0.07); color: rgba(165,243,252,0.5); border: 1px solid rgba(165,243,252,0.1); }
+  .budget .tag { background: rgba(52,211,153,0.07);  color: rgba(52,211,153,0.5);  border: 1px solid rgba(52,211,153,0.1); }
+
+  /* ── Reference cards (smaller) ── */
+  .ref-grid {
+    width: 100%;
+    max-width: 480px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+
+  .ref-card {
+    display: block;
+    text-decoration: none;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 14px 12px;
+    transition: transform 0.2s, border-color 0.2s;
+    animation: floatIn 1s cubic-bezier(0.16,1,0.3,1) both;
+  }
+  .ref-card:nth-child(1) { animation-delay: 0.55s; }
+  .ref-card:nth-child(2) { animation-delay: 0.62s; }
+  .ref-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(165,243,252,0.2);
+  }
+  .ref-card:active { transform: scale(0.98); }
+
+  .ref-icon { font-size: 20px; margin-bottom: 8px; }
+  .ref-name {
+    font-family: 'Fraunces', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 3px;
+    letter-spacing: -0.01em;
+  }
+  .ref-desc { font-size: 10px; color: var(--muted); line-height: 1.5; }
+
+  /* ── Footer ── */
+  .footer {
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+    animation: floatIn 1s 0.7s cubic-bezier(0.16,1,0.3,1) both;
+  }
+
+  .footer-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin-bottom: 20px;
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .footer-name {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--muted);
+  }
+
+  .footer-text {
+    font-size: 10px;
+    color: #2a3a50;
+    letter-spacing: 0.05em;
+    line-height: 1.6;
+  }
+
+  /* ── Snowflake particles ── */
+  .particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    color: rgba(165,243,252,0.2);
+    font-size: 10px;
+    animation: drift linear infinite;
+    user-select: none;
+  }
+  @keyframes drift {
+    from { transform: translateY(-20px) rotate(0deg); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 0.5; }
+    to   { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* ── Sync indicator ── */
+  .sync-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 9px;
+    color: var(--teal);
+    background: rgba(45,212,191,0.07);
+    border: 1px solid rgba(45,212,191,0.15);
+    border-radius: 20px;
+    padding: 4px 10px;
+    letter-spacing: 0.06em;
+  }
+  .sync-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--teal);
+    animation: blink 2s ease-in-out infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Floating background particles -->
+<div class="particles" id="particles"></div>
+
+<div class="bg-layer"></div>
+
+<div class="page">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="logo-wrap">
+      <div class="logo-glow"></div>
+      <svg class="logo-svg" width="72" height="72" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="36" cy="36" r="34" fill="#0d1a2e" stroke="rgba(165,243,252,0.1)" stroke-width="1"/>
+        <line x1="36" y1="9" x2="36" y2="63" stroke="url(#lg1)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="9" y1="36" x2="63" y2="36" stroke="url(#lg1)" stroke-width="3" stroke-linecap="round"/>
+        <line x1="16" y1="16" x2="56" y2="56" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" opacity="0.75"/>
+        <line x1="56" y1="16" x2="16" y2="56" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" opacity="0.75"/>
+        <!-- vertical tips -->
+        <line x1="28" y1="15" x2="36" y2="23" stroke="#a5f3fc" stroke-width="2" stroke-linecap="round"/>
+        <line x1="44" y1="15" x2="36" y2="23" stroke="#a5f3fc" stroke-width="2" stroke-linecap="round"/>
+        <line x1="28" y1="57" x2="36" y2="49" stroke="#a5f3fc" stroke-width="2" stroke-linecap="round"/>
+        <line x1="44" y1="57" x2="36" y2="49" stroke="#a5f3fc" stroke-width="2" stroke-linecap="round"/>
+        <!-- horizontal tips -->
+        <line x1="15" y1="28" x2="23" y2="36" stroke="#a5f3fc" stroke-width="2" stroke-linecap="round"/>
+        <line x1="15" y1="44" x2="23" y2="36" stroke="#a5f3fc" stroke-width="2" stroke-linecap="round"/>
+        <line x1="57" y1="28" x2="49" y2="36" stroke="#a5f3fc" stroke-width="2" stroke-linecap="round"/>
+        <line x1="57" y1="44" x2="49" y2="36" stroke="#a5f3fc" stroke-width="2" stroke-linecap="round"/>
+        <!-- diagonal tips -->
+        <line x1="22" y1="17" x2="22" y2="25" stroke="#818cf8" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="17" y1="22" x2="25" y2="22" stroke="#818cf8" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="50" y1="17" x2="50" y2="25" stroke="#818cf8" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="55" y1="22" x2="47" y2="22" stroke="#818cf8" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="22" y1="55" x2="22" y2="47" stroke="#818cf8" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="17" y1="50" x2="25" y2="50" stroke="#818cf8" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="50" y1="55" x2="50" y2="47" stroke="#818cf8" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="55" y1="50" x2="47" y2="50" stroke="#818cf8" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- center -->
+        <circle cx="36" cy="36" r="5" fill="url(#lg2)"/>
+        <circle cx="36" cy="36" r="2.5" fill="#0d1a2e"/>
+        <circle cx="36" cy="36" r="1" fill="#a5f3fc"/>
+        <defs>
+          <linearGradient id="lg1" x1="9" y1="9" x2="63" y2="63" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#a5f3fc"/>
+            <stop offset="100%" stop-color="#818cf8"/>
+          </linearGradient>
+          <radialGradient id="lg2" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#a5f3fc"/>
+            <stop offset="100%" stop-color="#60a5fa"/>
+          </radialGradient>
+        </defs>
+      </svg>
+    </div>
+
+    <div class="wordmark">SnowPath</div>
+    <div class="tagline">Your debt-free journey</div>
+
+    <div class="status-strip">
+      <div class="status-dot"><div class="dot green"></div>Supabase sync on</div>
+      <div class="sep">·</div>
+      <div class="status-dot"><div class="dot blue"></div>Miriam &amp; Rob</div>
+      <div class="sep">·</div>
+      <div class="status-dot"><div class="dot amber"></div>Jun–Sep 2026</div>
+    </div>
+  </header>
+
+  <!-- Main apps -->
+  <div class="section-label">Apps</div>
+  <div class="cards">
+
+    <a class="app-card snow" href="debt_snowball.html">
+      <div class="card-bar"></div>
+      <div class="card-inner">
+        <div class="card-icon">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+            <line x1="13" y1="2" x2="13" y2="24" stroke="url(#ci1)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="2" y1="13" x2="24" y2="13" stroke="url(#ci1)" stroke-width="2" stroke-linecap="round"/>
+            <line x1="5" y1="5" x2="21" y2="21" stroke="#60a5fa" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+            <line x1="21" y1="5" x2="5" y2="21" stroke="#60a5fa" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+            <line x1="9" y1="4" x2="13" y2="8" stroke="#a5f3fc" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="17" y1="4" x2="13" y2="8" stroke="#a5f3fc" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="9" y1="22" x2="13" y2="18" stroke="#a5f3fc" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="17" y1="22" x2="13" y2="18" stroke="#a5f3fc" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="4" y1="9" x2="8" y2="13" stroke="#a5f3fc" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="4" y1="17" x2="8" y2="13" stroke="#a5f3fc" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="22" y1="9" x2="18" y2="13" stroke="#a5f3fc" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="22" y1="17" x2="18" y2="13" stroke="#a5f3fc" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="13" cy="13" r="2.5" fill="url(#ci2)"/>
+            <defs>
+              <linearGradient id="ci1" x1="2" y1="2" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#a5f3fc"/>
+                <stop offset="100%" stop-color="#818cf8"/>
+              </linearGradient>
+              <radialGradient id="ci2" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#a5f3fc"/>
+                <stop offset="100%" stop-color="#60a5fa"/>
+              </radialGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="card-text">
+          <div class="card-name">SnowPath</div>
+          <div class="card-desc">Debt snowball tracker · By Income views · Payment status &amp; notes · Cloud synced</div>
+        </div>
+        <div class="card-arrow">›</div>
+      </div>
+      <div class="card-tags">
+        <span class="tag">Debt Snowball</span>
+        <span class="tag">By Income</span>
+        <span class="tag">Jun–Sep 2026</span>
+        <span class="tag">Synced</span>
+      </div>
+    </a>
+
+    <a class="app-card budget" href="zero_based_budget.html">
+      <div class="card-bar"></div>
+      <div class="card-inner">
+        <div class="card-icon">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+            <rect x="3" y="6" width="20" height="15" rx="3" stroke="#34d399" stroke-width="1.5" fill="none"/>
+            <line x1="3" y1="11" x2="23" y2="11" stroke="#34d399" stroke-width="1" opacity="0.6"/>
+            <circle cx="9" cy="17" r="2.5" fill="rgba(52,211,153,0.3)" stroke="#34d399" stroke-width="1"/>
+            <line x1="14" y1="15" x2="20" y2="15" stroke="#2dd4bf" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="14" y1="18" x2="18" y2="18" stroke="rgba(52,211,153,0.4)" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="7" y1="8" x2="10" y2="8" stroke="#34d399" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+          </svg>
+        </div>
+        <div class="card-text">
+          <div class="card-name">Zero-Based Budget</div>
+          <div class="card-desc">May 2026 · Cash flow · Categories · Subscriptions · Pay schedule</div>
+        </div>
+        <div class="card-arrow" style="color:rgba(52,211,153,0.25);">›</div>
+      </div>
+      <div class="card-tags">
+        <span class="tag">Zero-Based</span>
+        <span class="tag">Cash Flow</span>
+        <span class="tag">Subscriptions</span>
+        <span class="tag">Pay Schedule</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Reference files -->
+  <div class="section-label">Reference</div>
+  <div class="ref-grid">
+    <a class="ref-card" href="SnowPath_AppName.html">
+      <div class="ref-icon">✍️</div>
+      <div class="ref-name">App Name</div>
+      <div class="ref-desc">Wordmark variants · type specimen · rationale</div>
+    </a>
+    <a class="ref-card" href="SnowPath_Icon.html">
+      <div class="ref-icon">❄️</div>
+      <div class="ref-name">Icon Sheet</div>
+      <div class="ref-desc">All sizes · style variants · color palette</div>
+    </a>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-divider"></div>
+    <div class="footer-brand">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <line x1="7" y1="1" x2="7" y2="13" stroke="#a5f3fc" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+        <line x1="1" y1="7" x2="13" y2="7" stroke="#a5f3fc" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+        <line x1="3" y1="3" x2="11" y2="11" stroke="#60a5fa" stroke-width="1" stroke-linecap="round" opacity="0.4"/>
+        <line x1="11" y1="3" x2="3" y2="11" stroke="#60a5fa" stroke-width="1" stroke-linecap="round" opacity="0.4"/>
+        <circle cx="7" cy="7" r="1.5" fill="#a5f3fc" opacity="0.6"/>
+      </svg>
+      <div class="footer-name">SnowPath</div>
+    </div>
+    <div class="footer-text">Miriam &amp; Rob · Dale City, VA · 2026</div>
+  </footer>
+
+</div>
+
+<script>
+  // Floating snowflake particles
+  const container = document.getElementById('particles');
+  const flakes = ['❄', '❅', '❆', '·', '·', '·'];
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.textContent = flakes[Math.floor(Math.random() * flakes.length)];
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.top = (Math.random() * 100) + 'vh';
+    p.style.fontSize = (8 + Math.random() * 10) + 'px';
+    p.style.animationDuration = (12 + Math.random() * 20) + 's';
+    p.style.animationDelay = -(Math.random() * 20) + 's';
+    p.style.opacity = 0.1 + Math.random() * 0.2;
+    container.appendChild(p);
+  }
+</script>
+</body>
+</html>

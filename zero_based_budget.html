@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Zero-Based Budget — May 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,600;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --surface2: #222;
+    --border: #2e2e2e;
+    --text: #f0ede8;
+    --muted: #888;
+    --green: #4ade80;
+    --red: #f87171;
+    --amber: #fbbf24;
+    --blue: #60a5fa;
+    --teal: #2dd4bf;
+    --accent: #e8d5b7;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+  .header {
+    background: linear-gradient(135deg, #1a1a1a 0%, #0d1a12 100%);
+    padding: 24px 16px 20px;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--teal);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .header-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+  }
+  .header-sub {
+    color: var(--muted);
+    font-size: 11px;
+    margin-top: 2px;
+  }
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 12px 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    white-space: nowrap;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+  .tab-btn.active {
+    background: var(--teal);
+    color: #0f0f0f;
+    border-color: var(--teal);
+    font-weight: 500;
+  }
+  .tab-content { display: none; padding: 16px; }
+  .tab-content.active { display: block; }
+
+  /* Summary cards */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+  }
+  .card.full { grid-column: 1/-1; }
+  .card-label {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .card-value {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .card-value.green { color: var(--green); }
+  .card-value.amber { color: var(--amber); }
+  .card-value.blue { color: var(--blue); }
+  .card-value.teal { color: var(--teal); }
+  .card-sub { font-size: 10px; color: var(--muted); margin-top: 3px; }
+
+  /* Category breakdown */
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .cat-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #1e1e1e;
+  }
+  .cat-icon { font-size: 16px; width: 24px; text-align: center; flex-shrink: 0; }
+  .cat-info { flex: 1; min-width: 0; }
+  .cat-name { font-size: 12px; color: var(--text); }
+  .cat-detail { font-size: 10px; color: var(--muted); margin-top: 2px; }
+  .cat-amount { font-size: 13px; font-weight: 500; color: var(--text); text-align: right; white-space: nowrap; }
+  .bar-wrap { height: 4px; background: #2a2a2a; border-radius: 2px; margin-top: 6px; overflow: hidden; }
+  .bar { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+
+  /* Paycheck cash flow */
+  .pcf-header {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    border-left: 3px solid var(--teal);
+  }
+  .pcf-stream { font-size: 11px; color: var(--teal); text-transform: uppercase; letter-spacing: 0.08em; }
+  .pcf-amount { font-family: 'Fraunces', serif; font-size: 18px; color: var(--green); font-weight: 600; }
+  .pcf-date { font-size: 10px; color: var(--muted); }
+  .bill-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 9px 0;
+    border-bottom: 1px solid #1c1c1c;
+    gap: 8px;
+  }
+  .bill-left { flex: 1; min-width: 0; }
+  .bill-name { font-size: 12px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bill-meta { font-size: 10px; color: var(--muted); margin-top: 1px; }
+  .bill-right { text-align: right; flex-shrink: 0; }
+  .bill-amount { font-size: 13px; }
+  .bill-amount.expense { color: var(--red); }
+  .bill-amount.income { color: var(--green); }
+  .bill-balance { font-size: 10px; color: var(--muted); margin-top: 1px; }
+  .badge {
+    display: inline-block;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    letter-spacing: 0.05em;
+    margin-top: 3px;
+  }
+  .badge-debt { background: #3f1f1f; color: var(--red); }
+  .badge-sub { background: #1f2a3f; color: var(--blue); }
+  .badge-living { background: #1f3325; color: var(--green); }
+  .badge-income { background: #1a2e1a; color: var(--teal); }
+  .badge-housing { background: #2a2010; color: var(--amber); }
+  .badge-health { background: #261a2a; color: #c084fc; }
+  .badge-insurance { background: #1a2030; color: #7dd3fc; }
+
+  /* Subscriptions */
+  .sub-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #1c1c1c;
+  }
+  .sub-name { font-size: 12px; }
+  .sub-right { text-align: right; }
+  .sub-amt { font-size: 13px; color: var(--text); }
+  .sub-due { font-size: 10px; color: var(--muted); }
+  .keep { color: var(--green); font-size: 9px; }
+  .review { color: var(--amber); font-size: 9px; }
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0 4px;
+    font-weight: 500;
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
+  }
+
+  /* Pay schedule */
+  .sched-person {
+    background: var(--surface);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 12px;
+    border: 1px solid var(--border);
+  }
+  .sched-name {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .sched-grid { display: flex; flex-direction: column; gap: 6px; }
+  .sched-month { display: flex; justify-content: space-between; font-size: 11px; }
+  .sched-m { color: var(--muted); }
+  .sched-d { color: var(--teal); }
+
+  /* Running balance section */
+  .balance-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #1c1c1c;
+    font-size: 12px;
+  }
+  .balance-pos { color: var(--green); }
+  .balance-neg { color: var(--red); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-eyebrow">Zero-Based Budget</div>
+  <div class="header-title">May 2026 Overview</div>
+  <div class="header-sub">Miriam & Rob · Dale City, VA</div>
+</div>
+
+<div class="nav-tabs">
+  <button class="tab-btn active" onclick="showTab('summary')">Summary</button>
+  <button class="tab-btn" onclick="showTab('cashflow')">Cash Flow</button>
+  <button class="tab-btn" onclick="showTab('categories')">Categories</button>
+  <button class="tab-btn" onclick="showTab('subscriptions')">Subs</button>
+  <button class="tab-btn" onclick="showTab('schedule')">Pay Schedule</button>
+</div>
+
+<!-- SUMMARY TAB -->
+<div id="tab-summary" class="tab-content active">
+  <div class="summary-grid">
+    <div class="card">
+      <div class="card-label">Monthly Income</div>
+      <div class="card-value teal">$17,454</div>
+      <div class="card-sub">Miriam + Rob + Other</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Ending Balance</div>
+      <div class="card-value green">$1,589.75</div>
+      <div class="card-sub">After all planned payments</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Debt Payments</div>
+      <div class="card-value amber">$8,025.75</div>
+      <div class="card-sub">Mins + snowball planned</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Subscriptions</div>
+      <div class="card-value blue">$327.89</div>
+      <div class="card-sub">Monthly equivalent</div>
+    </div>
+  </div>
+
+  <div class="summary-grid">
+    <div class="card full">
+      <div class="card-label">Income Breakdown</div>
+      <div style="margin-top:8px;">
+        <div class="balance-row">
+          <span>Miriam Take-Home</span>
+          <span class="balance-pos">$6,576.96</span>
+        </div>
+        <div class="balance-row">
+          <span>Rob Take-Home</span>
+          <span class="balance-pos">$8,614.48</span>
+        </div>
+        <div class="balance-row">
+          <span>Other Income</span>
+          <span class="balance-pos">$2,262.60</span>
+        </div>
+        <div class="balance-row" style="font-weight:500; border-bottom:none;">
+          <span>Total</span>
+          <span class="balance-pos" style="font-size:14px;">$17,454.04</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="summary-grid" style="margin-top:0;">
+    <div class="card full">
+      <div class="card-label">Checking Balance</div>
+      <div style="margin-top:8px;">
+        <div class="balance-row">
+          <span>Starting Balance</span>
+          <span class="balance-pos">$4,243.14</span>
+        </div>
+        <div class="balance-row">
+          <span>Savings on Hand</span>
+          <span style="color:var(--muted);">$15,000.00</span>
+        </div>
+        <div class="balance-row" style="border-bottom:none;">
+          <span>Projected End Balance</span>
+          <span class="balance-pos" style="font-size:14px; font-weight:500;">$1,589.75</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:4px;" class="card">
+    <div class="card-label">Budget Caps</div>
+    <div style="margin-top:8px;">
+      <div class="balance-row"><span>Dining Out Cap</span><span style="color:var(--amber);">$400/mo</span></div>
+      <div class="balance-row"><span>Subscription Cap</span><span style="color:var(--amber);">$350/mo</span></div>
+      <div class="balance-row"><span>Current Subs Total</span><span style="color:var(--green);">$327.89 ✓</span></div>
+      <div class="balance-row" style="border-bottom:none;"><span>Rob Debt Target/Check</span><span style="color:var(--blue);">$2,500–3,000</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- CASH FLOW TAB -->
+<div id="tab-cashflow" class="tab-content">
+  <p style="font-size:11px; color:var(--muted); margin-bottom:16px;">Every bill tied to its income stream, in order.</p>
+
+  <div class="pcf-header">
+    <div class="pcf-stream">Beginning Cash / Other Income</div>
+    <div class="pcf-amount">$4,243.14 starting</div>
+    <div class="pcf-date">Cash on hand · not monthly income</div>
+  </div>
+
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">GoodLeap HVAC</div>
+      <div class="bill-meta">Due 1st · APR 15.49%</div>
+      <span class="badge badge-debt">DEBT #4</span>
+    </div>
+    <div class="bill-right">
+      <div class="bill-amount expense">−$137.23</div>
+      <div class="bill-balance">Bal $12,664.71</div>
+    </div>
+  </div>
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">Kings Dominion</div>
+      <div class="bill-meta">Due 2nd</div>
+      <span class="badge badge-living" style="background:#1f2a10;color:#a3e635;">ENTERTAINMENT</span>
+    </div>
+    <div class="bill-right"><div class="bill-amount expense">−$73.00</div></div>
+  </div>
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">HOA</div>
+      <div class="bill-meta">Due 3rd</div>
+      <span class="badge badge-housing">HOUSING</span>
+    </div>
+    <div class="bill-right"><div class="bill-amount expense">−$71.39</div></div>
+  </div>
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">SiriusXM</div>
+      <div class="bill-meta">Due 4th</div>
+      <span class="badge badge-sub">SUBSCRIPTION</span>
+    </div>
+    <div class="bill-right"><div class="bill-amount expense">−$14.68</div></div>
+  </div>
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">Wells Fargo CC</div>
+      <div class="bill-meta">Due 2nd · APR 15.65%</div>
+      <span class="badge badge-debt">DEBT #3</span>
+    </div>
+    <div class="bill-right">
+      <div class="bill-amount expense">−$150.00</div>
+      <div class="bill-balance">Bal $7,664.35</div>
+    </div>
+  </div>
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">eFax</div>
+      <div class="bill-meta">Due 7th</div>
+      <span class="badge badge-sub">SUBSCRIPTION</span>
+    </div>
+    <div class="bill-right"><div class="bill-amount expense">−$20.87</div></div>
+  </div>
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">Netflix</div>
+      <div class="bill-meta">Due 7th</div>
+      <span class="badge badge-sub">SUBSCRIPTION</span>
+    </div>
+    <div class="bill-right"><div class="bill-amount expense">−$24.99</div></div>
+  </div>
+
+  <div class="pcf-header" style="margin-top:20px; border-left-color:var(--blue);">
+    <div class="pcf-stream" style="color:var(--blue);">Miriam Check 1</div>
+    <div class="pcf-amount">$3,288.48</div>
+    <div class="pcf-date">Arrives May 8</div>
+  </div>
+
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">HELOC Extra — May only</div>
+      <div class="bill-meta">One-time extra · May 15</div>
+      <span class="badge badge-debt">DEBT SNOWBALL</span>
+    </div>
+    <div class="bill-right">
+      <div class="bill-amount expense">−$1,169.35</div>
+      <div class="bill-balance">Reduces advance balance</div>
+    </div>
+  </div>
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">HELOC Min Payment</div>
+      <div class="bill-meta">Due 8th · Pay by 21st · APR 10.19%</div>
+      <span class="badge badge-debt">DEBT #6</span>
+    </div>
+    <div class="bill-right">
+      <div class="bill-amount expense">−$2,463.40</div>
+      <div class="bill-balance">Bal $114,379.86</div>
+    </div>
+  </div>
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">CVS</div>
+      <div class="bill-meta">Due 10th</div>
+      <span class="badge badge-sub">SUBSCRIPTION</span>
+    </div>
+    <div class="bill-right"><div class="bill-amount expense">−$5.00</div></div>
+  </div>
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">YouTube Premium</div>
+      <div class="bill-meta">Due 11th</div>
+      <span class="badge badge-sub">SUBSCRIPTION</span>
+    </div>
+    <div class="bill-right"><div class="bill-amount expense">−$22.99</div></div>
+  </div>
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">Disney Plus</div>
+      <div class="bill-meta">Due 12th</div>
+      <span class="badge badge-sub">SUBSCRIPTION</span>
+    </div>
+    <div class="bill-right"><div class="bill-amount expense">−$19.99</div></div>
+  </div>
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">Adobe</div>
+      <div class="bill-meta">Due 13th</div>
+      <span class="badge badge-sub">SUBSCRIPTION</span>
+    </div>
+    <div class="bill-right"><div class="bill-amount expense">−$19.99</div></div>
+  </div>
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">T-Mobile</div>
+      <div class="bill-meta">Due 13th</div>
+      <span class="badge" style="background:#1a1a30;color:#818cf8;">PHONES</span>
+    </div>
+    <div class="bill-right"><div class="bill-amount expense">−$80.00</div></div>
+  </div>
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">Prime Video 1</div>
+      <div class="bill-meta">Due 13th</div>
+      <span class="badge badge-sub">SUBSCRIPTION</span>
+    </div>
+    <div class="bill-right"><div class="bill-amount expense">−$10.99</div></div>
+  </div>
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">Groceries (1st half)</div>
+      <div class="bill-meta">Variable · May 8</div>
+      <span class="badge badge-living">LIVING</span>
+    </div>
+    <div class="bill-right"><div class="bill-amount expense">−$300.00</div></div>
+  </div>
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">Work Lunch (1st half)</div>
+      <div class="bill-meta">Variable · May 8</div>
+      <span class="badge badge-living">LIVING</span>
+    </div>
+    <div class="bill-right"><div class="bill-amount expense">−$80.00</div></div>
+  </div>
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">Gas (1st half)</div>
+      <div class="bill-meta">Half of $250/mo</div>
+      <span class="badge badge-living">LIVING</span>
+    </div>
+    <div class="bill-right"><div class="bill-amount expense">−$125.00</div></div>
+  </div>
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">Dining Out (1st half)</div>
+      <div class="bill-meta">Cap: $400/mo</div>
+      <span class="badge badge-living">LIVING</span>
+    </div>
+    <div class="bill-right"><div class="bill-amount expense">−$200.00</div></div>
+  </div>
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">Meds/Supplements (1st half)</div>
+      <div class="bill-meta">Half of $638/mo</div>
+      <span class="badge badge-health">HEALTH</span>
+    </div>
+    <div class="bill-right"><div class="bill-amount expense">−$319.00</div></div>
+  </div>
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">Therapy (1st half)</div>
+      <div class="bill-meta">Half of $200/mo</div>
+      <span class="badge badge-health">HEALTH</span>
+    </div>
+    <div class="bill-right"><div class="bill-amount expense">−$100.00</div></div>
+  </div>
+
+  <div class="pcf-header" style="margin-top:20px; border-left-color:var(--amber);">
+    <div class="pcf-stream" style="color:var(--amber);">Rob Check 1</div>
+    <div class="pcf-amount">$4,307.24</div>
+    <div class="pcf-date">Arrives May 15</div>
+  </div>
+
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">LoanDepot Mortgage</div>
+      <div class="bill-meta">Due 1st · Grace to 15th</div>
+      <span class="badge badge-housing">HOUSING</span>
+    </div>
+    <div class="bill-right">
+      <div class="bill-amount expense">−$3,505.91</div>
+      <div class="bill-balance">Pay before 25th credit threshold</div>
+    </div>
+  </div>
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">NavyFed</div>
+      <div class="bill-meta">Due 13th · APR 14.15%</div>
+      <span class="badge badge-debt">DEBT #5</span>
+    </div>
+    <div class="bill-right">
+      <div class="bill-amount expense">−$536.89</div>
+      <div class="bill-balance">Bal $22,765.72</div>
+    </div>
+  </div>
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">Citibank Min</div>
+      <div class="bill-meta">Due 15th · APR 27.99%</div>
+      <span class="badge badge-debt">DEBT #1 PRIORITY</span>
+    </div>
+    <div class="bill-right">
+      <div class="bill-amount expense">−$277.49</div>
+      <div class="bill-balance">Bal $8,550.49</div>
+    </div>
+  </div>
+
+  <div class="pcf-header" style="margin-top:20px; border-left-color:var(--blue);">
+    <div class="pcf-stream" style="color:var(--blue);">Miriam Check 2</div>
+    <div class="pcf-amount">$3,288.48</div>
+    <div class="pcf-date">Arrives May 22</div>
+  </div>
+
+  <div class="bill-row">
+    <div class="bill-left">
+      <div class="bill-name">Moxie Pest Control</div>
+      <div class="bill-meta">Quarterly · Due 18th</div>
+      <span class="badge badge-housing">HOME</span>
+    </div>
+    <div class="bill-right"><div class="bill-amount expense">−$179.00</div></div>
+  </div>
+
+  <div class="pcf-header" style="margin-top:20px; border-left-color:var(--amber);">
+    <div class="pcf-stream" style="color:var(--amber);">Rob Check 2</div>
+    <div class="pcf-amount">$4,307.24</div>
+    <div class="pcf-date">Arrives May 29</div>
+  </div>
+
+  <p style="font-size:11px; color:var(--muted); padding:12px 0;">
+    Rob Check 2 is the primary debt attack check — targets Citibank snowball, Wells Fargo, and Passante.
+  </p>
+
+  <div class="balance-row" style="margin-top:16px; padding:14px; background:var(--surface); border-radius:10px; border:1px solid var(--border);">
+    <span style="font-size:13px;">Projected Ending Balance</span>
+    <span style="color:var(--green); font-size:16px; font-family:'Fraunces',serif; font-weight:600;">$1,589.75</span>
+  </div>
+</div>
+
+<!-- CATEGORIES TAB -->
+<div id="tab-categories" class="tab-content">
+  <p style="font-size:11px; color:var(--muted); margin-bottom:16px;">Planned monthly spending by category.</p>
+
+  <div class="cat-row">
+    <div class="cat-icon">🏦</div>
+    <div class="cat-info">
+      <div class="cat-name">Debt Payments</div>
+      <div class="cat-detail">Minimums on all active debts</div>
+      <div class="bar-wrap"><div class="bar" style="width:100%;background:var(--red);"></div></div>
+    </div>
+    <div class="cat-amount" style="color:var(--red);">$5,202.17</div>
+  </div>
+  <div class="cat-row">
+    <div class="cat-icon">❄️</div>
+    <div class="cat-info">
+      <div class="cat-name">Debt Snowball Extra</div>
+      <div class="cat-detail">HELOC extra + targeting Citibank</div>
+      <div class="bar-wrap"><div class="bar" style="width:85%;background:var(--amber);"></div></div>
+    </div>
+    <div class="cat-amount" style="color:var(--amber);">$2,823.58</div>
+  </div>
+  <div class="cat-row">
+    <div class="cat-icon">🏠</div>
+    <div class="cat-info">
+      <div class="cat-name">Housing</div>
+      <div class="cat-detail">Mortgage + HOA + Property Tax</div>
+      <div class="bar-wrap"><div class="bar" style="width:75%;background:var(--blue);"></div></div>
+    </div>
+    <div class="cat-amount" style="color:var(--blue);">$3,800+</div>
+  </div>
+  <div class="cat-row">
+    <div class="cat-icon">💊</div>
+    <div class="cat-info">
+      <div class="cat-name">Health</div>
+      <div class="cat-detail">Meds/Supplements + Therapy</div>
+      <div class="bar-wrap"><div class="bar" style="width:55%;background:#c084fc;"></div></div>
+    </div>
+    <div class="cat-amount" style="color:#c084fc;">$838.00</div>
+  </div>
+  <div class="cat-row">
+    <div class="cat-icon">🛒</div>
+    <div class="cat-info">
+      <div class="cat-name">Living Expenses</div>
+      <div class="cat-detail">Groceries + Gas + Dining + Lunch</div>
+      <div class="bar-wrap"><div class="bar" style="width:50%;background:var(--green);"></div></div>
+    </div>
+    <div class="cat-amount" style="color:var(--green);">$1,570.00</div>
+  </div>
+  <div class="cat-row">
+    <div class="cat-icon">💡</div>
+    <div class="cat-info">
+      <div class="cat-name">Utilities</div>
+      <div class="cat-detail">Electric, water, internet, etc.</div>
+      <div class="bar-wrap"><div class="bar" style="width:40%;background:var(--teal);"></div></div>
+    </div>
+    <div class="cat-amount" style="color:var(--teal);">$984.08</div>
+  </div>
+  <div class="cat-row">
+    <div class="cat-icon">📱</div>
+    <div class="cat-info">
+      <div class="cat-name">Subscriptions</div>
+      <div class="cat-detail">20 services (cap: $350)</div>
+      <div class="bar-wrap"><div class="bar" style="width:35%;background:var(--blue);"></div></div>
+    </div>
+    <div class="cat-amount" style="color:var(--blue);">$327.89</div>
+  </div>
+  <div class="cat-row">
+    <div class="cat-icon">🛡️</div>
+    <div class="cat-info">
+      <div class="cat-name">Insurance</div>
+      <div class="cat-detail">Auto, home, life, etc.</div>
+      <div class="bar-wrap"><div class="bar" style="width:25%;background:#7dd3fc;"></div></div>
+    </div>
+    <div class="cat-amount" style="color:#7dd3fc;">$358.80</div>
+  </div>
+  <div class="cat-row">
+    <div class="cat-icon">📱</div>
+    <div class="cat-info">
+      <div class="cat-name">Phones</div>
+      <div class="cat-detail">T-Mobile</div>
+      <div class="bar-wrap"><div class="bar" style="width:8%;background:#818cf8;"></div></div>
+    </div>
+    <div class="cat-amount" style="color:#818cf8;">$80.00</div>
+  </div>
+  <div class="cat-row" style="border-bottom:none;">
+    <div class="cat-icon">🎯</div>
+    <div class="cat-info">
+      <div class="cat-name">True Expenses</div>
+      <div class="cat-detail">Sinking funds / irregular</div>
+      <div class="bar-wrap"><div class="bar" style="width:20%;background:var(--amber);"></div></div>
+    </div>
+    <div class="cat-amount" style="color:var(--amber);">$600.00</div>
+  </div>
+
+  <div class="total-row">
+    <span>Total Monthly Income</span>
+    <span style="color:var(--teal);">$17,454.04</span>
+  </div>
+</div>
+
+<!-- SUBSCRIPTIONS TAB -->
+<div id="tab-subscriptions" class="tab-content">
+  <div class="summary-grid">
+    <div class="card">
+      <div class="card-label">Monthly Total</div>
+      <div class="card-value green">$327.89</div>
+      <div class="card-sub">Under $350 cap ✓</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Services</div>
+      <div class="card-value blue">20</div>
+      <div class="card-sub">Active subscriptions</div>
+    </div>
+  </div>
+
+  <div class="section-title">All Subscriptions</div>
+
+  <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--muted); padding-bottom:8px; border-bottom:1px solid var(--border);">
+    <span>SERVICE</span>
+    <span>AMOUNT · DUE</span>
+  </div>
+
+  <div class="sub-row">
+    <div><div class="sub-name">SiriusXM</div><span class="review">⚠ REVIEW</span></div>
+    <div class="sub-right"><div class="sub-amt">$14.68</div><div class="sub-due">Due 4th</div></div>
+  </div>
+  <div class="sub-row">
+    <div><div class="sub-name">eFax</div><span class="review">⚠ REVIEW</span><div class="sub-due" style="font-size:10px;color:#f87171;margin-top:2px;">Duplicate with Metrofax?</div></div>
+    <div class="sub-right"><div class="sub-amt">$20.87</div><div class="sub-due">Due 7th</div></div>
+  </div>
+  <div class="sub-row">
+    <div><div class="sub-name">Netflix</div><span class="review">⚠ REVIEW</span></div>
+    <div class="sub-right"><div class="sub-amt">$24.99</div><div class="sub-due">Due 7th</div></div>
+  </div>
+  <div class="sub-row">
+    <div><div class="sub-name">CVS</div><span class="review">⚠ REVIEW</span></div>
+    <div class="sub-right"><div class="sub-amt">$5.00</div><div class="sub-due">Due 10th</div></div>
+  </div>
+  <div class="sub-row">
+    <div><div class="sub-name">Disney Plus</div><span class="review">⚠ REVIEW</span></div>
+    <div class="sub-right"><div class="sub-amt">$19.99</div><div class="sub-due">Due 12th</div></div>
+  </div>
+  <div class="sub-row">
+    <div><div class="sub-name">Prime Video 1</div><span class="keep">✓ KEEP</span></div>
+    <div class="sub-right"><div class="sub-amt">$10.99</div><div class="sub-due">Due 13th</div></div>
+  </div>
+  <div class="sub-row">
+    <div><div class="sub-name">Adobe</div><span class="review">⚠ REVIEW</span></div>
+    <div class="sub-right"><div class="sub-amt">$19.99</div><div class="sub-due">Due 13th</div></div>
+  </div>
+  <div class="sub-row">
+    <div><div class="sub-name">Nintendo</div><span class="review">⚠ REVIEW</span></div>
+    <div class="sub-right"><div class="sub-amt">$2.66</div><div class="sub-due">Due 15th</div></div>
+  </div>
+  <div class="sub-row">
+    <div><div class="sub-name">Prime Video 2</div><span class="keep">✓ KEEP</span></div>
+    <div class="sub-right"><div class="sub-amt">$16.99</div><div class="sub-due">Due 15th</div></div>
+  </div>
+  <div class="sub-row">
+    <div><div class="sub-name">HelloTech</div><span class="review">⚠ REVIEW</span></div>
+    <div class="sub-right"><div class="sub-amt">$19.99</div><div class="sub-due">Due 20th</div></div>
+  </div>
+  <div class="sub-row">
+    <div><div class="sub-name">OpenAI</div><span class="review">⚠ REVIEW</span></div>
+    <div class="sub-right"><div class="sub-amt">$20.00</div><div class="sub-due">Due 20th</div></div>
+  </div>
+  <div class="sub-row">
+    <div><div class="sub-name">Prime Video 3</div><span class="keep">✓ KEEP</span></div>
+    <div class="sub-right"><div class="sub-amt">$13.99</div><div class="sub-due">Due 20th</div></div>
+  </div>
+  <div class="sub-row">
+    <div><div class="sub-name">Urban Air</div><span class="keep">✓ KEEP</span></div>
+    <div class="sub-right"><div class="sub-amt">$43.96</div><div class="sub-due">Due 26th</div></div>
+  </div>
+  <div class="sub-row">
+    <div><div class="sub-name">Claude</div><span class="review">⚠ REVIEW</span></div>
+    <div class="sub-right"><div class="sub-amt">$20.00</div><div class="sub-due">Due 27th</div></div>
+  </div>
+  <div class="sub-row">
+    <div><div class="sub-name">Google Simple App</div><span class="review">⚠ REVIEW</span></div>
+    <div class="sub-right"><div class="sub-amt">$29.99</div><div class="sub-due">Due 27th</div></div>
+  </div>
+  <div class="sub-row">
+    <div><div class="sub-name">Metrofax</div><span class="review">⚠ REVIEW</span><div style="font-size:10px;color:#f87171;margin-top:2px;">Duplicate with eFax?</div></div>
+    <div class="sub-right"><div class="sub-amt">$4.00</div><div class="sub-due">Due 28th</div></div>
+  </div>
+  <div class="sub-row">
+    <div><div class="sub-name">Prime Video 4</div><span class="keep">✓ KEEP</span></div>
+    <div class="sub-right"><div class="sub-amt">$7.99</div><div class="sub-due">Due 24th</div></div>
+  </div>
+  <div class="sub-row">
+    <div><div class="sub-name">Zedge</div><span class="review">⚠ REVIEW</span></div>
+    <div class="sub-right"><div class="sub-amt">$4.99</div><div class="sub-due">Due 30th</div></div>
+  </div>
+  <div class="sub-row">
+    <div><div class="sub-name">YouTube Premium</div><span class="review">⚠ REVIEW</span></div>
+    <div class="sub-right"><div class="sub-amt">$22.99</div><div class="sub-due">Due 11th</div></div>
+  </div>
+  <div class="sub-row">
+    <div><div class="sub-name">Google AVAS</div><span class="review">⚠ REVIEW</span></div>
+    <div class="sub-right"><div class="sub-amt">$11.99</div><div class="sub-due">Due ?</div></div>
+  </div>
+
+  <div class="total-row">
+    <span>Monthly Total</span>
+    <span style="color:var(--green);">$327.89</span>
+  </div>
+  <div style="background:#1a2e1a; border-radius:8px; padding:10px 12px; margin-top:8px; font-size:11px; color:var(--green);">
+    ✓ Under $350 cap by $22.11 — watch eFax + Metrofax duplicates
+  </div>
+</div>
+
+<!-- PAY SCHEDULE TAB -->
+<div id="tab-schedule" class="tab-content">
+  <div class="sched-person">
+    <div class="sched-name">Rob</div>
+    <div class="sched-grid">
+      <div class="sched-month"><span class="sched-m">May</span><span class="sched-d">May 15, May 29</span></div>
+      <div class="sched-month"><span class="sched-m">June</span><span class="sched-d">June 15, June 30</span></div>
+      <div class="sched-month"><span class="sched-m">July</span><span class="sched-d">July 15, July 31</span></div>
+      <div class="sched-month"><span class="sched-m">August</span><span class="sched-d">Aug 14, Aug 31</span></div>
+      <div class="sched-month"><span class="sched-m">September</span><span class="sched-d">Sept 15, Sept 30</span></div>
+      <div class="sched-month"><span class="sched-m">October</span><span class="sched-d">Oct 15, Oct 30</span></div>
+      <div class="sched-month"><span class="sched-m">November</span><span class="sched-d">Nov 13, Nov 30</span></div>
+      <div class="sched-month"><span class="sched-m">December</span><span class="sched-d">Dec 15, Dec 31</span></div>
+    </div>
+  </div>
+
+  <div class="sched-person">
+    <div class="sched-name">Miriam</div>
+    <div class="sched-grid">
+      <div class="sched-month"><span class="sched-m">May</span><span class="sched-d">May 8, May 22</span></div>
+      <div class="sched-month"><span class="sched-m">June</span><span class="sched-d">June 5, June 18</span></div>
+      <div class="sched-month"><span class="sched-m">July</span><span class="sched-d">July 3, July 17, July 31</span></div>
+      <div class="sched-month"><span class="sched-m">August</span><span class="sched-d">Aug 14, Aug 28</span></div>
+      <div class="sched-month"><span class="sched-m">September</span><span class="sched-d">Sept 11, Sept 25</span></div>
+      <div class="sched-month"><span class="sched-m">October</span><span class="sched-d">Oct 9, Oct 23</span></div>
+      <div class="sched-month"><span class="sched-m">November</span><span class="sched-d">Nov 6, Nov 20</span></div>
+      <div class="sched-month"><span class="sched-m">December</span><span class="sched-d">Dec 4, Dec 18, Dec 31</span></div>
+    </div>
+  </div>
+
+  <div class="sched-person" style="border-left:3px solid var(--blue);">
+    <div class="sched-name" style="font-size:13px;">Income Check A (DCF)</div>
+    <div class="sched-grid">
+      <div class="sched-month"><span class="sched-m">May</span><span class="sched-d">May 15</span></div>
+      <div class="sched-month"><span class="sched-m">June</span><span class="sched-d">Jun 21</span></div>
+      <div class="sched-month"><span class="sched-m">July</span><span class="sched-d">Jul 24 *</span></div>
+      <div class="sched-month"><span class="sched-m">August</span><span class="sched-d">Aug 21</span></div>
+      <div class="sched-month"><span class="sched-m">September</span><span class="sched-d">Sep 18</span></div>
+      <div class="sched-month"><span class="sched-m">October</span><span class="sched-d">Oct 30 *</span></div>
+      <div class="sched-month"><span class="sched-m">November</span><span class="sched-d">Nov 20</span></div>
+      <div class="sched-month"><span class="sched-m">December</span><span class="sched-d">Dec 18 *</span></div>
+    </div>
+  </div>
+
+  <div class="sched-person" style="border-left:3px solid var(--amber);">
+    <div class="sched-name" style="font-size:13px;">Income Check B (DCF)</div>
+    <div class="sched-grid">
+      <div class="sched-month"><span class="sched-m">May</span><span class="sched-d">May 30</span></div>
+      <div class="sched-month"><span class="sched-m">June</span><span class="sched-d">Jul 9</span></div>
+      <div class="sched-month"><span class="sched-m">July</span><span class="sched-d">Aug 14 *</span></div>
+      <div class="sched-month"><span class="sched-m">August</span><span class="sched-d">Sep 4</span></div>
+      <div class="sched-month"><span class="sched-m">September</span><span class="sched-d">Oct 9</span></div>
+      <div class="sched-month"><span class="sched-m">October</span><span class="sched-d">Nov 6</span></div>
+      <div class="sched-month"><span class="sched-m">November</span><span class="sched-d">Dec 4</span></div>
+      <div class="sched-month"><span class="sched-m">December</span><span class="sched-d">Jan 15 *</span></div>
+    </div>
+  </div>
+
+  <div style="background:var(--surface2); border-radius:8px; padding:10px 12px; font-size:11px; color:var(--muted); border:1px solid var(--border);">
+    * = 3-week delayed deposit per MA DCF EFT schedule (FY2027 predicted)
+  </div>
+</div>
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SnowPath — App Name</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,700;0,900;1,300;1,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: #080d14;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .page-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: #4a6080;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+  }
+
+  /* ── Wordmark ── */
+  .wordmark-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 64px;
+  }
+
+  .wordmark-icon {
+    width: 80px;
+    height: 80px;
+  }
+
+  .wordmark-text {
+    font-family: 'Fraunces', serif;
+    font-size: 52px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #a5f3fc 0%, #60a5fa 50%, #818cf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+  }
+
+  .wordmark-tagline {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: #4a7a99;
+    text-transform: uppercase;
+  }
+
+  /* ── Variants ── */
+  .variants-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    width: 100%;
+    max-width: 520px;
+    margin-bottom: 48px;
+  }
+
+  .variant-card {
+    border-radius: 16px;
+    padding: 28px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid;
+  }
+
+  .variant-card.dark {
+    background: #0d1525;
+    border-color: #1e2d44;
+  }
+  .variant-card.light {
+    background: #f0f6ff;
+    border-color: #c8ddf5;
+  }
+  .variant-card.mono {
+    background: #0a0a0a;
+    border-color: #222;
+  }
+  .variant-card.frost {
+    background: linear-gradient(135deg, #e8f4ff, #f0eeff);
+    border-color: #bdd5f5;
+  }
+
+  .v-label {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .dark .v-label  { color: #4a6080; }
+  .light .v-label { color: #7a9ac0; }
+  .mono .v-label  { color: #444; }
+  .frost .v-label { color: #8aabcc; }
+
+  .v-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    font-size: 30px;
+  }
+  .dark .v-name  { background: linear-gradient(135deg, #a5f3fc, #60a5fa); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .light .v-name { color: #1a4a7a; }
+  .mono .v-name  { color: #e8e8e8; }
+  .frost .v-name { background: linear-gradient(135deg, #2563eb, #7c3aed); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+
+  .v-sub {
+    font-size: 9px;
+    letter-spacing: 0.08em;
+  }
+  .dark .v-sub  { color: #2dd4bf; }
+  .light .v-sub { color: #4a8ab8; }
+  .mono .v-sub  { color: #666; }
+  .frost .v-sub { color: #6366f1; }
+
+  /* ── Name rationale ── */
+  .rationale {
+    max-width: 480px;
+    background: #0d1525;
+    border: 1px solid #1e2d44;
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 32px;
+  }
+  .rationale-title {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #a5f3fc;
+    margin-bottom: 12px;
+  }
+  .rationale p {
+    font-size: 11px;
+    color: #7a9ab8;
+    line-height: 1.8;
+    margin-bottom: 10px;
+  }
+  .rationale p:last-child { margin-bottom: 0; }
+  .rationale strong { color: #c8e8f5; }
+
+  /* ── Type specimen ── */
+  .type-spec {
+    max-width: 480px;
+    width: 100%;
+    background: #0d1525;
+    border: 1px solid #1e2d44;
+    border-radius: 14px;
+    padding: 24px;
+  }
+  .spec-row {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid #141e2e;
+  }
+  .spec-row:last-child { border-bottom: none; }
+  .spec-meta { font-size: 9px; color: #4a6080; letter-spacing: 0.08em; width: 80px; flex-shrink: 0; }
+  .spec-sample { font-family: 'Fraunces', serif; color: #e8edf5; }
+</style>
+</head>
+<body>
+
+<div class="page-label">SnowPath · App Name Reference</div>
+
+<!-- Main wordmark -->
+<div class="wordmark-wrap">
+  <svg class="wordmark-icon" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="40" cy="40" r="38" fill="#0d1a2e" stroke="#1e3a5a" stroke-width="1"/>
+    <!-- main axes -->
+    <line x1="40" y1="10" x2="40" y2="70" stroke="url(#grad1)" stroke-width="3" stroke-linecap="round"/>
+    <line x1="10" y1="40" x2="70" y2="40" stroke="url(#grad1)" stroke-width="3" stroke-linecap="round"/>
+    <!-- diagonal axes -->
+    <line x1="18" y1="18" x2="62" y2="62" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+    <line x1="62" y1="18" x2="18" y2="62" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+    <!-- branch tips - vertical -->
+    <line x1="33" y1="17" x2="40" y2="24" stroke="#a5f3fc" stroke-width="2" stroke-linecap="round"/>
+    <line x1="47" y1="17" x2="40" y2="24" stroke="#a5f3fc" stroke-width="2" stroke-linecap="round"/>
+    <line x1="33" y1="63" x2="40" y2="56" stroke="#a5f3fc" stroke-width="2" stroke-linecap="round"/>
+    <line x1="47" y1="63" x2="40" y2="56" stroke="#a5f3fc" stroke-width="2" stroke-linecap="round"/>
+    <!-- branch tips - horizontal -->
+    <line x1="17" y1="33" x2="24" y2="40" stroke="#a5f3fc" stroke-width="2" stroke-linecap="round"/>
+    <line x1="17" y1="47" x2="24" y2="40" stroke="#a5f3fc" stroke-width="2" stroke-linecap="round"/>
+    <line x1="63" y1="33" x2="56" y2="40" stroke="#a5f3fc" stroke-width="2" stroke-linecap="round"/>
+    <line x1="63" y1="47" x2="56" y2="40" stroke="#a5f3fc" stroke-width="2" stroke-linecap="round"/>
+    <!-- branch tips - diagonal -->
+    <line x1="26" y1="20" x2="26" y2="27" stroke="#818cf8" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="20" y1="26" x2="27" y2="26" stroke="#818cf8" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="54" y1="20" x2="54" y2="27" stroke="#818cf8" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="60" y1="26" x2="53" y2="26" stroke="#818cf8" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="26" y1="60" x2="26" y2="53" stroke="#818cf8" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="20" y1="54" x2="27" y2="54" stroke="#818cf8" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="54" y1="60" x2="54" y2="53" stroke="#818cf8" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="60" y1="54" x2="53" y2="54" stroke="#818cf8" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- center -->
+    <circle cx="40" cy="40" r="4" fill="#a5f3fc"/>
+    <circle cx="40" cy="40" r="2" fill="#0d1a2e"/>
+    <defs>
+      <linearGradient id="grad1" x1="10" y1="10" x2="70" y2="70" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#a5f3fc"/>
+        <stop offset="100%" stop-color="#818cf8"/>
+      </linearGradient>
+    </defs>
+  </svg>
+  <div class="wordmark-text">SnowPath</div>
+  <div class="wordmark-tagline">Your debt-free journey</div>
+</div>
+
+<!-- Variants -->
+<div class="variants-grid">
+  <div class="variant-card dark">
+    <div class="v-label">Dark · Primary</div>
+    <div class="v-name">SnowPath</div>
+    <div class="v-sub">DEBT SNOWBALL</div>
+  </div>
+  <div class="variant-card light">
+    <div class="v-label">Light</div>
+    <div class="v-name">SnowPath</div>
+    <div class="v-sub" style="color:#4a8ab8;">DEBT SNOWBALL</div>
+  </div>
+  <div class="variant-card mono">
+    <div class="v-label">Mono</div>
+    <div class="v-name">SnowPath</div>
+    <div class="v-sub">DEBT SNOWBALL</div>
+  </div>
+  <div class="variant-card frost">
+    <div class="v-label">Frost</div>
+    <div class="v-name">SnowPath</div>
+    <div class="v-sub">DEBT SNOWBALL</div>
+  </div>
+</div>
+
+<!-- Rationale -->
+<div class="rationale">
+  <div class="rationale-title">Why SnowPath?</div>
+  <p><strong>Snow</strong> nods directly to the debt snowball — small payments gaining momentum, rolling into larger ones until every debt is gone.</p>
+  <p><strong>Path</strong> is the plan: every check, every payment, every due date mapped to a clear route. You always know where you are and where you're headed.</p>
+  <p>Together: <strong>SnowPath</strong> is a journey with direction — not just a budget, but a debt-freedom roadmap built around your income streams.</p>
+</div>
+
+<!-- Type specimen -->
+<div class="type-spec">
+  <div style="font-size:9px;color:#4a6080;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:12px;">Type Specimen · Fraunces</div>
+  <div class="spec-row"><div class="spec-meta">900 · 52px</div><div class="spec-sample" style="font-size:36px;font-weight:900;">SnowPath</div></div>
+  <div class="spec-row"><div class="spec-meta">700 · 24px</div><div class="spec-sample" style="font-size:22px;font-weight:700;">SnowPath</div></div>
+  <div class="spec-row"><div class="spec-meta">600 · 16px</div><div class="spec-sample" style="font-size:16px;font-weight:600;">SnowPath</div></div>
+  <div class="spec-row"><div class="spec-meta">300 · italic</div><div class="spec-sample" style="font-size:16px;font-weight:300;font-style:italic;">Debt-free journey</div></div>
+</div>
+
+</body>
+</html>
