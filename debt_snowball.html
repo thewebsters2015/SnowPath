@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>❄️ SnowPath — Debt Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,600;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0d14;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: #1e2d44;
+    --text: #e8edf5;
+    --muted: #6b7a99;
+    --snow: #a5f3fc;
+    --green: #34d399;
+    --red: #f87171;
+    --amber: #fbbf24;
+    --purple: #a78bfa;
+    --orange: #fb923c;
+    --teal: #2dd4bf;
+    --paid: #2d4a3a;
+    --paid-text: #4ade80;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+  .header {
+    background: linear-gradient(160deg, #0a0d14 0%, #0d1a2e 60%, #0f1e1a 100%);
+    padding: 24px 16px 18px;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--snow);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .header-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #e8f4f8;
+    letter-spacing: -0.02em;
+  }
+  .header-sub { color: var(--muted); font-size: 11px; margin-top: 2px; }
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 12px 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    white-space: nowrap;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+  .tab-btn.active {
+    background: var(--snow);
+    color: #0a0d14;
+    border-color: var(--snow);
+    font-weight: 500;
+  }
+  .tab-content { display: none; padding: 16px; }
+  .tab-content.active { display: block; }
+
+  /* Summary */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+  }
+  .card.full { grid-column: 1/-1; }
+  .card-label { font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+  .card-value { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
+  .card-sub { font-size: 10px; color: var(--muted); margin-top: 3px; }
+
+  /* Debt card */
+  .debt-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .debt-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    border-radius: 14px 0 0 14px;
+  }
+  .debt-card.priority-1::before { background: var(--red); }
+  .debt-card.priority-2::before { background: var(--orange); }
+  .debt-card.priority-3::before { background: var(--amber); }
+  .debt-card.priority-4::before { background: #facc15; }
+  .debt-card.priority-5::before { background: var(--green); }
+  .debt-card.priority-6::before { background: var(--teal); }
+  .debt-card.priority-7::before { background: var(--snow); }
+  .debt-card.mortgage::before { background: var(--muted); }
+  .debt-card.paid {
+    border-color: var(--paid);
+    opacity: 0.7;
+  }
+  .debt-card.paid::before { background: var(--paid-text); }
+  .debt-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .debt-name { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 600; }
+  .debt-badge {
+    font-size: 9px;
+    padding: 3px 8px;
+    border-radius: 10px;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+  }
+  .badge-active { background: #1a2535; color: var(--snow); border: 1px solid var(--border); }
+  .badge-paid { background: var(--paid); color: var(--paid-text); }
+  .badge-priority { background: #2a1515; color: var(--red); }
+  .debt-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+  .stat-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; }
+  .stat-value { font-size: 13px; font-weight: 500; }
+  .progress-wrap { height: 6px; background: #1e2d44; border-radius: 3px; overflow: hidden; margin-bottom: 6px; }
+  .progress-bar { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
+  .debt-note { font-size: 10px; color: var(--muted); line-height: 1.5; margin-top: 6px; }
+  .payoff-chip {
+    display: inline-block;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 10px;
+    color: var(--snow);
+    margin-top: 8px;
+  }
+
+  /* Snowball timeline */
+  .timeline-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .timeline-dot-col { display: flex; flex-direction: column; align-items: center; }
+  .timeline-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .timeline-line { flex: 1; width: 1px; background: var(--border); margin-top: 4px; }
+  .timeline-content { flex: 1; padding-bottom: 8px; }
+  .timeline-date { font-size: 10px; color: var(--muted); margin-bottom: 4px; }
+  .timeline-title { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+  .timeline-detail { font-size: 11px; color: var(--muted); }
+
+  /* Strategy section */
+  .strategy-rule {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 12px;
+    border-left: 3px solid var(--snow);
+    font-size: 12px;
+    line-height: 1.6;
+    color: #b8cce0;
+  }
+  .data-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 9px 0;
+    border-bottom: 1px solid #141e2e;
+    font-size: 12px;
+  }
+  .data-label { color: var(--muted); }
+  .data-val { color: var(--text); font-weight: 500; }
+
+  /* Miriam mapping */
+  .mapping-row {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 8px;
+    border: 1px solid var(--border);
+  }
+  .mapping-check { font-size: 10px; color: var(--snow); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .mapping-detail { font-size: 12px; color: var(--text); margin-bottom: 4px; }
+  .mapping-note { font-size: 10px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-eyebrow">❄️ SnowPath</div>
+  <div class="header-title">Debt Snowball Tracker</div>
+  <div class="header-sub">May 2026 · Miriam & Rob</div>
+</div>
+
+<div class="nav-tabs">
+  <button class="tab-btn active" onclick="showTab('overview')">Overview</button>
+  <button class="tab-btn" onclick="showTab('debts')">All Debts</button>
+  <button class="tab-btn" onclick="showTab('timeline')">Timeline</button>
+  <button class="tab-btn" onclick="showTab('strategy')">Strategy</button>
+  <button class="tab-btn" onclick="showTab('paidoff')">Paid Off ✅</button>
+  <button class="tab-btn" onclick="showTab('living')">Living</button>
+  <button class="tab-btn" onclick="showTab('byincome-jun')">By Income Jun</button>
+  <button class="tab-btn" onclick="showTab('byincome-jul')">By Income Jul</button>
+  <button class="tab-btn" onclick="showTab('byincome-aug')">By Income Aug</button>
+  <button class="tab-btn" onclick="showTab('byincome-sep')">By Income Sep</button>
+</div>
+
+<!-- OVERVIEW -->
+<div id="tab-overview" class="tab-content active">
+  <div class="summary-grid">
+    <div class="card">
+      <div class="card-label">Total Active Debt</div>
+      <div class="card-value" style="color:var(--red); font-size:18px;">$180,762</div>
+      <div class="card-sub">Excl. mortgage</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Monthly Interest</div>
+      <div class="card-value" style="color:var(--orange); font-size:18px;">$1,898</div>
+      <div class="card-sub">Burning every month</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Monthly Payments</div>
+      <div class="card-value" style="color:var(--amber); font-size:18px;">$8,026</div>
+      <div class="card-sub">Min + snowball</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Debts Paid Off</div>
+      <div class="card-value" style="color:var(--paid-text); font-size:18px;">5</div>
+      <div class="card-sub">May 2026 via HELOC</div>
+    </div>
+  </div>
+
+  <div class="card full" style="margin-bottom:16px;">
+    <div class="card-label">Priority Attack Order</div>
+    <div style="margin-top:10px;">
+      <div class="data-row"><span class="data-label">#1 Citibank CC</span><span style="color:var(--red);">27.99% APR → Sep 2026</span></div>
+      <div class="data-row"><span class="data-label">#2 Passante</span><span style="color:var(--orange);">21.00% APR → Sep 2026</span></div>
+      <div class="data-row"><span class="data-label">#3 Wells Fargo CC</span><span style="color:var(--amber);">15.65% APR → Oct 2026</span></div>
+      <div class="data-row"><span class="data-label">#4 GoodLeap HVAC</span><span style="color:#facc15;">15.49% APR → Feb 2027</span></div>
+      <div class="data-row"><span class="data-label">#5 NavyFed</span><span style="color:var(--green);">14.15% APR → Jul 2027</span></div>
+      <div class="data-row"><span class="data-label">#6 HELOC</span><span style="color:var(--teal);">10.19% APR → Nov 2028</span></div>
+      <div class="data-row" style="border-bottom:none;"><span class="data-label">#7 LightStream</span><span style="color:var(--snow);">8.99% APR → Oct 2026</span></div>
+    </div>
+  </div>
+
+  <div style="background:#1a2a1a; border-radius:10px; padding:12px 14px; border:1px solid #2a3e2a; font-size:11px; color:var(--green); line-height:1.6;">
+    🎉 <strong>May 2026 Win:</strong> US Bank, BC, Chase Sapphire eBiz, Citi Preferred, and Chase Basic all paid off via HELOC advance consolidation ($13,817.31 at ~11% APR).
+  </div>
+</div>
+
+<!-- ALL DEBTS -->
+<div id="tab-debts" class="tab-content">
+
+  <div class="debt-card priority-1">
+    <div class="debt-header">
+      <div class="debt-name">Citibank CC</div>
+      <span class="debt-badge badge-priority">🔥 PRIORITY #1</span>
+    </div>
+    <div class="debt-stats">
+      <div><div class="stat-label">Balance</div><div class="stat-value" style="color:var(--red);">$8,550.49</div></div>
+      <div><div class="stat-label">APR</div><div class="stat-value" style="color:var(--red);">27.99%</div></div>
+      <div><div class="stat-label">Min Pmt</div><div class="stat-value">$277.49</div></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" style="width:45%;background:var(--red);"></div></div>
+    <div class="debt-note">Receiving ~$2,245/mo total (min + redirected sinking funds + Check B + Extra Snowball). Monthly interest: $199.44.</div>
+    <div class="payoff-chip">📅 Est. payoff: September 2026</div>
+  </div>
+
+  <div class="debt-card priority-2">
+    <div class="debt-header">
+      <div class="debt-name">Passante</div>
+      <span class="debt-badge badge-active">PRIORITY #2</span>
+    </div>
+    <div class="debt-stats">
+      <div><div class="stat-label">Balance</div><div class="stat-value" style="color:var(--orange);">$8,443.77</div></div>
+      <div><div class="stat-label">APR</div><div class="stat-value" style="color:var(--orange);">21.00%</div></div>
+      <div><div class="stat-label">Min Pmt</div><div class="stat-value">$324.86</div></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" style="width:40%;background:var(--orange);"></div></div>
+    <div class="debt-note">Receiving $150 (Car Repairs redirect) + $324.86 min + Check A $324.86 + Rob Chk2 $324.86. Monthly interest: $147.77.</div>
+    <div class="payoff-chip">📅 Est. payoff: September 2026</div>
+  </div>
+
+  <div class="debt-card priority-3">
+    <div class="debt-header">
+      <div class="debt-name">Wells Fargo CC</div>
+      <span class="debt-badge badge-active">PRIORITY #3</span>
+    </div>
+    <div class="debt-stats">
+      <div><div class="stat-label">Balance</div><div class="stat-value" style="color:var(--amber);">$7,664.35</div></div>
+      <div><div class="stat-label">APR</div><div class="stat-value" style="color:var(--amber);">15.65%</div></div>
+      <div><div class="stat-label">Min Pmt</div><div class="stat-value">$150.00</div></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" style="width:35%;background:var(--amber);"></div></div>
+    <div class="debt-note">Receiving $1,500 snowball from Rob Check 2 + $150 minimum. Monthly interest: $99.96.</div>
+    <div class="payoff-chip">📅 Est. payoff: October 2026</div>
+  </div>
+
+  <div class="debt-card priority-4">
+    <div class="debt-header">
+      <div class="debt-name">GoodLeap HVAC</div>
+      <span class="debt-badge badge-active">PRIORITY #4</span>
+    </div>
+    <div class="debt-stats">
+      <div><div class="stat-label">Balance</div><div class="stat-value" style="color:#facc15;">$12,664.71</div></div>
+      <div><div class="stat-label">APR</div><div class="stat-value" style="color:#facc15;">15.49%</div></div>
+      <div><div class="stat-label">Min Pmt</div><div class="stat-value">$137.23</div></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" style="width:25%;background:#facc15;"></div></div>
+    <div class="debt-note">Minimum only ($137.23) until higher-APR debts cleared. Monthly interest: $163.48. Then redirect full snowball.</div>
+    <div class="payoff-chip">📅 Est. payoff: February 2027</div>
+  </div>
+
+  <div class="debt-card priority-5">
+    <div class="debt-header">
+      <div class="debt-name">NavyFed</div>
+      <span class="debt-badge badge-active">PRIORITY #5</span>
+    </div>
+    <div class="debt-stats">
+      <div><div class="stat-label">Balance</div><div class="stat-value" style="color:var(--green);">$22,765.72</div></div>
+      <div><div class="stat-label">APR</div><div class="stat-value" style="color:var(--green);">14.15%</div></div>
+      <div><div class="stat-label">Min Pmt</div><div class="stat-value">$536.89</div></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" style="width:20%;background:var(--green);"></div></div>
+    <div class="debt-note">Minimum only via Income Check A. After Passante & WF clear: major snowball targeting this. Monthly interest: $268.45.</div>
+    <div class="payoff-chip">📅 Est. payoff: July 2027</div>
+  </div>
+
+  <div class="debt-card priority-6">
+    <div class="debt-header">
+      <div class="debt-name">HELOC</div>
+      <span class="debt-badge badge-active">PRIORITY #6</span>
+    </div>
+    <div class="debt-stats">
+      <div><div class="stat-label">Balance</div><div class="stat-value" style="color:var(--teal); font-size:11px;">$114,380</div></div>
+      <div><div class="stat-label">APR</div><div class="stat-value" style="color:var(--teal);">10.19%</div></div>
+      <div><div class="stat-label">Min Pmt</div><div class="stat-value">$2,463.40</div></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" style="width:15%;background:var(--teal);"></div></div>
+    <div class="debt-note">Variable rate 10.19%. Min $2,463.40/mo. Monthly interest: $971.28. ⚠️ Do NOT draw additional advances. Extra payment of $1,169.35 in May 2026 only.</div>
+    <div class="payoff-chip">📅 Est. payoff: November 2028</div>
+  </div>
+
+  <div class="debt-card priority-7">
+    <div class="debt-header">
+      <div class="debt-name">LightStream</div>
+      <span class="debt-badge badge-active">PRIORITY #7</span>
+    </div>
+    <div class="debt-stats">
+      <div><div class="stat-label">Balance</div><div class="stat-value" style="color:var(--snow);">$6,292.62</div></div>
+      <div><div class="stat-label">APR</div><div class="stat-value" style="color:var(--snow);">8.99%</div></div>
+      <div><div class="stat-label">Min Pmt</div><div class="stat-value">$1,589.75</div></div>
+    </div>
+    <div class="progress-wrap"><div class="progress-bar" style="width:75%;background:var(--snow);"></div></div>
+    <div class="debt-note">Pays off Oct 2026 via $1,589.75 minimum alone — no extra snowball needed. Monthly interest: $47.14. Can be paid as late as the 10th of each month.</div>
+    <div class="payoff-chip">📅 Est. payoff: October 2026 via minimums</div>
+  </div>
+
+  <div class="debt-card mortgage">
+    <div class="debt-header">
+      <div class="debt-name">LoanDepot Mortgage</div>
+      <span class="debt-badge badge-active">PRIORITY #8</span>
+    </div>
+    <div class="debt-stats">
+      <div><div class="stat-label">Balance</div><div class="stat-value" style="color:var(--muted);">—</div></div>
+      <div><div class="stat-label">APR</div><div class="stat-value" style="color:var(--muted);">Fixed</div></div>
+      <div><div class="stat-label">Payment</div><div class="stat-value">$3,505.91</div></div>
+    </div>
+    <div class="debt-note">Pay on time every month. No early payoff priority while higher-APR debts exist. Due 1st, grace period to 15th (late fee $103.25 after that). HARD deadline: before 25th or credit bureau reports.</div>
+    <div class="payoff-chip">📅 Long-term</div>
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<div id="tab-timeline" class="tab-content">
+  <p style="font-size:11px; color:var(--muted); margin-bottom:20px;">Projected payoff sequence at current payment levels.</p>
+
+  <div class="timeline-item">
+    <div class="timeline-dot-col">
+      <div class="timeline-dot" style="background:var(--paid-text);"></div>
+      <div class="timeline-line"></div>
+    </div>
+    <div class="timeline-content">
+      <div class="timeline-date">May 2026 — COMPLETED ✅</div>
+      <div class="timeline-title" style="color:var(--paid-text);">5 Debts Eliminated</div>
+      <div class="timeline-detail">US Bank, BC, Chase Sapphire eBiz, Citi Preferred, Chase Basic — all paid off via HELOC consolidation ($13,817.31)</div>
+    </div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="timeline-dot-col">
+      <div class="timeline-dot" style="background:var(--snow);"></div>
+      <div class="timeline-line"></div>
+    </div>
+    <div class="timeline-content">
+      <div class="timeline-date">October 2026</div>
+      <div class="timeline-title" style="color:var(--snow);">LightStream Paid Off</div>
+      <div class="timeline-detail">$6,292.62 at 8.99% — cleared via $1,589.75/mo minimums alone. Roll freed payment to next target.</div>
+    </div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="timeline-dot-col">
+      <div class="timeline-dot" style="background:var(--red);"></div>
+      <div class="timeline-line"></div>
+    </div>
+    <div class="timeline-content">
+      <div class="timeline-date">September 2026</div>
+      <div class="timeline-title" style="color:var(--red);">Citibank CC Paid Off</div>
+      <div class="timeline-detail">$8,550.49 at 27.99% — ~$2,245/mo attack payment. Frees $2,245/mo to roll to Passante.</div>
+    </div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="timeline-dot-col">
+      <div class="timeline-dot" style="background:var(--orange);"></div>
+      <div class="timeline-line"></div>
+    </div>
+    <div class="timeline-content">
+      <div class="timeline-date">September 2026</div>
+      <div class="timeline-title" style="color:var(--orange);">Passante Paid Off</div>
+      <div class="timeline-detail">$8,443.77 at 21% — multiple streams attacking. Roll freed payments to Wells Fargo.</div>
+    </div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="timeline-dot-col">
+      <div class="timeline-dot" style="background:var(--amber);"></div>
+      <div class="timeline-line"></div>
+    </div>
+    <div class="timeline-content">
+      <div class="timeline-date">October 2026</div>
+      <div class="timeline-title" style="color:var(--amber);">Wells Fargo CC Paid Off</div>
+      <div class="timeline-detail">$7,664.35 at 15.65% — snowball accelerating. Roll to GoodLeap.</div>
+    </div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="timeline-dot-col">
+      <div class="timeline-dot" style="background:#facc15;"></div>
+      <div class="timeline-line"></div>
+    </div>
+    <div class="timeline-content">
+      <div class="timeline-date">February 2027</div>
+      <div class="timeline-title" style="color:#facc15;">GoodLeap HVAC Paid Off</div>
+      <div class="timeline-detail">$12,664.71 at 15.49% — massive snowball hits. Roll to NavyFed.</div>
+    </div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="timeline-dot-col">
+      <div class="timeline-dot" style="background:var(--green);"></div>
+      <div class="timeline-line"></div>
+    </div>
+    <div class="timeline-content">
+      <div class="timeline-date">July 2027</div>
+      <div class="timeline-title" style="color:var(--green);">NavyFed Paid Off</div>
+      <div class="timeline-detail">$22,765.72 at 14.15% — all prior snowball redirected here. Roll full amount to HELOC.</div>
+    </div>
+  </div>
+
+  <div class="timeline-item">
+    <div class="timeline-dot-col">
+      <div class="timeline-dot" style="background:var(--teal);"></div>
+    </div>
+    <div class="timeline-content">
+      <div class="timeline-date">November 2028</div>
+      <div class="timeline-title" style="color:var(--teal);">HELOC Paid Off 🎯</div>
+      <div class="timeline-detail">$114,379.86 at 10.19% variable — full snowball + minimums demolish this. Debt-free (excl. mortgage)!</div>
+    </div>
+  </div>
+</div>
+
+<!-- STRATEGY -->
+<div id="tab-strategy" class="tab-content">
+  <div class="strategy-rule">
+    <strong style="color:var(--snow);">The Rule:</strong> Pay minimums on every debt. Then send all extra payoff money to the first active debt in priority order. Once paid off, roll that full payment to the next debt. Every payoff accelerates the next.
+  </div>
+
+  <div class="card full" style="margin-bottom:12px;">
+    <div class="card-label">Monthly Debt Summary</div>
+    <div style="margin-top:8px;">
+      <div class="data-row"><span class="data-label">Total planned debt payments</span><span class="data-val" style="color:var(--amber);">$8,025.75</span></div>
+      <div class="data-row"><span class="data-label">Total active debt balance</span><span class="data-val" style="color:var(--red);">$180,761.52</span></div>
+      <div class="data-row" style="border-bottom:none;"><span class="data-label">Total monthly interest cost</span><span class="data-val" style="color:var(--orange);">$1,897.52</span></div>
+    </div>
+  </div>
+
+  <div class="card full" style="margin-bottom:12px;">
+    <div class="card-label">Scheduling Notes</div>
+    <div style="margin-top:8px;">
+      <div class="data-row"><span class="data-label">Rob checks</span><span class="data-val" style="color:var(--snow);">Main debt attack</span></div>
+      <div class="data-row"><span class="data-label">Rob Chk1 debt target</span><span class="data-val">$2,500/check</span></div>
+      <div class="data-row"><span class="data-label">Rob Chk2 debt target</span><span class="data-val">$3,000/check</span></div>
+      <div class="data-row"><span class="data-label">LightStream pay by</span><span class="data-val">10th of month</span></div>
+      <div class="data-row" style="border-bottom:none;"><span class="data-label">Passante pay by</span><span class="data-val">25th of month</span></div>
+    </div>
+  </div>
+
+  <div style="font-family:'Fraunces',serif; font-size:15px; font-weight:600; color:#e8f4f8; margin-bottom:10px;">Miriam $750 Payment Map</div>
+
+  <div class="mapping-row">
+    <div class="mapping-check">Miriam Check 1 · May 8</div>
+    <div class="mapping-detail">$750 → US Bank</div>
+    <div class="mapping-note">$750 leaves $223.29 remaining on US Bank</div>
+  </div>
+  <div class="mapping-row">
+    <div class="mapping-check">Miriam Check 2 · May 22</div>
+    <div class="mapping-detail">$750 split → $223.29 to US Bank, $526.71 to BC</div>
+    <div class="mapping-note">US Bank paid off May 22 · BC projected payoff May 28</div>
+  </div>
+
+  <div style="background:#1a1a2e; border-radius:10px; padding:12px 14px; border:1px solid #2a2a44; font-size:11px; color:#a5b4fc; line-height:1.6; margin-top:12px;">
+    ⚡ <strong>Key insight:</strong> Every debt eliminated permanently saves its monthly interest. Citibank alone costs $199.44/mo in interest — that's $2,393/year freed when it's gone.
+  </div>
+</div>
+
+<!-- PAID OFF -->
+<div id="tab-paidoff" class="tab-content">
+  <div style="background:#1a2a1a; border-radius:10px; padding:14px; margin-bottom:16px; border:1px solid #2a3e2a;">
+    <div style="font-size:11px; color:var(--paid-text); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px;">May 2026 Milestone</div>
+    <div style="font-family:'Fraunces',serif; font-size:16px; color:#e8f5ee; font-weight:600; margin-bottom:6px;">5 Debts Eliminated</div>
+    <div style="font-size:11px; color:var(--muted);">Consolidated via HELOC advance of $13,817.31 at ~11% APR. Freed minimums redirected to HELOC advance payoff.</div>
+  </div>
+
+  <div class="debt-card paid">
+    <div class="debt-header">
+      <div class="debt-name" style="color:var(--paid-text);">US Bank</div>
+      <span class="debt-badge badge-paid">✅ PAID OFF</span>
+    </div>
+    <div class="debt-stats">
+      <div><div class="stat-label">Balance</div><div class="stat-value" style="color:var(--paid-text);">$0.00</div></div>
+      <div><div class="stat-label">Was</div><div class="stat-value">$486.64 min</div></div>
+      <div><div class="stat-label">When</div><div class="stat-value">May 2026</div></div>
+    </div>
+    <div class="debt-note">Paid off via HELOC advance consolidation.</div>
+  </div>
+
+  <div class="debt-card paid">
+    <div class="debt-header">
+      <div class="debt-name" style="color:var(--paid-text);">BC</div>
+      <span class="debt-badge badge-paid">✅ PAID OFF</span>
+    </div>
+    <div class="debt-stats">
+      <div><div class="stat-label">Balance</div><div class="stat-value" style="color:var(--paid-text);">$0.00</div></div>
+      <div><div class="stat-label">Was</div><div class="stat-value">$1,500 min</div></div>
+      <div><div class="stat-label">When</div><div class="stat-value">May 2026</div></div>
+    </div>
+    <div class="debt-note">Paid off via HELOC advance consolidation.</div>
+  </div>
+
+  <div class="debt-card paid">
+    <div class="debt-header">
+      <div class="debt-name" style="color:var(--paid-text);">Chase Sapphire eBiz</div>
+      <span class="debt-badge badge-paid">✅ PAID OFF</span>
+    </div>
+    <div class="debt-stats">
+      <div><div class="stat-label">Balance</div><div class="stat-value" style="color:var(--paid-text);">$0.00</div></div>
+      <div><div class="stat-label">APR Was</div><div class="stat-value">26.74%</div></div>
+      <div><div class="stat-label">When</div><div class="stat-value">May 2026</div></div>
+    </div>
+    <div class="debt-note">Paid off via HELOC advance. Original balance: $249.49 min.</div>
+  </div>
+
+  <div class="debt-card paid">
+    <div class="debt-header">
+      <div class="debt-name" style="color:var(--paid-text);">Citi Preferred</div>
+      <span class="debt-badge badge-paid">✅ PAID OFF</span>
+    </div>
+    <div class="debt-stats">
+      <div><div class="stat-label">Balance</div><div class="stat-value" style="color:var(--paid-text);">$0.00</div></div>
+      <div><div class="stat-label">APR Was</div><div class="stat-value">27.99%</div></div>
+      <div><div class="stat-label">When</div><div class="stat-value">May 2026</div></div>
+    </div>
+    <div class="debt-note">Paid off via HELOC advance. Original balance: $250 min.</div>
+  </div>
+
+  <div class="debt-card paid">
+    <div class="debt-header">
+      <div class="debt-name" style="color:var(--paid-text);">Chase Basic</div>
+      <span class="debt-badge badge-paid">✅ PAID OFF</span>
+    </div>
+    <div class="debt-stats">
+      <div><div class="stat-label">Balance</div><div class="stat-value" style="color:var(--paid-text);">$0.00</div></div>
+      <div><div class="stat-label">Was</div><div class="stat-value">$60 min</div></div>
+      <div><div class="stat-label">When</div><div class="stat-value">May 2026</div></div>
+    </div>
+    <div class="debt-note">Confirmed $0 balance — paid in full.</div>
+  </div>
+</div>
+
+<!-- BY INCOME JUNE -->
+<div id="tab-byincome-jun" class="tab-content">
+  <p style="font-size:11px; color:var(--muted); margin-bottom:12px;">June 2026 · debt payments by income stream, due date, and send date.</p>
+  
+  <div style="overflow-x:auto;">
+<table class="income-table">
+  <thead><tr>
+    <th style="min-width:130px;">Debt / Expense</th>
+    <th>Income Stream</th>
+    <th>Due Date</th>
+    <th>Send Date</th>
+    <th>Amount</th>
+    <th>Status</th>
+    <th style="min-width:110px;">Notes</th>
+  </tr></thead>
+  <tbody>
+  <tr class="stream-hdr buf"><td colspan="7">Beginning Cash · Early-month buffer</td></tr>
+  <tr>
+    <td><div class="td-name">GoodLeap HVAC</div><div class="td-meta">Debt #4 · Pays: $137.23</div></td>
+    <td class="td-stream">Beg. Cash</td>
+    <td class="td-date">Jun 1</td>
+    <td class="td-date">Jun 1</td>
+    <td class="td-amt">$137.23</td>
+    <td><select class="status-sel" data-key="row-001" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Wells Fargo CC</div><div class="td-meta">Debt #3 · Pays: $150.00</div></td>
+    <td class="td-stream">Beg. Cash</td>
+    <td class="td-date">Jun 2</td>
+    <td class="td-date">Jun 2</td>
+    <td class="td-amt">$150.00</td>
+    <td><select class="status-sel" data-key="row-002" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr mir"><td colspan="7">Miriam Check 1 · Payday Jun 5</td></tr>
+  <tr>
+    <td><div class="td-name">HELOC Minimum</div><div class="td-meta">Debt #6 · Pays: $2,463.40</div></td>
+    <td class="td-stream">Miriam Chk 1</td>
+    <td class="td-date">Due 8th</td>
+    <td class="td-date">By Jun 21</td>
+    <td class="td-amt">$2,463.40</td>
+    <td><select class="status-sel" data-key="row-003" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr dca"><td colspan="7">Income Check A (DCF) · Deposits Jun 21</td></tr>
+  <tr>
+    <td><div class="td-name">NavyFed</div><div class="td-meta">Debt #5 · Pays: $536.89</div></td>
+    <td class="td-stream">Check A</td>
+    <td class="td-date">Due 13th</td>
+    <td class="td-date">Jun 21</td>
+    <td class="td-amt">$536.89</td>
+    <td><select class="status-sel" data-key="row-004" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Snowball → Passante</div><div class="td-meta">Priority #2 · Pays: $324.86</div></td>
+    <td class="td-stream">Check A</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Jun 21</td>
+    <td class="td-amt snow">$324.86</td>
+    <td><select class="status-sel" data-key="row-005" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr rob"><td colspan="7">Rob Check 1 · Payday Jun 15</td></tr>
+  <tr>
+    <td><div class="td-name">LoanDepot Mortgage</div><div class="td-meta">Due 1st · grace to 15th</div></td>
+    <td class="td-stream">Rob Chk 1</td>
+    <td class="td-date">Due 1st</td>
+    <td class="td-date">Jun 15</td>
+    <td class="td-amt">$3,505.91</td>
+    <td><select class="status-sel" data-key="row-006" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Citibank CC Min</div><div class="td-meta">Debt #1 · Pays: $277.49</div></td>
+    <td class="td-stream">Rob Chk 1</td>
+    <td class="td-date">Due 15th</td>
+    <td class="td-date">Jun 15</td>
+    <td class="td-amt">$277.49</td>
+    <td><select class="status-sel" data-key="row-007" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr mir"><td colspan="7">Miriam Check 2 · Payday Jun 18</td></tr>
+  <tr>
+    <td><div class="td-name">Passante</div><div class="td-meta">Debt #2 · Pays: $324.86</div></td>
+    <td class="td-stream">Miriam Chk 2</td>
+    <td class="td-date">Due 1st</td>
+    <td class="td-date">Jun 18</td>
+    <td class="td-amt">$324.86</td>
+    <td><select class="status-sel" data-key="row-008" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Snowball → Passante</div><div class="td-meta">Car Repairs redirect</div></td>
+    <td class="td-stream">Miriam Chk 2</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Jun 18</td>
+    <td class="td-amt snow">$150.00</td>
+    <td><select class="status-sel" data-key="row-009" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Snowball → Citibank</div><div class="td-meta">Home Maintenance redirect</div></td>
+    <td class="td-stream">Miriam Chk 2</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Jun 18</td>
+    <td class="td-amt snow">$200.00</td>
+    <td><select class="status-sel" data-key="row-010" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr rob"><td colspan="7">Rob Check 2 · Payday Jun 30</td></tr>
+  <tr>
+    <td><div class="td-name">LightStream</div><div class="td-meta">Debt #7 · Pays: $1,589.75</div></td>
+    <td class="td-stream">Rob Chk 2</td>
+    <td class="td-date">By 10th</td>
+    <td class="td-date">Jun 30→Jul 10</td>
+    <td class="td-amt">$1,589.75</td>
+    <td><select class="status-sel" data-key="row-011" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Snowball → Wells Fargo</div><div class="td-meta">Priority #3 · Pays: $1,500.00</div></td>
+    <td class="td-stream">Rob Chk 2</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Jun 30</td>
+    <td class="td-amt snow">$1,500.00</td>
+    <td><select class="status-sel" data-key="row-012" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Snowball → Citibank Extra</div><div class="td-meta">Priority #1 · Pays: $868.07</div></td>
+    <td class="td-stream">Rob Chk 2</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Jun 30</td>
+    <td class="td-amt snow">$868.07</td>
+    <td><select class="status-sel" data-key="row-013" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr dca"><td colspan="7">Income Check B (DCF) · Deposits Jul 9 ⚠ delayed</td></tr>
+  <tr>
+    <td><div class="td-name">Snowball → Citibank</div><div class="td-meta">Jun 16–30 period delayed 3 wks</div></td>
+    <td class="td-stream">Check B</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Jul 9</td>
+    <td class="td-amt snow">$400.00</td>
+    <td><select class="status-sel" data-key="row-014" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  </tbody>
+</table>
+</div>
+  <div style="background:var(--surface2);border-radius:12px;padding:14px;border:1px solid var(--border);margin-top:8px;">
+  <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:500;margin-bottom:8px;">
+    <span style="color:#e8edf5;">Monthly Debt Total</span>
+    <span style="color:var(--amber);font-family:'Fraunces',serif;font-size:16px;">$7,107.94</span>
+  </div>
+  <div style="font-size:10px;color:var(--muted);line-height:1.8;">
+    <div style="display:flex;justify-content:space-between;"><span>Minimums</span><span style="color:#e8edf5;">$3,665.01</span></div>
+    <div style="display:flex;justify-content:space-between;"><span>Snowball extra</span><span style="color:#a78bfa;">$3,442.93</span></div>
+    <div style="display:flex;justify-content:space-between;margin-top:6px;"><span style="color:#2dd4bf;">🎯 Citibank on track for Sep payoff</span><span></span></div>
+  </div>
+</div>
+  <div style="background:#1a1f2e; border-radius:8px; padding:10px 12px; margin-top:12px; font-size:10px; color:var(--muted); line-height:1.7; border:1px solid var(--border);">
+    <span style="color:var(--snow);">Legend:</span> Normal rows = minimum payments ·
+    <span style="color:#a78bfa;">Purple = extra snowball</span> ·
+    <span style="color:#2dd4bf;">Teal = payoff milestone / freed payment</span>
+  </div>
+</div>
+
+<!-- BY INCOME JULY -->
+<div id="tab-byincome-jul" class="tab-content">
+  <p style="font-size:11px; color:var(--muted); margin-bottom:12px;">July 2026 · Citibank under heavy attack. Bonus 3rd Miriam paycheck this month!</p>
+  <div style="background:#0d2020;border-radius:10px;padding:10px 14px;margin-bottom:12px;border:1px solid #1a3e2e;font-size:11px;color:#2dd4bf;">🎁 July has a <strong>3rd Miriam paycheck ($3,288.48)</strong> — consider directing entirely to Citibank or Passante.</div>
+  <div style="overflow-x:auto;">
+<table class="income-table">
+  <thead><tr>
+    <th style="min-width:130px;">Debt / Expense</th>
+    <th>Income Stream</th>
+    <th>Due Date</th>
+    <th>Send Date</th>
+    <th>Amount</th>
+    <th>Status</th>
+    <th style="min-width:110px;">Notes</th>
+  </tr></thead>
+  <tbody>
+  <tr class="stream-hdr buf"><td colspan="7">Beginning Cash · Early-month buffer</td></tr>
+  <tr>
+    <td><div class="td-name">GoodLeap HVAC</div><div class="td-meta">Debt #4 · Pays: $137.23</div></td>
+    <td class="td-stream">Beg. Cash</td>
+    <td class="td-date">Jul 1</td>
+    <td class="td-date">Jul 1</td>
+    <td class="td-amt">$137.23</td>
+    <td><select class="status-sel" data-key="row-015" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Wells Fargo CC</div><div class="td-meta">Debt #3 · Pays: $150.00</div></td>
+    <td class="td-stream">Beg. Cash</td>
+    <td class="td-date">Jul 2</td>
+    <td class="td-date">Jul 2</td>
+    <td class="td-amt">$150.00</td>
+    <td><select class="status-sel" data-key="row-016" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr mir"><td colspan="7">Miriam Check 1 · Payday Jul 3</td></tr>
+  <tr>
+    <td><div class="td-name">HELOC Minimum</div><div class="td-meta">Debt #6 · Pays: $2,463.40</div></td>
+    <td class="td-stream">Miriam Chk 1</td>
+    <td class="td-date">Due 8th</td>
+    <td class="td-date">By Jul 21</td>
+    <td class="td-amt">$2,463.40</td>
+    <td><select class="status-sel" data-key="row-017" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr dca"><td colspan="7">Income Check B (DCF) · Deposits Jul 9 ⚠ Jun 16–30 delay</td></tr>
+  <tr>
+    <td><div class="td-name">Snowball → Citibank</div><div class="td-meta">Carrying forward from June period</div></td>
+    <td class="td-stream">Check B</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Jul 9</td>
+    <td class="td-amt snow">$400.00</td>
+    <td><select class="status-sel" data-key="row-018" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr rob"><td colspan="7">Rob Check 1 · Payday Jul 15</td></tr>
+  <tr>
+    <td><div class="td-name">LoanDepot Mortgage</div><div class="td-meta">Due 1st · grace to 15th</div></td>
+    <td class="td-stream">Rob Chk 1</td>
+    <td class="td-date">Due 1st</td>
+    <td class="td-date">Jul 15</td>
+    <td class="td-amt">$3,505.91</td>
+    <td><select class="status-sel" data-key="row-019" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Citibank CC Min</div><div class="td-meta">Debt #1 · Pays: $277.49</div></td>
+    <td class="td-stream">Rob Chk 1</td>
+    <td class="td-date">Due 15th</td>
+    <td class="td-date">Jul 15</td>
+    <td class="td-amt">$277.49</td>
+    <td><select class="status-sel" data-key="row-020" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr mir"><td colspan="7">Miriam Check 2 · Payday Jul 17</td></tr>
+  <tr>
+    <td><div class="td-name">Passante</div><div class="td-meta">Debt #2 · Pays: $324.86</div></td>
+    <td class="td-stream">Miriam Chk 2</td>
+    <td class="td-date">Due 1st</td>
+    <td class="td-date">Jul 17</td>
+    <td class="td-amt">$324.86</td>
+    <td><select class="status-sel" data-key="row-021" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Snowball → Passante</div><div class="td-meta">Car Repairs redirect</div></td>
+    <td class="td-stream">Miriam Chk 2</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Jul 17</td>
+    <td class="td-amt snow">$150.00</td>
+    <td><select class="status-sel" data-key="row-022" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Snowball → Citibank</div><div class="td-meta">Home Maintenance redirect</div></td>
+    <td class="td-stream">Miriam Chk 2</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Jul 17</td>
+    <td class="td-amt snow">$200.00</td>
+    <td><select class="status-sel" data-key="row-023" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr dca"><td colspan="7">Income Check A (DCF) · Deposits Jul 24 ⚠ delayed</td></tr>
+  <tr>
+    <td><div class="td-name">NavyFed</div><div class="td-meta">Debt #5 · Pays: $536.89</div></td>
+    <td class="td-stream">Check A</td>
+    <td class="td-date">Due 13th</td>
+    <td class="td-date">Jul 24</td>
+    <td class="td-amt">$536.89</td>
+    <td><select class="status-sel" data-key="row-024" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Snowball → Passante</div><div class="td-meta">Priority #2 · Pays: $324.86</div></td>
+    <td class="td-stream">Check A</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Jul 24</td>
+    <td class="td-amt snow">$324.86</td>
+    <td><select class="status-sel" data-key="row-025" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr rob"><td colspan="7">Rob Check 2 · Payday Jul 31</td></tr>
+  <tr>
+    <td><div class="td-name">LightStream</div><div class="td-meta">Debt #7 · Pays: $1,589.75</div></td>
+    <td class="td-stream">Rob Chk 2</td>
+    <td class="td-date">By 10th</td>
+    <td class="td-date">Jul 31→Aug 10</td>
+    <td class="td-amt">$1,589.75</td>
+    <td><select class="status-sel" data-key="row-026" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Snowball → Wells Fargo</div><div class="td-meta">Priority #3 · Pays: $1,500.00</div></td>
+    <td class="td-stream">Rob Chk 2</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Jul 31</td>
+    <td class="td-amt snow">$1,500.00</td>
+    <td><select class="status-sel" data-key="row-027" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Snowball → Citibank Extra</div><div class="td-meta">Priority #1 · Pays: $868.07</div></td>
+    <td class="td-stream">Rob Chk 2</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Jul 31</td>
+    <td class="td-amt snow">$868.07</td>
+    <td><select class="status-sel" data-key="row-028" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr mir"><td colspan="7">Miriam Check 3 · Payday Jul 31 🎁 Bonus check!</td></tr>
+  <tr>
+    <td><div class="td-name">Extra snowball opportunity</div><div class="td-meta">3rd Miriam check — July only · direct to Citibank/Passante</div></td>
+    <td class="td-stream">Miriam Chk 3</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Jul 31</td>
+    <td class="td-amt snow">$3,288.48</td>
+    <td><select class="status-sel" data-key="row-029" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  </tbody>
+</table>
+</div>
+  <div style="background:var(--surface2);border-radius:12px;padding:14px;border:1px solid var(--border);margin-top:8px;">
+  <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:500;margin-bottom:8px;">
+    <span style="color:#e8edf5;">Monthly Debt Total</span>
+    <span style="color:var(--amber);font-family:'Fraunces',serif;font-size:16px;">$7,107.94</span>
+  </div>
+  <div style="font-size:10px;color:var(--muted);line-height:1.8;">
+    <div style="display:flex;justify-content:space-between;"><span>Minimums</span><span style="color:#e8edf5;">$3,665.01</span></div>
+    <div style="display:flex;justify-content:space-between;"><span>Snowball extra</span><span style="color:#a78bfa;">$3,442.93</span></div>
+    <div style="display:flex;justify-content:space-between;margin-top:6px;"><span style="color:#2dd4bf;">🎁 Bonus Miriam check: +$3,288.48 available</span><span></span></div>
+  </div>
+</div>
+  <div style="background:#1a1f2e; border-radius:8px; padding:10px 12px; margin-top:12px; font-size:10px; color:var(--muted); line-height:1.7; border:1px solid var(--border);">
+    <span style="color:var(--snow);">Legend:</span> Normal rows = minimum payments ·
+    <span style="color:#a78bfa;">Purple = extra snowball</span> ·
+    <span style="color:#2dd4bf;">Teal = payoff milestone / freed payment</span>
+  </div>
+</div>
+
+<!-- BY INCOME AUGUST -->
+<div id="tab-byincome-aug" class="tab-content">
+  <p style="font-size:11px; color:var(--muted); margin-bottom:12px;">August 2026 · Citibank final months. LightStream approaching Oct payoff.</p>
+  
+  <div style="overflow-x:auto;">
+<table class="income-table">
+  <thead><tr>
+    <th style="min-width:130px;">Debt / Expense</th>
+    <th>Income Stream</th>
+    <th>Due Date</th>
+    <th>Send Date</th>
+    <th>Amount</th>
+    <th>Status</th>
+    <th style="min-width:110px;">Notes</th>
+  </tr></thead>
+  <tbody>
+  <tr class="stream-hdr buf"><td colspan="7">Beginning Cash · Early-month buffer</td></tr>
+  <tr>
+    <td><div class="td-name">GoodLeap HVAC</div><div class="td-meta">Debt #4 · Pays: $137.23</div></td>
+    <td class="td-stream">Beg. Cash</td>
+    <td class="td-date">Aug 1</td>
+    <td class="td-date">Aug 1</td>
+    <td class="td-amt">$137.23</td>
+    <td><select class="status-sel" data-key="row-030" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Wells Fargo CC</div><div class="td-meta">Debt #3 · Pays: $150.00</div></td>
+    <td class="td-stream">Beg. Cash</td>
+    <td class="td-date">Aug 2</td>
+    <td class="td-date">Aug 2</td>
+    <td class="td-amt">$150.00</td>
+    <td><select class="status-sel" data-key="row-031" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr dca"><td colspan="7">Income Check B (DCF) · Deposits Aug 14 ⚠ delayed</td></tr>
+  <tr>
+    <td><div class="td-name">Snowball → Citibank</div><div class="td-meta">Carrying forward allocation</div></td>
+    <td class="td-stream">Check B</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Aug 14</td>
+    <td class="td-amt snow">$400.00</td>
+    <td><select class="status-sel" data-key="row-032" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr mir"><td colspan="7">Miriam Check 1 · Payday Aug 14</td></tr>
+  <tr>
+    <td><div class="td-name">HELOC Minimum</div><div class="td-meta">Debt #6 · Pays: $2,463.40</div></td>
+    <td class="td-stream">Miriam Chk 1</td>
+    <td class="td-date">Due 8th</td>
+    <td class="td-date">By Aug 21</td>
+    <td class="td-amt">$2,463.40</td>
+    <td><select class="status-sel" data-key="row-033" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr rob"><td colspan="7">Rob Check 1 · Payday Aug 14</td></tr>
+  <tr>
+    <td><div class="td-name">LoanDepot Mortgage</div><div class="td-meta">Due 1st · grace to 15th</div></td>
+    <td class="td-stream">Rob Chk 1</td>
+    <td class="td-date">Due 1st</td>
+    <td class="td-date">Aug 14</td>
+    <td class="td-amt">$3,505.91</td>
+    <td><select class="status-sel" data-key="row-034" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Citibank CC Min</div><div class="td-meta">Debt #1 · Pays: $277.49</div></td>
+    <td class="td-stream">Rob Chk 1</td>
+    <td class="td-date">Due 15th</td>
+    <td class="td-date">Aug 14</td>
+    <td class="td-amt">$277.49</td>
+    <td><select class="status-sel" data-key="row-035" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr dca"><td colspan="7">Income Check A (DCF) · Deposits Aug 21 [+ Quarterly Clothing Aug 24]</td></tr>
+  <tr>
+    <td><div class="td-name">NavyFed</div><div class="td-meta">Debt #5 · Pays: $536.89</div></td>
+    <td class="td-stream">Check A</td>
+    <td class="td-date">Due 13th</td>
+    <td class="td-date">Aug 21</td>
+    <td class="td-amt">$536.89</td>
+    <td><select class="status-sel" data-key="row-036" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Snowball → Passante</div><div class="td-meta">Priority #2 · Pays: $324.86</div></td>
+    <td class="td-stream">Check A</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Aug 21</td>
+    <td class="td-amt snow">$324.86</td>
+    <td><select class="status-sel" data-key="row-037" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr mir"><td colspan="7">Miriam Check 2 · Payday Aug 28</td></tr>
+  <tr>
+    <td><div class="td-name">Passante</div><div class="td-meta">Debt #2 · Pays: $324.86</div></td>
+    <td class="td-stream">Miriam Chk 2</td>
+    <td class="td-date">Due 1st</td>
+    <td class="td-date">Aug 28</td>
+    <td class="td-amt">$324.86</td>
+    <td><select class="status-sel" data-key="row-038" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Snowball → Passante</div><div class="td-meta">Car Repairs redirect</div></td>
+    <td class="td-stream">Miriam Chk 2</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Aug 28</td>
+    <td class="td-amt snow">$150.00</td>
+    <td><select class="status-sel" data-key="row-039" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Snowball → Citibank</div><div class="td-meta">Home Maintenance redirect</div></td>
+    <td class="td-stream">Miriam Chk 2</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Aug 28</td>
+    <td class="td-amt snow">$200.00</td>
+    <td><select class="status-sel" data-key="row-040" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr rob"><td colspan="7">Rob Check 2 · Payday Aug 31</td></tr>
+  <tr>
+    <td><div class="td-name">LightStream</div><div class="td-meta">Debt #7 · Pays: $1,589.75</div></td>
+    <td class="td-stream">Rob Chk 2</td>
+    <td class="td-date">By 10th</td>
+    <td class="td-date">Aug 31→Sep 10</td>
+    <td class="td-amt">$1,589.75</td>
+    <td><select class="status-sel" data-key="row-041" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Snowball → Wells Fargo</div><div class="td-meta">Priority #3 · Pays: $1,500.00</div></td>
+    <td class="td-stream">Rob Chk 2</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Aug 31</td>
+    <td class="td-amt snow">$1,500.00</td>
+    <td><select class="status-sel" data-key="row-042" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Snowball → Citibank Extra</div><div class="td-meta">Priority #1 · Pays: $868.07</div></td>
+    <td class="td-stream">Rob Chk 2</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Aug 31</td>
+    <td class="td-amt snow">$868.07</td>
+    <td><select class="status-sel" data-key="row-043" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  </tbody>
+</table>
+</div>
+  <div style="background:var(--surface2);border-radius:12px;padding:14px;border:1px solid var(--border);margin-top:8px;">
+  <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:500;margin-bottom:8px;">
+    <span style="color:#e8edf5;">Monthly Debt Total</span>
+    <span style="color:var(--amber);font-family:'Fraunces',serif;font-size:16px;">$7,107.94</span>
+  </div>
+  <div style="font-size:10px;color:var(--muted);line-height:1.8;">
+    <div style="display:flex;justify-content:space-between;"><span>Minimums</span><span style="color:#e8edf5;">$3,665.01</span></div>
+    <div style="display:flex;justify-content:space-between;"><span>Snowball extra</span><span style="color:#a78bfa;">$3,442.93</span></div>
+    <div style="display:flex;justify-content:space-between;margin-top:6px;"><span style="color:#2dd4bf;">🎯 Citibank final push — Sep payoff incoming</span><span></span></div>
+  </div>
+</div>
+  <div style="background:#1a1f2e; border-radius:8px; padding:10px 12px; margin-top:12px; font-size:10px; color:var(--muted); line-height:1.7; border:1px solid var(--border);">
+    <span style="color:var(--snow);">Legend:</span> Normal rows = minimum payments ·
+    <span style="color:#a78bfa;">Purple = extra snowball</span> ·
+    <span style="color:#2dd4bf;">Teal = payoff milestone / freed payment</span>
+  </div>
+</div>
+
+<!-- BY INCOME SEPTEMBER -->
+<div id="tab-byincome-sep" class="tab-content">
+  <p style="font-size:11px; color:var(--muted); margin-bottom:12px;">September 2026 · Citibank &amp; Passante projected to PAY OFF this month.</p>
+  <div style="background:#0d2020;border-radius:10px;padding:12px 14px;margin-bottom:12px;border:1px solid #1a3e2e;font-size:11px;color:#2dd4bf;line-height:1.7;">🎯 <strong>Sep payoff targets:</strong> Citibank CC (frees ~$2,245/mo) + Passante (frees ~$999/mo) → both roll to Wells Fargo</div>
+  <div style="overflow-x:auto;">
+<table class="income-table">
+  <thead><tr>
+    <th style="min-width:130px;">Debt / Expense</th>
+    <th>Income Stream</th>
+    <th>Due Date</th>
+    <th>Send Date</th>
+    <th>Amount</th>
+    <th>Status</th>
+    <th style="min-width:110px;">Notes</th>
+  </tr></thead>
+  <tbody>
+  <tr class="stream-hdr buf"><td colspan="7">Beginning Cash · Early-month buffer</td></tr>
+  <tr>
+    <td><div class="td-name">GoodLeap HVAC</div><div class="td-meta">Debt #4 · Pays: $137.23</div></td>
+    <td class="td-stream">Beg. Cash</td>
+    <td class="td-date">Sep 1</td>
+    <td class="td-date">Sep 1</td>
+    <td class="td-amt">$137.23</td>
+    <td><select class="status-sel" data-key="row-044" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Wells Fargo CC</div><div class="td-meta">Debt #3 · Pays: $150.00</div></td>
+    <td class="td-stream">Beg. Cash</td>
+    <td class="td-date">Sep 2</td>
+    <td class="td-date">Sep 2</td>
+    <td class="td-amt">$150.00</td>
+    <td><select class="status-sel" data-key="row-045" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr dca"><td colspan="7">Income Check B (DCF) · Deposits Sep 4</td></tr>
+  <tr>
+    <td><div class="td-name">Snowball → Citibank (final)</div><div class="td-meta">Last months before payoff</div></td>
+    <td class="td-stream">Check B</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Sep 4</td>
+    <td class="td-amt snow">$400.00</td>
+    <td><select class="status-sel" data-key="row-046" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr mir"><td colspan="7">Miriam Check 1 · Payday Sep 11</td></tr>
+  <tr>
+    <td><div class="td-name">HELOC Minimum</div><div class="td-meta">Debt #6 · Pays: $2,463.40</div></td>
+    <td class="td-stream">Miriam Chk 1</td>
+    <td class="td-date">Due 8th</td>
+    <td class="td-date">By Sep 21</td>
+    <td class="td-amt">$2,463.40</td>
+    <td><select class="status-sel" data-key="row-047" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr rob"><td colspan="7">Rob Check 1 · Payday Sep 15</td></tr>
+  <tr>
+    <td><div class="td-name">LoanDepot Mortgage</div><div class="td-meta">Due 1st · grace to 15th</div></td>
+    <td class="td-stream">Rob Chk 1</td>
+    <td class="td-date">Due 1st</td>
+    <td class="td-date">Sep 15</td>
+    <td class="td-amt">$3,505.91</td>
+    <td><select class="status-sel" data-key="row-048" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Citibank CC — FINAL PMT 🎉</div><div class="td-meta">Pays: $277.49 · EST. PAYOFF THIS MONTH</div></td>
+    <td class="td-stream">Rob Chk 1</td>
+    <td class="td-date">Due 15th</td>
+    <td class="td-date">Sep 15</td>
+    <td class="td-amt">$277.49</td>
+    <td><select class="status-sel" data-key="row-049" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr dca"><td colspan="7">Income Check A (DCF) · Deposits Sep 18</td></tr>
+  <tr>
+    <td><div class="td-name">NavyFed</div><div class="td-meta">Debt #5 · Pays: $536.89</div></td>
+    <td class="td-stream">Check A</td>
+    <td class="td-date">Due 13th</td>
+    <td class="td-date">Sep 18</td>
+    <td class="td-amt">$536.89</td>
+    <td><select class="status-sel" data-key="row-050" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Snowball → Passante (final)</div><div class="td-meta">Priority #2 · est. payoff Sep</div></td>
+    <td class="td-stream">Check A</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Sep 18</td>
+    <td class="td-amt snow">$324.86</td>
+    <td><select class="status-sel" data-key="row-051" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr mir"><td colspan="7">Miriam Check 2 · Payday Sep 25</td></tr>
+  <tr>
+    <td><div class="td-name">Passante — FINAL PMT 🎉</div><div class="td-meta">Pays: $324.86 · EST. PAYOFF THIS MONTH</div></td>
+    <td class="td-stream">Miriam Chk 2</td>
+    <td class="td-date">Due 1st</td>
+    <td class="td-date">Sep 25</td>
+    <td class="td-amt">$324.86</td>
+    <td><select class="status-sel" data-key="row-052" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Snowball → Passante</div><div class="td-meta">Car Repairs redirect · last month</div></td>
+    <td class="td-stream">Miriam Chk 2</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Sep 25</td>
+    <td class="td-amt snow">$150.00</td>
+    <td><select class="status-sel" data-key="row-053" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Snowball → Wells Fargo</div><div class="td-meta">Home Maintenance → now targets WF</div></td>
+    <td class="td-stream">Miriam Chk 2</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Sep 25</td>
+    <td class="td-amt snow">$200.00</td>
+    <td><select class="status-sel" data-key="row-054" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr class="stream-hdr rob"><td colspan="7">Rob Check 2 · Payday Sep 30</td></tr>
+  <tr>
+    <td><div class="td-name">LightStream</div><div class="td-meta">Debt #7 · Pays: $1,589.75</div></td>
+    <td class="td-stream">Rob Chk 2</td>
+    <td class="td-date">By 10th</td>
+    <td class="td-date">Sep 30→Oct 10</td>
+    <td class="td-amt">$1,589.75</td>
+    <td><select class="status-sel" data-key="row-055" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Snowball → Wells Fargo</div><div class="td-meta">Priority #3 · Pays: $1,500.00</div></td>
+    <td class="td-stream">Rob Chk 2</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Sep 30</td>
+    <td class="td-amt snow">$1,500.00</td>
+    <td><select class="status-sel" data-key="row-056" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  <tr>
+    <td><div class="td-name">Freed Citibank → Wells Fargo 🎉</div><div class="td-meta">~$2,245/mo unlocked post-Citibank payoff</div></td>
+    <td class="td-stream">Rob Chk 2</td>
+    <td class="td-date">—</td>
+    <td class="td-date">Sep 30</td>
+    <td class="td-amt snow">$~2,245.00</td>
+    <td><select class="status-sel" data-key="row-057" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+    <td><textarea class="notes-inp" data-key="note-row-000" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+  </tr>
+  </tbody>
+</table>
+</div>
+  <div style="background:var(--surface2);border-radius:12px;padding:14px;border:1px solid var(--border);margin-top:8px;">
+  <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:500;margin-bottom:8px;">
+    <span style="color:#e8edf5;">Monthly Debt Total</span>
+    <span style="color:var(--amber);font-family:'Fraunces',serif;font-size:16px;">$7,107.94</span>
+  </div>
+  <div style="font-size:10px;color:var(--muted);line-height:1.8;">
+    <div style="display:flex;justify-content:space-between;"><span>Minimums</span><span style="color:#e8edf5;">$3,665.01</span></div>
+    <div style="display:flex;justify-content:space-between;"><span>Snowball extra</span><span style="color:#a78bfa;">$3,442.93</span></div>
+    <div style="display:flex;justify-content:space-between;margin-top:6px;"><span style="color:#2dd4bf;">🎉 Citibank + Passante pay off → +$3,244/mo freed</span><span></span></div>
+  </div>
+</div>
+  <div style="background:#1a1f2e; border-radius:8px; padding:10px 12px; margin-top:12px; font-size:10px; color:var(--muted); line-height:1.7; border:1px solid var(--border);">
+    <span style="color:var(--snow);">Legend:</span> Normal rows = minimum payments ·
+    <span style="color:#a78bfa;">Purple = extra snowball</span> ·
+    <span style="color:#2dd4bf;">Teal = payoff milestone / freed payment</span>
+  </div>
+</div>
+
+<!-- LIVING EXPENSES TAB -->
+<div id="tab-living" class="tab-content">
+  <p style="font-size:11px; color:var(--muted); margin-bottom:12px;">All living &amp; variable expenses — which check pays, when it's due, and when to send.</p>
+
+  <div style="overflow-x:auto;">
+  <table class="living-table">
+    <thead><tr>
+      <th style="min-width:130px;">Expense</th>
+      <th>Income Stream</th>
+      <th>Payday</th>
+      <th>Due / Timing</th>
+      <th>Send Date</th>
+      <th>Amount</th>
+    </tr></thead>
+    <tbody>
+      <tr class="living-cat-hdr"><td colspan="6">🛒 Groceries</td></tr>
+      <tr><td class="td-name">Groceries — 1st half</td><td class="td-stream">Miriam Chk 1</td><td class="td-date">8th</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$300.00</td></tr>
+      <tr><td class="td-name">Groceries — 2nd half</td><td class="td-stream">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$300.00</td></tr>
+      <tr style="background:var(--surface2);"><td colspan="5" style="font-size:10px;color:var(--muted);padding:6px;">Monthly total</td><td class="td-amt" style="padding:6px;font-weight:500;">$600.00</td></tr>
+
+      <tr class="living-cat-hdr"><td colspan="6">🍽️ Dining Out <span style="font-size:9px;color:var(--amber);">(cap: $400/mo)</span></td></tr>
+      <tr><td class="td-name">Dining Out — 1st half</td><td class="td-stream">Miriam Chk 1</td><td class="td-date">8th</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$200.00</td></tr>
+      <tr><td class="td-name">Dining Out — 2nd half</td><td class="td-stream">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$200.00</td></tr>
+      <tr style="background:var(--surface2);"><td colspan="5" style="font-size:10px;color:var(--muted);padding:6px;">Monthly total (under $400 cap ✓)</td><td class="td-amt" style="padding:6px;font-weight:500;color:var(--green);">$400.00</td></tr>
+
+      <tr class="living-cat-hdr"><td colspan="6">⛽ Gas</td></tr>
+      <tr><td class="td-name">Gas — 1st half</td><td class="td-stream">Miriam Chk 1</td><td class="td-date">8th</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$125.00</td></tr>
+      <tr><td class="td-name">Gas — 2nd half</td><td class="td-stream">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$125.00</td></tr>
+      <tr style="background:var(--surface2);"><td colspan="5" style="font-size:10px;color:var(--muted);padding:6px;">Monthly total</td><td class="td-amt" style="padding:6px;font-weight:500;">$250.00</td></tr>
+
+      <tr class="living-cat-hdr"><td colspan="6">🥗 Work Lunch</td></tr>
+      <tr><td class="td-name">Work Lunch — 1st half</td><td class="td-stream">Miriam Chk 1</td><td class="td-date">8th</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$80.00</td></tr>
+      <tr><td class="td-name">Work Lunch — 2nd half</td><td class="td-stream">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$80.00</td></tr>
+      <tr style="background:var(--surface2);"><td colspan="5" style="font-size:10px;color:var(--muted);padding:6px;">Monthly total</td><td class="td-amt" style="padding:6px;font-weight:500;">$160.00</td></tr>
+
+      <tr class="living-cat-hdr"><td colspan="6">✂️ Personal Care</td></tr>
+      <tr><td class="td-name">Lolita for Hair</td><td class="td-stream">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Due 4th</td><td class="td-date">On payday</td><td class="td-amt">$100.00</td></tr>
+
+      <tr class="living-cat-hdr"><td colspan="6">🎡 Entertainment / Family</td></tr>
+      <tr><td class="td-name">Kings Dominion</td><td class="td-stream">Beg. Cash</td><td class="td-date">1st of mo</td><td class="td-date">Due 2nd</td><td class="td-date">Jun 2</td><td class="td-amt">$73.00</td></tr>
+      <tr><td class="td-name">Urban Air</td><td class="td-stream">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Due 26th</td><td class="td-date">On payday</td><td class="td-amt">$43.96</td></tr>
+
+      <tr class="living-cat-hdr"><td colspan="6">💊 Health &amp; Wellness</td></tr>
+      <tr><td class="td-name">Meds / Supplements — 1st half</td><td class="td-stream">Miriam Chk 1</td><td class="td-date">8th</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$319.00</td></tr>
+      <tr><td class="td-name">Meds / Supplements — 2nd half</td><td class="td-stream">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$319.00</td></tr>
+      <tr><td class="td-name">Therapy — 1st half</td><td class="td-stream">Miriam Chk 1</td><td class="td-date">8th</td><td class="td-date">Mondays</td><td class="td-date">On payday</td><td class="td-amt">$100.00</td></tr>
+      <tr><td class="td-name">Therapy — 2nd half</td><td class="td-stream">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Mondays</td><td class="td-date">On payday</td><td class="td-amt">$100.00</td></tr>
+      <tr style="background:var(--surface2);"><td colspan="5" style="font-size:10px;color:var(--muted);padding:6px;">Health monthly total</td><td class="td-amt" style="padding:6px;font-weight:500;">$838.00</td></tr>
+
+      <tr class="living-cat-hdr"><td colspan="6">🎯 True Expenses (Sinking Funds)</td></tr>
+      <tr><td class="td-name">Car Repairs fund</td><td class="td-stream">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Monthly</td><td class="td-date">On payday</td><td class="td-amt">$150.00</td></tr>
+      <tr><td class="td-name">Home Maintenance fund</td><td class="td-stream">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Monthly</td><td class="td-date">On payday</td><td class="td-amt">$200.00</td></tr>
+      <tr><td class="td-name">Gifts / Holidays fund</td><td class="td-stream">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Monthly</td><td class="td-date">On payday</td><td class="td-amt">$150.00</td></tr>
+      <tr><td class="td-name">Medical Overflow fund</td><td class="td-stream">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Monthly</td><td class="td-date">On payday</td><td class="td-amt">$100.00</td></tr>
+      <tr style="background:var(--surface2);"><td colspan="5" style="font-size:10px;color:var(--muted);padding:6px;">True Expenses monthly total</td><td class="td-amt" style="padding:6px;font-weight:500;">$600.00</td></tr>
+
+      <tr style="background:var(--surface); border-top:2px solid var(--border);">
+        <td colspan="5" style="font-size:12px;font-weight:500;padding:12px 6px;">Total Monthly Living</td>
+        <td style="font-size:14px;font-weight:600;color:var(--amber);padding:12px 6px;font-family:'Fraunces',serif;">$3,064.96</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div style="background:#1a1a1a;border-radius:10px;padding:12px 14px;margin-top:12px;font-size:11px;color:var(--muted);line-height:1.7;border:1px solid var(--border);">
+    <span style="color:var(--snow);">📌 Note:</span> All living expenses are funded from <strong style="color:#60a5fa;">Miriam's checks</strong> (both 1st and 2nd). Rob's checks are dedicated to mortgage, debt minimums, and the primary snowball attack. Sinking funds (Car Repairs, Home Maintenance) are currently redirected monthly to the debt snowball.
+  </div>
+</div>
+
+<style>
+.pcf-block { background:var(--surface); border-radius:14px; padding:14px; margin-bottom:14px; border:1px solid var(--border); }
+.pcf-hdr { border-left:4px solid var(--snow); padding-left:10px; margin-bottom:12px; }
+.pcf-stream-label { font-size:11px; text-transform:uppercase; letter-spacing:0.1em; font-weight:500; margin-bottom:3px; }
+.pcf-payday { font-size:11px; color:var(--muted); }
+.pco-item { display:flex; justify-content:space-between; align-items:flex-start; padding:9px 0; border-bottom:1px solid #141e2e; gap:8px; }
+.pco-item.highlight { }
+.pco-left { flex:1; min-width:0; }
+.pco-name { font-size:12px; color:var(--text); }
+.pco-meta { font-size:10px; color:var(--muted); margin-top:2px; }
+.pco-right { text-align:right; flex-shrink:0; }
+.pco-amt { font-size:13px; font-weight:500; color:var(--text); }
+.pco-date { font-size:10px; color:var(--snow); margin-top:2px; }
+.pco-total { display:flex; justify-content:space-between; padding-top:10px; margin-top:2px; font-size:12px; font-weight:500; color:var(--text); border-top:1px solid var(--border); }
+.pco-info { font-size:10px; color:var(--amber); background:#1e1800; border-radius:6px; padding:6px 8px; margin:4px 0; }
+
+/* Status + Notes table styles */
+.income-table { width:100%; border-collapse:collapse; font-size:11px; }
+.income-table th {
+  background:var(--surface2); color:var(--muted); font-size:9px;
+  text-transform:uppercase; letter-spacing:0.08em; padding:8px 6px;
+  text-align:left; border-bottom:1px solid var(--border); position:sticky; top:0;
+}
+.income-table td { padding:9px 6px; border-bottom:1px solid #141e2e; vertical-align:middle; }
+.income-table tr:last-child td { border-bottom:none; }
+.income-table .td-name { color:var(--text); font-size:11px; line-height:1.4; }
+.income-table .td-meta { color:var(--muted); font-size:10px; margin-top:2px; }
+.income-table .td-amt { color:var(--text); white-space:nowrap; }
+.income-table .td-amt.snow { color:#a78bfa; }
+.income-table .td-date { color:var(--snow); font-size:10px; white-space:nowrap; }
+.income-table .td-stream { color:var(--muted); font-size:10px; line-height:1.4; }
+.status-sel {
+  background:#0d1525; color:var(--text); border:1px solid var(--border);
+  border-radius:6px; padding:4px 6px; font-size:11px; font-family:'DM Mono',monospace;
+  width:64px; cursor:pointer; -webkit-appearance:none; text-align:center;
+}
+.status-sel.s  { border-color:#fbbf24; color:#fbbf24; background:#1e1800; }
+.status-sel.d  { border-color:#34d399; color:#34d399; background:#0d2010; }
+.status-sel.ch { border-color:#f87171; color:#f87171; background:#1e0d0d; }
+.notes-inp {
+  background:#0d1525; color:var(--text); border:1px solid var(--border);
+  border-radius:6px; padding:4px 7px; font-size:11px; font-family:'DM Mono',monospace;
+  width:100%; min-width:80px; resize:none; height:34px;
+}
+.notes-inp:focus { outline:none; border-color:var(--snow); }
+.stream-hdr {
+  background:var(--surface2); border-left:3px solid var(--snow);
+  padding:8px 10px; margin:14px 0 0;
+}
+.stream-hdr td { color:var(--snow); font-size:10px; text-transform:uppercase;
+  letter-spacing:0.1em; font-weight:500; padding:0 !important; border:none !important; }
+.stream-hdr.rob td { border-left-color:#fbbf24 !important; }
+.stream-hdr.mir td { border-left-color:#60a5fa !important; }
+.stream-hdr.dca td { border-left-color:#34d399 !important; }
+.stream-hdr.buf td { border-left-color:#6b7a99 !important; }
+
+/* Living tab */
+.living-table { width:100%; border-collapse:collapse; font-size:11px; }
+.living-table th {
+  background:var(--surface2); color:var(--muted); font-size:9px;
+  text-transform:uppercase; letter-spacing:0.08em; padding:8px 6px;
+  text-align:left; border-bottom:1px solid var(--border);
+}
+.living-table td { padding:9px 6px; border-bottom:1px solid #141e2e; vertical-align:middle; }
+.living-table tr:last-child td { border-bottom:none; }
+.living-cat-hdr td {
+  background:var(--surface2); color:var(--teal); font-size:9px;
+  text-transform:uppercase; letter-spacing:0.08em; padding:6px 6px 4px;
+  border-bottom:1px solid var(--border); font-weight:500;
+}
+
+/* App name selector */
+.name-card {
+  background:var(--surface); border:1px solid var(--border); border-radius:12px;
+  padding:12px 14px; margin-bottom:10px; cursor:pointer; transition:all 0.2s;
+  display:flex; align-items:center; gap:12px;
+}
+.name-card:hover, .name-card.selected {
+  border-color:var(--snow); background:#0d1a28;
+}
+.name-card .nc-icon { font-size:24px; width:36px; text-align:center; flex-shrink:0; }
+.name-card .nc-name { font-family:'Fraunces',serif; font-size:15px; font-weight:600; color:var(--text); }
+.name-card .nc-desc { font-size:10px; color:var(--muted); margin-top:2px; }
+.icon-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+.icon-opt {
+  background:var(--surface); border:1px solid var(--border); border-radius:14px;
+  padding:16px 10px; text-align:center; cursor:pointer; transition:all 0.2s;
+}
+.icon-opt:hover, .icon-opt.selected { border-color:var(--snow); background:#0d1a28; }
+.icon-opt .io-svg { margin-bottom:8px; }
+.icon-opt .io-label { font-size:11px; color:var(--muted); }
+.sel-confirm { display:none; background:#0d2020; border-radius:8px; padding:10px 14px;
+  color:#2dd4bf; font-size:11px; margin-top:10px; text-align:center; }
+
+</style>
+
+<script>
+// ── SnowPath · Supabase Sync ──────────────────────────────────────────────
+const SUPA_URL = 'https://ywbzzncfalpjevrxserj.supabase.co';
+const SUPA_KEY = 'sb_publishable__GwcwVGKRMelHWgsHSqrxQ_v2wDTjm6';
+
+// Low-level REST helper
+async function supaFetch(method, body) {
+  const url = SUPA_URL + '/rest/v1/snowpath_data';
+  const opts = {
+    method,
+    headers: {
+      'apikey': SUPA_KEY,
+      'Authorization': 'Bearer ' + SUPA_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': method === 'POST' ? 'resolution=merge-duplicates,return=minimal' : 'return=minimal'
+    }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(url + (method === 'GET' ? '?select=id,value' : ''), opts);
+  if (method === 'GET') return res.json();
+  return res.ok;
+}
+
+// ── Save a single key/value to Supabase ──────────────────────────────────
+async function saveToCloud(key, value) {
+  await supaFetch('POST', [{ id: key, value: value, updated_at: new Date().toISOString() }]);
+}
+
+// ── Load all saved data on page load and restore UI ──────────────────────
+async function loadFromCloud() {
+  showSyncBadge('syncing');
+  try {
+    const rows = await supaFetch('GET');
+    if (!Array.isArray(rows)) { showSyncBadge('error'); return; }
+    rows.forEach(row => {
+      // Status selects
+      const sel = document.querySelector(`select[data-key="${row.id}"]`);
+      if (sel) {
+        sel.value = row.value;
+        setSel(sel);
+      }
+      // Notes textareas
+      const ta = document.querySelector(`textarea[data-key="${row.id}"]`);
+      if (ta) {
+        ta.value = row.value;
+        autoResize(ta);
+      }
+    });
+    showSyncBadge('ok');
+  } catch(e) {
+    showSyncBadge('error');
+  }
+}
+
+// ── Debounce helper ───────────────────────────────────────────────────────
+const debounceTimers = {};
+function debounce(key, fn, delay=800) {
+  clearTimeout(debounceTimers[key]);
+  debounceTimers[key] = setTimeout(fn, delay);
+}
+
+// ── Status select changed ─────────────────────────────────────────────────
+function setSel(el) {
+  el.className = 'status-sel';
+  if (el.value === 'S') el.classList.add('s');
+  else if (el.value === 'D') el.classList.add('d');
+  else if (el.value === 'CH') el.classList.add('ch');
+  // Save to cloud if triggered by user (has data-key)
+  if (el.dataset.key && el.value !== undefined) {
+    showSyncBadge('syncing');
+    debounce(el.dataset.key, async () => {
+      const ok = await saveToCloud(el.dataset.key, el.value);
+      showSyncBadge(ok ? 'ok' : 'error');
+    }, 400);
+  }
+}
+
+// ── Notes textarea changed ────────────────────────────────────────────────
+function saveNote(el) {
+  autoResize(el);
+  if (!el.dataset.key) return;
+  showSyncBadge('syncing');
+  debounce(el.dataset.key, async () => {
+    const ok = await saveToCloud(el.dataset.key, el.value);
+    showSyncBadge(ok ? 'ok' : 'error');
+  }, 900);
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.max(34, el.scrollHeight) + 'px';
+}
+
+// ── Sync status badge ─────────────────────────────────────────────────────
+function showSyncBadge(state) {
+  const b = document.getElementById('sync-badge');
+  if (!b) return;
+  const states = {
+    syncing: { text: '⟳ syncing…', color: '#fbbf24' },
+    ok:      { text: '☁ synced',   color: '#34d399' },
+    error:   { text: '✕ sync err', color: '#f87171' }
+  };
+  const s = states[state] || states.ok;
+  b.textContent = s.text;
+  b.style.color = s.color;
+  b.style.opacity = '1';
+  if (state === 'ok') setTimeout(() => { b.style.opacity = '0.4'; }, 2500);
+}
+
+// ── Tab switching ─────────────────────────────────────────────────────────
+function showTab(name) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  loadFromCloud();
+  // Re-sync when tab becomes visible again (phone switching apps, etc.)
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) loadFromCloud();
+  });
+});
+</script>
+
+<!-- Sync status badge -->
+<div id="sync-badge" style="
+  position: fixed; bottom: 16px; right: 16px;
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: #34d399; opacity: 0.4;
+  transition: opacity 0.6s;
+  pointer-events: none;
+  z-index: 9999;
+  letter-spacing: 0.05em;
+">☁ synced</div>
+
+</body>
+</html>
