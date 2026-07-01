@@ -801,15 +801,13 @@
     </tbody>
   </table>
   </div>
-  <div style="background:var(--surface2);border-radius:12px;padding:14px;border:1px solid var(--border);margin-top:8px;">
+  <div style="background:var(--surface2);border-radius:12px;padding:14px;border:1px solid var(--border);margin-top:8px;" id="summary-jun">
     <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:500;margin-bottom:8px;">
-      <span style="color:#e8edf5;">Monthly Debt Total</span>
-      <span style="color:var(--amber);font-family:'Fraunces',serif;font-size:16px;">$7,107.94</span>
+      <span style="color:#e8edf5;">Monthly Total</span>
+      <span id="total-jun" style="color:var(--amber);font-family:'Fraunces',serif;font-size:16px;">calculating…</span>
     </div>
     <div style="font-size:10px;color:var(--muted);line-height:1.8;">
-      <div style="display:flex;justify-content:space-between;"><span>Minimums</span><span style="color:#e8edf5;">$3,665.01</span></div>
-      <div style="display:flex;justify-content:space-between;"><span>Snowball extra</span><span style="color:#a78bfa;">$3,442.93</span></div>
-      <div style="display:flex;justify-content:space-between;margin-top:6px;"><span style="color:#2dd4bf;">🎯 Citibank on track for Sep payoff</span><span></span></div>
+      <div style="display:flex;justify-content:space-between;margin-top:4px;"><span style="color:#2dd4bf;">🎯 All snowball on Citibank · 27.99% APR</span></div>
     </div>
   </div>
   <div style="background:#1a1f2e;border-radius:8px;padding:10px 12px;margin-top:12px;font-size:10px;color:var(--muted);line-height:1.7;border:1px solid var(--border);">
@@ -852,6 +850,13 @@
       <td><select class="status-sel" data-key="jul-003" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
       <td><textarea class="notes-inp" data-key="note-jul-003" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
     </tr>
+    <tr class="mir-row">
+      <td><div class="td-name">Z Med</div><div class="td-meta">Every 4 wks · due Jul 2 · cycle 1 of 8</div></td>
+      <td class="td-stream" style="color:var(--mir-color);">Miriam Chk 1</td><td class="td-date">Due Jul 2</td><td class="td-date">Jul 3</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$325.00" data-key="amt-jul-zmed-1" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="jul-zmed-1" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-jul-zmed-1" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+    </tr>
 
     <tr class="stream-hdr dca"><td colspan="7">Income Check B (DCF) · Deposits Jul 9 ⚠ Jun 16–30 delay</td></tr>
     <tr class="snowball-row dcf-row">
@@ -885,6 +890,13 @@
       <td class="td-amt"><input class="amt-input" type="text" value="$324.86" data-key="amt-jul-pass-m2" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
       <td><select class="status-sel" data-key="jul-007" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
       <td><textarea class="notes-inp" data-key="note-jul-007" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="mir-row">
+      <td><div class="td-name">Z Med</div><div class="td-meta">Every 4 wks · due Jul 30 · paid early · cycle 2 of 8</div></td>
+      <td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">Due Jul 30</td><td class="td-date">Jul 17 (early)</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$325.00" data-key="amt-jul-zmed-2" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="jul-zmed-2" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-jul-zmed-2" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
     </tr>
     <tr class="snowball-row mir-row">
       <td><div class="td-name">Snowball → Citibank</div><div class="td-meta">Car Repairs redirect → Citibank</div></td>
@@ -944,12 +956,13 @@
     </tbody>
   </table>
   </div>
-  <div style="background:var(--surface2);border-radius:12px;padding:14px;border:1px solid var(--border);margin-top:8px;">
-    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:500;margin-bottom:8px;"><span style="color:#e8edf5;">Monthly Debt Total</span><span style="color:var(--amber);font-family:'Fraunces',serif;font-size:16px;">$7,107.94</span></div>
+    <div style="background:var(--surface2);border-radius:12px;padding:14px;border:1px solid var(--border);margin-top:8px;" id="summary-jul">
+    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:500;margin-bottom:8px;">
+      <span style="color:#e8edf5;">Monthly Total</span>
+      <span id="total-jul" style="color:var(--amber);font-family:'Fraunces',serif;font-size:16px;">calculating…</span>
+    </div>
     <div style="font-size:10px;color:var(--muted);line-height:1.8;">
-      <div style="display:flex;justify-content:space-between;"><span>Minimums</span><span style="color:#e8edf5;">$3,665.01</span></div>
-      <div style="display:flex;justify-content:space-between;"><span>Snowball extra</span><span style="color:#a78bfa;">$3,442.93</span></div>
-      <div style="display:flex;justify-content:space-between;margin-top:6px;"><span style="color:#2dd4bf;">🎁 Bonus Miriam check: +$3,288.48 available</span><span></span></div>
+      <div style="display:flex;justify-content:space-between;margin-top:4px;"><span style="color:#2dd4bf;">🎁 Bonus Miriam Chk 3 this month · Citibank getting crushed</span></div>
     </div>
   </div>
   <div style="background:#1a1f2e;border-radius:8px;padding:10px 12px;margin-top:12px;font-size:10px;color:var(--muted);line-height:1.7;border:1px solid var(--border);">
@@ -1041,6 +1054,13 @@
       <td><select class="status-sel" data-key="aug-009" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
       <td><textarea class="notes-inp" data-key="note-aug-009" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
     </tr>
+    <tr class="mir-row">
+      <td><div class="td-name">Z Med</div><div class="td-meta">Every 4 wks · due Aug 27 · cycle 3 of 8</div></td>
+      <td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">Due Aug 27</td><td class="td-date">Aug 28</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$325.00" data-key="amt-aug-zmed" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="aug-zmed" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-aug-zmed" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+    </tr>
     <tr class="snowball-row mir-row">
       <td><div class="td-name">Snowball → Citibank</div><div class="td-meta">Car Repairs redirect → Citibank</div></td>
       <td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">—</td><td class="td-date">Aug 28</td>
@@ -1074,11 +1094,12 @@
     </tbody>
   </table>
   </div>
-  <div style="background:var(--surface2);border-radius:12px;padding:14px;border:1px solid var(--border);margin-top:8px;">
-    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:500;margin-bottom:8px;"><span>Monthly Debt Total</span><span style="color:var(--amber);font-family:'Fraunces',serif;font-size:16px;">$7,107.94</span></div>
+  <div style="background:var(--surface2);border-radius:12px;padding:14px;border:1px solid var(--border);margin-top:8px;" id="summary-aug">
+    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:500;margin-bottom:8px;">
+      <span style="color:#e8edf5;">Monthly Total</span>
+      <span id="total-aug" style="color:var(--amber);font-family:'Fraunces',serif;font-size:16px;">$0.00</span>
+    </div>
     <div style="font-size:10px;color:var(--muted);line-height:1.8;">
-      <div style="display:flex;justify-content:space-between;"><span>Minimums</span><span style="color:#e8edf5;">$3,665.01</span></div>
-      <div style="display:flex;justify-content:space-between;"><span>Snowball extra</span><span style="color:#a78bfa;">$3,442.93</span></div>
       <div style="display:flex;justify-content:space-between;margin-top:6px;"><span style="color:#2dd4bf;">🎯 Citibank final push — Sep payoff incoming</span><span></span></div>
     </div>
   </div>
@@ -1172,6 +1193,13 @@
       <td><select class="status-sel" data-key="sep-009" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
       <td><textarea class="notes-inp" data-key="note-sep-009" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
     </tr>
+    <tr class="mir-row">
+      <td><div class="td-name">Z Med</div><div class="td-meta">Every 4 wks · due Sep 24 · cycle 4 of 8</div></td>
+      <td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">Due Sep 24</td><td class="td-date">Sep 25</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$325.00" data-key="amt-sep-zmed" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="sep-zmed" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-sep-zmed" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+    </tr>
     <tr class="snowball-row mir-row">
       <td><div class="td-name">Snowball → Citibank</div><div class="td-meta">Car Repairs + Home Maint → all to Citibank</div></td>
       <td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">—</td><td class="td-date">Sep 25</td>
@@ -1205,12 +1233,13 @@
     </tbody>
   </table>
   </div>
-  <div style="background:var(--surface2);border-radius:12px;padding:14px;border:1px solid var(--border);margin-top:8px;">
-    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:500;margin-bottom:8px;"><span>Monthly Debt Total</span><span style="color:var(--amber);font-family:'Fraunces',serif;font-size:16px;">$7,107.94</span></div>
+  <div style="background:var(--surface2);border-radius:12px;padding:14px;border:1px solid var(--border);margin-top:8px;" id="summary-sep">
+    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:500;margin-bottom:8px;">
+      <span style="color:#e8edf5;">Monthly Total</span>
+      <span id="total-sep" style="color:var(--amber);font-family:'Fraunces',serif;font-size:16px;">$0.00</span>
+    </div>
     <div style="font-size:10px;color:var(--muted);line-height:1.8;">
-      <div style="display:flex;justify-content:space-between;"><span>Minimums</span><span style="color:#e8edf5;">$3,665.01</span></div>
-      <div style="display:flex;justify-content:space-between;"><span>Snowball extra</span><span style="color:#a78bfa;">$3,442.93</span></div>
-      <div style="display:flex;justify-content:space-between;margin-top:6px;"><span style="color:#2dd4bf;">🎉 Citibank pays off → +$2,500/mo freed, all rolls to Passante</span><span></span></div>
+      <div style="display:flex;justify-content:space-between;margin-top:6px;"><span style="color:#2dd4bf;">🎉 Citibank pays off → freed funds roll to Passante</span><span></span></div>
     </div>
   </div>
   <div style="background:#1a1f2e;border-radius:8px;padding:10px 12px;margin-top:12px;font-size:10px;color:var(--muted);line-height:1.7;border:1px solid var(--border);">
@@ -1295,6 +1324,13 @@
     </tr>
 
     <tr class="stream-hdr mir"><td colspan="7">Miriam Check 2 · Payday Oct 23</td></tr>
+    <tr class="mir-row">
+      <td><div class="td-name">Z Med</div><div class="td-meta">Every 4 wks · due Oct 22 · cycle 5 of 8</div></td>
+      <td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">Due Oct 22</td><td class="td-date">Oct 23</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$325.00" data-key="amt-oct-zmed" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="oct-zmed" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-oct-zmed" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+    </tr>
     <tr class="snowball-row mir-row">
       <td><div class="td-name">Snowball → Passante</div><div class="td-meta">Car Repairs + Home Maint redirect → Passante</div></td>
       <td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">—</td><td class="td-date">Oct 23</td>
@@ -1327,6 +1363,15 @@
       <div style="display:flex;justify-content:space-between;"><span>Minimums</span><span style="color:#e8edf5;">$2,125</span></div>
       <div style="display:flex;justify-content:space-between;"><span>Snowball redirects</span><span style="color:#a78bfa;">$7,562+</span></div>
       <div style="display:flex;justify-content:space-between;margin-top:6px;"><span style="color:#2dd4bf;">🎉 LightStream self-liquidates! Passante getting crushed by full Citibank snowball</span><span></span></div>
+    </div>
+  </div>
+    <div style="background:var(--surface2);border-radius:12px;padding:14px;border:1px solid var(--border);margin-top:8px;" id="summary-oct">
+    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:500;margin-bottom:8px;">
+      <span style="color:#e8edf5;">Monthly Total</span>
+      <span id="total-oct" style="color:var(--amber);font-family:'Fraunces',serif;font-size:16px;">calculating…</span>
+    </div>
+    <div style="font-size:10px;color:var(--muted);line-height:1.8;">
+      <div style="display:flex;justify-content:space-between;margin-top:4px;"><span style="color:#2dd4bf;">🎉 LightStream self-liquidates! Passante under full attack</span></div>
     </div>
   </div>
   <div style="background:#1a1f2e;border-radius:8px;padding:10px 12px;margin-top:12px;font-size:10px;color:var(--muted);line-height:1.7;border:1px solid var(--border);">
@@ -1372,11 +1417,30 @@
       <tr><td class="td-name">Urban Air</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Due 26th</td><td class="td-date">On payday</td><td class="td-amt">$43.96</td></tr>
 
       <tr class="living-cat-hdr"><td colspan="6">💊 Health &amp; Wellness</td></tr>
-      <tr><td class="td-name">Meds / Supplements — 1st half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 1</td><td class="td-date">8th</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$319.00</td></tr>
-      <tr><td class="td-name">Meds / Supplements — 2nd half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$319.00</td></tr>
-      <tr><td class="td-name">Therapy — 1st half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 1</td><td class="td-date">8th</td><td class="td-date">Mondays</td><td class="td-date">On payday</td><td class="td-amt">$100.00</td></tr>
-      <tr><td class="td-name">Therapy — 2nd half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Mondays</td><td class="td-date">On payday</td><td class="td-amt">$100.00</td></tr>
-      <tr style="background:var(--surface2);"><td colspan="5" style="font-size:10px;color:var(--muted);padding:6px;">Health monthly total</td><td class="td-amt" style="padding:6px;font-weight:500;">$838.00</td></tr>
+      <tr>
+        <td class="td-name">Z Med<div class="td-meta">Every 4 weeks · $325 flat · single payment per cycle · Miriam checks only</div></td>
+        <td class="td-stream" style="color:var(--mir-color);">Miriam Chk 1 or 2</td>
+        <td class="td-date">Every 4 wks</td>
+        <td class="td-date">Closest Miriam payday</td>
+        <td class="td-date">Recurring</td>
+        <td class="td-amt">$325.00</td>
+      </tr>
+      <tr style="background:#0d1525;">
+        <td colspan="6" style="font-size:10px;color:var(--muted);padding:6px 6px 10px;line-height:2;">
+          📅 <strong style="color:var(--mir-color);">Full schedule:</strong>&nbsp;
+          Jul 2 → <span style="color:var(--mir-color);">Mir Chk 1 (Jul 3)</span> &nbsp;·&nbsp;
+          Jul 30 → <span style="color:var(--mir-color);">Mir Chk 2 (Jul 17, early)</span> &nbsp;·&nbsp;
+          Aug 27 → <span style="color:var(--mir-color);">Mir Chk 2 (Aug 28)</span> &nbsp;·&nbsp;
+          Sep 24 → <span style="color:var(--mir-color);">Mir Chk 2 (Sep 25)</span> &nbsp;·&nbsp;
+          Oct 22 → <span style="color:var(--mir-color);">Mir Chk 2 (Oct 23)</span> &nbsp;·&nbsp;
+          Nov 19 → <span style="color:var(--mir-color);">Mir Chk 2 (~Nov 20)</span> &nbsp;·&nbsp;
+          Dec 17 → <span style="color:var(--mir-color);">Mir Chk 2 (~Dec 18)</span> &nbsp;·&nbsp;
+          Jan 14, 2027 → <span style="color:var(--mir-color);">Mir Chk 1 (~Jan 8)</span>
+        </td>
+      </tr>
+      <tr><td class="td-name">Therapy — 1st half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 1</td><td class="td-date">8th</td><td class="td-date">Mondays</td><td class="td-date">On payday</td><td class="td-amt">$50.00</td></tr>
+      <tr><td class="td-name">Therapy — 2nd half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Mondays</td><td class="td-date">On payday</td><td class="td-amt">$50.00</td></tr>
+      <tr style="background:var(--surface2);"><td colspan="5" style="font-size:10px;color:var(--muted);padding:6px;">Health monthly total</td><td class="td-amt" style="padding:6px;font-weight:500;">$200.00</td></tr>
 
       <tr class="living-cat-hdr"><td colspan="6">🎯 True Expenses (Sinking Funds)</td></tr>
       <tr><td class="td-name">Car Repairs fund</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Monthly</td><td class="td-date">On payday</td><td class="td-amt">$150.00</td></tr>
@@ -1387,7 +1451,7 @@
 
       <tr style="background:var(--surface);border-top:2px solid var(--border);">
         <td colspan="5" style="font-size:12px;font-weight:500;padding:12px 6px;">Total Monthly Living</td>
-        <td style="font-size:14px;font-weight:600;color:var(--amber);padding:12px 6px;font-family:'Fraunces',serif;">$3,064.96</td>
+        <td style="font-size:14px;font-weight:600;color:var(--amber);padding:12px 6px;font-family:'Fraunces',serif;">$2,326.96</td>
       </tr>
     </tbody>
   </table>
@@ -1449,6 +1513,7 @@ async function loadFromCloud() {
       }
     });
     updateRunningTotal();
+    recalcAllTotals();
     showSyncBadge('ok');
   } catch(e) { showSyncBadge('error'); }
 }
@@ -1484,6 +1549,12 @@ function saveNote(el) {
 }
 
 function saveAmt(el) {
+  // Recalc total for whichever tab this input lives in
+  const tabEl = el.closest('.tab-content');
+  if (tabEl) {
+    const tabId = tabEl.id.replace('tab-byincome-','');
+    if (['jun','jul','aug','sep','oct'].includes(tabId)) recalcTotal(tabId);
+  }
   if (!el.dataset.key) return;
   showSyncBadge('syncing');
   debounce(el.dataset.key, async () => {
@@ -1576,10 +1647,36 @@ function showTab(name, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
   if (btn) btn.classList.add('active');
+  // Recalculate total for the newly shown tab
+  const tabIds = ['jun','jul','aug','sep','oct'];
+  if (tabIds.includes(name)) recalcTotal(name);
+}
+
+function parseAmt(val) {
+  if (!val) return 0;
+  const n = parseFloat(val.replace(/[$,\s]/g,''));
+  return isNaN(n) ? 0 : n;
+}
+
+function recalcTotal(tabId) {
+  const tabEl = document.getElementById('tab-byincome-' + tabId);
+  if (!tabEl) return;
+  const inputs = tabEl.querySelectorAll('input.amt-input');
+  let total = 0;
+  inputs.forEach(inp => { total += parseAmt(inp.value); });
+  const totalEl = document.getElementById('total-' + tabId);
+  if (totalEl) {
+    totalEl.textContent = '$' + total.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+}
+
+function recalcAllTotals() {
+  ['jun','jul','aug','sep','oct'].forEach(t => recalcTotal(t));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   loadFromCloud();
+  setTimeout(recalcAllTotals, 300);
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) loadFromCloud();
   });
