@@ -236,6 +236,13 @@
   .sub-type-sel { background:#0d1525; color:var(--muted); border:1px solid var(--border); border-radius:6px; padding:3px 4px; font-size:10px; font-family:'DM Mono',monospace; cursor:pointer; width:100%; }
   .sub-del-btn { background:rgba(248,113,113,0.1); color:var(--red); border:1px solid rgba(248,113,113,0.3); border-radius:6px; padding:4px 8px; font-size:10px; cursor:pointer; }
   .sub-del-btn:hover { background:rgba(248,113,113,0.3); }
+  /* Annual subscription rows — fuschia */
+  tr.annual-row td { background: rgba(236,72,153,0.10) !important; }
+  tr.annual-row .sub-inp { color: #f472b6 !important; border-bottom-color: #be185d; }
+  tr.annual-row .sub-inp.sub-amt { color: #f472b6 !important; }
+  tr.annual-row .sub-inp.sub-cc { color: #f472b6 !important; }
+  tr.annual-row .sub-type-sel { color: #f472b6 !important; background: rgba(236,72,153,0.12) !important; border-color: #be185d !important; }
+  tr.annual-row .sub-del-btn { color: #f472b6; border-color: rgba(244,114,182,0.4); background: rgba(236,72,153,0.08); }
 </style>
 </head>
 <body>
@@ -824,7 +831,7 @@
       <tr id="sub-row-0">
         <td><input class="sub-inp sub-name" data-key="sub-000-name" value="Adobe" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-000-amt" value="$19.99" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-000-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-000-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-000-due" value="13th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-000-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-000-cc" value="Navy Fed" oninput="saveSub(this)"></td>
@@ -833,7 +840,7 @@
       <tr id="sub-row-1">
         <td><input class="sub-inp sub-name" data-key="sub-001-name" value="Claude" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-001-amt" value="$20.00" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-001-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-001-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-001-due" value="27th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-001-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-001-cc" value="Navy Fed" oninput="saveSub(this)"></td>
@@ -842,7 +849,7 @@
       <tr id="sub-row-2">
         <td><input class="sub-inp sub-name" data-key="sub-002-name" value="Comcast" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-002-amt" value="$109.98" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-002-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-002-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-002-due" value="27th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-002-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-002-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
@@ -851,7 +858,7 @@
       <tr id="sub-row-3">
         <td><input class="sub-inp sub-name" data-key="sub-003-name" value="CVS" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-003-amt" value="$5.00" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-003-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-003-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-003-due" value="10th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-003-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-003-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
@@ -860,7 +867,7 @@
       <tr id="sub-row-4">
         <td><input class="sub-inp sub-name" data-key="sub-004-name" value="Disney Plus" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-004-amt" value="$19.99" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-004-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-004-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-004-due" value="12th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-004-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-004-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
@@ -869,7 +876,7 @@
       <tr id="sub-row-5">
         <td><input class="sub-inp sub-name" data-key="sub-005-name" value="eFax (Onlinefaxservice)" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-005-amt" value="$20.87" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-005-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-005-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-005-due" value="7th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-005-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-005-cc" value="Navy Fed" oninput="saveSub(this)"></td>
@@ -878,16 +885,16 @@
       <tr id="sub-row-6">
         <td><input class="sub-inp sub-name" data-key="sub-006-name" value="GLAM LAB" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-006-amt" value="$7.99" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-006-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-006-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-006-due" value="8th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-006-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-006-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
         <td><button class="sub-del-btn" onclick="deleteSub(6)">&#x2715;</button></td>
       </tr>
-      <tr id="sub-row-7">
+      <tr id="sub-row-7" class="annual-row">
         <td><input class="sub-inp sub-name" data-key="sub-007-name" value="Google AVAS" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-007-amt" value="$11.99" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-007-type" onchange="saveSub(this)"><option >Monthly</option><option selected>Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-007-type" onchange="saveSub(this);toggleAnnualRow(this)"><option >Monthly</option><option selected>Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-007-due" value="9th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-007-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-007-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
@@ -896,7 +903,7 @@
       <tr id="sub-row-8">
         <td><input class="sub-inp sub-name" data-key="sub-008-name" value="Google Simple App" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-008-amt" value="$29.99" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-008-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-008-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-008-due" value="27th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-008-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-008-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
@@ -905,7 +912,7 @@
       <tr id="sub-row-9">
         <td><input class="sub-inp sub-name" data-key="sub-009-name" value="HelloTech" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-009-amt" value="$19.99" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-009-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-009-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-009-due" value="20th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-009-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-009-cc" value="Navy Fed" oninput="saveSub(this)"></td>
@@ -914,7 +921,7 @@
       <tr id="sub-row-10">
         <td><input class="sub-inp sub-name" data-key="sub-010-name" value="Hulu" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-010-amt" value="$18.99" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-010-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-010-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-010-due" value="21st" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-010-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-010-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
@@ -923,7 +930,7 @@
       <tr id="sub-row-11">
         <td><input class="sub-inp sub-name" data-key="sub-011-name" value="Metrofax" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-011-amt" value="$4.00" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-011-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-011-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-011-due" value="28th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-011-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-011-cc" value="Navy Fed" oninput="saveSub(this)"></td>
@@ -932,7 +939,7 @@
       <tr id="sub-row-12">
         <td><input class="sub-inp sub-name" data-key="sub-012-name" value="Netflix" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-012-amt" value="$24.99" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-012-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-012-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-012-due" value="7th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-012-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-012-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
@@ -941,7 +948,7 @@
       <tr id="sub-row-13">
         <td><input class="sub-inp sub-name" data-key="sub-013-name" value="Nintendo" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-013-amt" value="$7.99" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-013-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-013-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-013-due" value="15th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-013-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-013-cc" value="Navy Fed" oninput="saveSub(this)"></td>
@@ -950,7 +957,7 @@
       <tr id="sub-row-14">
         <td><input class="sub-inp sub-name" data-key="sub-014-name" value="OpenAI (Miriam)" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-014-amt" value="$20.00" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-014-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-014-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-014-due" value="20th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-014-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-014-cc" value="Navy Fed" oninput="saveSub(this)"></td>
@@ -959,16 +966,16 @@
       <tr id="sub-row-15">
         <td><input class="sub-inp sub-name" data-key="sub-015-name" value="OpenAI (Rob)" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-015-amt" value="$20.00" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-015-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-015-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-015-due" value="20th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-015-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-015-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
         <td><button class="sub-del-btn" onclick="deleteSub(15)">&#x2715;</button></td>
       </tr>
-      <tr id="sub-row-16">
+      <tr id="sub-row-16" class="annual-row">
         <td><input class="sub-inp sub-name" data-key="sub-016-name" value="Prime Sub" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-016-amt" value="$139.00" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-016-type" onchange="saveSub(this)"><option >Monthly</option><option selected>Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-016-type" onchange="saveSub(this);toggleAnnualRow(this)"><option >Monthly</option><option selected>Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-016-due" value="Nov 13th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-016-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-016-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
@@ -977,7 +984,7 @@
       <tr id="sub-row-17">
         <td><input class="sub-inp sub-name" data-key="sub-017-name" value="Prime" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-017-amt" value="$49.96" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-017-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-017-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-017-due" value="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-017-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-017-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
@@ -986,7 +993,7 @@
       <tr id="sub-row-18">
         <td><input class="sub-inp sub-name" data-key="sub-018-name" value="SiriusXM" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-018-amt" value="$14.68" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-018-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-018-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-018-due" value="4th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-018-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-018-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
@@ -995,7 +1002,7 @@
       <tr id="sub-row-19">
         <td><input class="sub-inp sub-name" data-key="sub-019-name" value="YouTube Premium" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-019-amt" value="$26.99" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-019-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-019-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-019-due" value="13th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-019-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-019-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
@@ -1004,7 +1011,7 @@
       <tr id="sub-row-20">
         <td><input class="sub-inp sub-name" data-key="sub-020-name" value="Zedge" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-020-amt" value="$4.99" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-020-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-020-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-020-due" value="30th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-020-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-020-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
@@ -1013,16 +1020,16 @@
       <tr id="sub-row-21">
         <td><input class="sub-inp sub-name" data-key="sub-021-name" value="Amazon Digital Services" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-021-amt" value="$11.99" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-021-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-021-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-021-due" value="25th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-021-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-021-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
         <td><button class="sub-del-btn" onclick="deleteSub(21)">&#x2715;</button></td>
       </tr>
-      <tr id="sub-row-22">
+      <tr id="sub-row-22" class="annual-row">
         <td><input class="sub-inp sub-name" data-key="sub-022-name" value="Avast Mobile SEC Pro" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-022-amt" value="$11.99" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-022-type" onchange="saveSub(this)"><option >Monthly</option><option selected>Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-022-type" onchange="saveSub(this);toggleAnnualRow(this)"><option >Monthly</option><option selected>Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-022-due" value="Jan 8th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-022-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-022-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
@@ -1031,7 +1038,7 @@
       <tr id="sub-row-23">
         <td><input class="sub-inp sub-name" data-key="sub-023-name" value="Prime Video Channel 1" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-023-amt" value="$8.99" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-023-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-023-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-023-due" value="8th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-023-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-023-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
@@ -1040,16 +1047,16 @@
       <tr id="sub-row-24">
         <td><input class="sub-inp sub-name" data-key="sub-024-name" value="Prime Video Channel 2" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-024-amt" value="$13.99" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-024-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-024-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-024-due" value="9th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-024-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-024-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
         <td><button class="sub-del-btn" onclick="deleteSub(24)">&#x2715;</button></td>
       </tr>
-      <tr id="sub-row-25">
+      <tr id="sub-row-25" class="annual-row">
         <td><input class="sub-inp sub-name" data-key="sub-025-name" value="Life360" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-025-amt" value="$149.00" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-025-type" onchange="saveSub(this)"><option >Monthly</option><option selected>Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-025-type" onchange="saveSub(this);toggleAnnualRow(this)"><option >Monthly</option><option selected>Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-025-due" value="Aug 16th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-025-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-025-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
@@ -1058,7 +1065,7 @@
       <tr id="sub-row-26">
         <td><input class="sub-inp sub-name" data-key="sub-026-name" value="Rocket Money" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-026-amt" value="$10.00" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-026-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-026-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-026-due" value="18th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-026-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-026-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
@@ -1067,34 +1074,34 @@
       <tr id="sub-row-27">
         <td><input class="sub-inp sub-name" data-key="sub-027-name" value="Kings Dominion" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-027-amt" value="$73.00" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-027-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-027-type" onchange="saveSub(this);toggleAnnualRow(this)"><option selected>Monthly</option><option >Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-027-due" value="4th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-027-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-027-cc" value="Navy Fed" oninput="saveSub(this)"></td>
         <td><button class="sub-del-btn" onclick="deleteSub(27)">&#x2715;</button></td>
       </tr>
-      <tr id="sub-row-28">
+      <tr id="sub-row-28" class="annual-row">
         <td><input class="sub-inp sub-name" data-key="sub-028-name" value="Rentcast" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-028-amt" value="$144.00" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-028-type" onchange="saveSub(this)"><option >Monthly</option><option selected>Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-028-type" onchange="saveSub(this);toggleAnnualRow(this)"><option >Monthly</option><option selected>Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-028-due" value="Jun 4th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-028-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-028-cc" value="Navy Fed" oninput="saveSub(this)"></td>
         <td><button class="sub-del-btn" onclick="deleteSub(28)">&#x2715;</button></td>
       </tr>
-      <tr id="sub-row-29">
+      <tr id="sub-row-29" class="annual-row">
         <td><input class="sub-inp sub-name" data-key="sub-029-name" value="REI Hub Annual Sub" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-029-amt" value="$108.00" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-029-type" onchange="saveSub(this)"><option >Monthly</option><option selected>Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-029-type" onchange="saveSub(this);toggleAnnualRow(this)"><option >Monthly</option><option selected>Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-029-due" value="Sept 18th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-029-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-029-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
         <td><button class="sub-del-btn" onclick="deleteSub(29)">&#x2715;</button></td>
       </tr>
-      <tr id="sub-row-30">
+      <tr id="sub-row-30" class="annual-row">
         <td><input class="sub-inp sub-name" data-key="sub-030-name" value="TurboTenant" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-amt" data-key="sub-030-amt" value="$149.00" oninput="saveSub(this)"></td>
-        <td><select class="sub-type-sel" data-key="sub-030-type" onchange="saveSub(this)"><option >Monthly</option><option selected>Annual</option></select></td>
+        <td><select class="sub-type-sel" data-key="sub-030-type" onchange="saveSub(this);toggleAnnualRow(this)"><option >Monthly</option><option selected>Annual</option></select></td>
         <td><input class="sub-inp sub-due" data-key="sub-030-due" value="Sept 9th" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-sent" data-key="sub-030-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
         <td><input class="sub-inp sub-cc" data-key="sub-030-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
@@ -2353,6 +2360,12 @@ function deleteSub(rowIdx) {
   const r = document.getElementById('sub-row-' + rowIdx);
   if (r) { r.remove(); recalcSubTotal(); }
 }
+function toggleAnnualRow(sel) {
+  const row = sel.closest('tr');
+  if (!row) return;
+  const isAnnual = sel.value === 'Annual' || sel.value === 'Annually';
+  row.classList.toggle('annual-row', isAnnual);
+}
 function addSubRow() {
   const id = subCounter++;
   const k = 'sub-' + String(id).padStart(3,'0');
@@ -2360,7 +2373,7 @@ function addSubRow() {
   tr.id = 'sub-row-' + id;
   tr.innerHTML = `<td><input class="sub-inp sub-name" data-key="${k}-name" value="" placeholder="Subscription name" oninput="saveSub(this)"></td>
     <td><input class="sub-inp sub-amt" data-key="${k}-amt" value="" placeholder="$0.00" oninput="saveSub(this)"></td>
-    <td><select class="sub-type-sel" data-key="${k}-type" onchange="saveSub(this)"><option>Monthly</option><option>Annual</option></select></td>
+    <td><select class="sub-type-sel" data-key="${k}-type" onchange="saveSub(this);toggleAnnualRow(this)"><option>Monthly</option><option>Annual</option></select></td>
     <td><input class="sub-inp sub-due" data-key="${k}-due" value="" placeholder="e.g. 15th" oninput="saveSub(this)"></td>
     <td><input class="sub-inp sub-sent" data-key="${k}-sent" value="" placeholder="&#8212;" oninput="saveSub(this)"></td>
     <td><input class="sub-inp sub-cc" data-key="${k}-cc" value="" placeholder="Card / bank" oninput="saveSub(this)"></td>
