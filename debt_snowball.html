@@ -223,6 +223,19 @@
   }
   .carryover-note-cell input:focus { outline: none; border-bottom-color: var(--snow); color: var(--text); }
   .co-auto { font-size: 9px; color: var(--teal); letter-spacing: 0.06em; margin-top: 3px; }
+
+  .sub-table { width:100%; border-collapse:collapse; font-size:11px; }
+  .sub-table th { background:var(--surface2); color:var(--muted); font-size:9px; text-transform:uppercase; letter-spacing:0.08em; padding:8px 6px; text-align:left; border-bottom:1px solid var(--border); }
+  .sub-table td { padding:6px 4px; border-bottom:1px solid #141e2e; vertical-align:middle; }
+  .sub-table tr:last-child td { border-bottom:none; }
+  .sub-inp { background:transparent; border:none; border-bottom:1px dashed #1e2d44; color:var(--text); font-family:'DM Mono',monospace; font-size:11px; padding:3px 4px; width:100%; }
+  .sub-inp:focus { outline:none; border-bottom-color:var(--snow); color:var(--snow); background:#0d1525; border-radius:4px 4px 0 0; }
+  .sub-inp.sub-cc { color:var(--teal); }
+  .sub-inp.sub-cc:focus { color:var(--snow); }
+  .sub-inp.sub-amt { color:var(--amber); text-align:right; }
+  .sub-type-sel { background:#0d1525; color:var(--muted); border:1px solid var(--border); border-radius:6px; padding:3px 4px; font-size:10px; font-family:'DM Mono',monospace; cursor:pointer; width:100%; }
+  .sub-del-btn { background:rgba(248,113,113,0.1); color:var(--red); border:1px solid rgba(248,113,113,0.3); border-radius:6px; padding:4px 8px; font-size:10px; cursor:pointer; }
+  .sub-del-btn:hover { background:rgba(248,113,113,0.3); }
 </style>
 </head>
 <body>
@@ -234,19 +247,45 @@
 </div>
 
 <div class="nav-tabs">
-  <button class="tab-btn" onclick="showTab('carryover', this)">Carry-over 💰</button>
+  <button class="tab-btn" onclick="showTab('carryover', this)">Carry-over &#128176;</button>
   <button class="tab-btn active" onclick="showTab('overview', this)">Overview</button>
   <button class="tab-btn" onclick="showTab('active-debt', this)">Active Debt</button>
   <button class="tab-btn" onclick="showTab('timeline', this)">Timeline</button>
   <button class="tab-btn" onclick="showTab('strategy', this)">Strategy</button>
-  <button class="tab-btn" onclick="showTab('paidoff', this)">Paid Off ✅</button>
+  <button class="tab-btn" onclick="showTab('paidoff', this)">Paid Off &#9989;</button>
   <button class="tab-btn" onclick="showTab('living', this)">Living</button>
+  <button class="tab-btn" onclick="showTab('subscriptions', this)">Subscriptions &#128203;</button>
   <button class="tab-btn" onclick="showTab('byincome-jun', this)">By Income Jun</button>
   <button class="tab-btn" onclick="showTab('byincome-jul', this)">By Income Jul</button>
   <button class="tab-btn" onclick="showTab('byincome-aug', this)">By Income Aug</button>
   <button class="tab-btn" onclick="showTab('byincome-sep', this)">By Income Sep</button>
   <button class="tab-btn" onclick="showTab('byincome-oct', this)">By Income Oct</button>
+  <button class="tab-btn" onclick="showTab('byincome-nov', this)">By Income Nov</button>
+  <button class="tab-btn" onclick="showTab('byincome-dec', this)">By Income Dec</button>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ══════════════════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════════════════ -->
 
 <!-- ══════════════════════════════════════════════════════════
      CARRY-OVER TAB
@@ -676,6 +715,398 @@
   <div class="debt-card paid"><div class="debt-header"><div class="debt-name" style="color:var(--paid-text);">Chase Basic</div><span class="debt-badge badge-paid">✅ PAID OFF</span></div><div class="debt-stats"><div><div class="stat-label">Balance</div><div class="stat-value" style="color:var(--paid-text);">$0.00</div></div><div><div class="stat-label">Was</div><div class="stat-value">$60 min</div></div><div><div class="stat-label">When</div><div class="stat-value">May 2026</div></div></div><div class="debt-note">Confirmed $0 balance — paid in full.</div></div>
 </div>
 
+<!-- ══════════════════════════════════════════════════════════
+     LIVING EXPENSES
+══════════════════════════════════════════════════════════ -->
+<div id="tab-living" class="tab-content">
+  <p style="font-size:11px;color:var(--muted);margin-bottom:12px;">All living &amp; variable expenses — which check pays, when it's due, and when to send.</p>
+  <div style="overflow-x:auto;">
+  <table class="living-table">
+    <thead><tr><th style="min-width:130px;">Expense</th><th>Income Stream</th><th>Payday</th><th>Due / Timing</th><th>Send Date</th><th>Amount</th></tr></thead>
+    <tbody>
+      <tr class="living-cat-hdr"><td colspan="6">🛒 Groceries</td></tr>
+      <tr><td class="td-name">Groceries — 1st half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 1</td><td class="td-date">8th</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$300.00</td></tr>
+      <tr><td class="td-name">Groceries — 2nd half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$300.00</td></tr>
+      <tr style="background:var(--surface2);"><td colspan="5" style="font-size:10px;color:var(--muted);padding:6px;">Monthly total</td><td class="td-amt" style="padding:6px;font-weight:500;">$600.00</td></tr>
+
+      <tr class="living-cat-hdr"><td colspan="6">🍽️ Dining Out <span style="font-size:9px;color:var(--amber);">(cap: $400/mo)</span></td></tr>
+      <tr><td class="td-name">Dining Out — 1st half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 1</td><td class="td-date">8th</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$200.00</td></tr>
+      <tr><td class="td-name">Dining Out — 2nd half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$200.00</td></tr>
+      <tr style="background:var(--surface2);"><td colspan="5" style="font-size:10px;color:var(--muted);padding:6px;">Monthly total (under $400 cap ✓)</td><td class="td-amt" style="padding:6px;font-weight:500;color:var(--green);">$400.00</td></tr>
+
+      <tr class="living-cat-hdr"><td colspan="6">⛽ Gas</td></tr>
+      <tr><td class="td-name">Gas — 1st half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 1</td><td class="td-date">8th</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$125.00</td></tr>
+      <tr><td class="td-name">Gas — 2nd half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$125.00</td></tr>
+      <tr style="background:var(--surface2);"><td colspan="5" style="font-size:10px;color:var(--muted);padding:6px;">Monthly total</td><td class="td-amt" style="padding:6px;font-weight:500;">$250.00</td></tr>
+
+      <tr class="living-cat-hdr"><td colspan="6">🥗 Work Lunch</td></tr>
+      <tr><td class="td-name">Work Lunch — 1st half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 1</td><td class="td-date">8th</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$80.00</td></tr>
+      <tr><td class="td-name">Work Lunch — 2nd half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$80.00</td></tr>
+      <tr style="background:var(--surface2);"><td colspan="5" style="font-size:10px;color:var(--muted);padding:6px;">Monthly total</td><td class="td-amt" style="padding:6px;font-weight:500;">$160.00</td></tr>
+
+      <tr class="living-cat-hdr"><td colspan="6">✂️ Personal Care</td></tr>
+      <tr><td class="td-name">Lolita for Hair</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Due 4th</td><td class="td-date">On payday</td><td class="td-amt">$100.00</td></tr>
+
+      <tr class="living-cat-hdr"><td colspan="6">🎡 Entertainment / Family</td></tr>
+      <tr><td class="td-name">Kings Dominion</td><td class="td-stream">Beg. Cash</td><td class="td-date">1st of mo</td><td class="td-date">Due 2nd</td><td class="td-date">On 2nd</td><td class="td-amt">$73.00</td></tr>
+      <tr><td class="td-name">Urban Air</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Due 26th</td><td class="td-date">On payday</td><td class="td-amt">$43.96</td></tr>
+
+      <tr class="living-cat-hdr"><td colspan="6">💊 Health &amp; Wellness</td></tr>
+      <tr>
+        <td class="td-name">Z Med<div class="td-meta">Every 4 weeks · $325 flat · single payment per cycle · Miriam checks only</div></td>
+        <td class="td-stream" style="color:var(--mir-color);">Miriam Chk 1 or 2</td>
+        <td class="td-date">Every 4 wks</td>
+        <td class="td-date">Closest Miriam payday</td>
+        <td class="td-date">Recurring</td>
+        <td class="td-amt">$325.00</td>
+      </tr>
+      <tr style="background:#0d1525;">
+        <td colspan="6" style="font-size:10px;color:var(--muted);padding:6px 6px 10px;line-height:2;">
+          📅 <strong style="color:var(--mir-color);">Full schedule:</strong>&nbsp;
+          Jul 2 → <span style="color:var(--mir-color);">Mir Chk 1 (Jul 3)</span> &nbsp;·&nbsp;
+          Jul 30 → <span style="color:var(--mir-color);">Mir Chk 2 (Jul 17, early)</span> &nbsp;·&nbsp;
+          Aug 27 → <span style="color:var(--mir-color);">Mir Chk 2 (Aug 28)</span> &nbsp;·&nbsp;
+          Sep 24 → <span style="color:var(--mir-color);">Mir Chk 2 (Sep 25)</span> &nbsp;·&nbsp;
+          Oct 22 → <span style="color:var(--mir-color);">Mir Chk 2 (Oct 23)</span> &nbsp;·&nbsp;
+          Nov 19 → <span style="color:var(--mir-color);">Mir Chk 2 (~Nov 20)</span> &nbsp;·&nbsp;
+          Dec 17 → <span style="color:var(--mir-color);">Mir Chk 2 (~Dec 18)</span> &nbsp;·&nbsp;
+          Jan 14, 2027 → <span style="color:var(--mir-color);">Mir Chk 1 (~Jan 8)</span>
+        </td>
+      </tr>
+      <tr><td class="td-name">Therapy — 1st half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 1</td><td class="td-date">8th</td><td class="td-date">Mondays</td><td class="td-date">On payday</td><td class="td-amt">$50.00</td></tr>
+      <tr><td class="td-name">Therapy — 2nd half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Mondays</td><td class="td-date">On payday</td><td class="td-amt">$50.00</td></tr>
+      <tr style="background:var(--surface2);"><td colspan="5" style="font-size:10px;color:var(--muted);padding:6px;">Health monthly total</td><td class="td-amt" style="padding:6px;font-weight:500;">$200.00</td></tr>
+
+      <tr class="living-cat-hdr"><td colspan="6">🎯 True Expenses (Sinking Funds)</td></tr>
+      <tr><td class="td-name">Car Repairs fund</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Monthly</td><td class="td-date">On payday</td><td class="td-amt">$150.00</td></tr>
+      <tr><td class="td-name">Home Maintenance fund</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Monthly</td><td class="td-date">On payday</td><td class="td-amt">$200.00</td></tr>
+      <tr><td class="td-name">Gifts / Holidays fund</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Monthly</td><td class="td-date">On payday</td><td class="td-amt">$150.00</td></tr>
+      <tr><td class="td-name">Medical Overflow fund</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Monthly</td><td class="td-date">On payday</td><td class="td-amt">$100.00</td></tr>
+      <tr style="background:var(--surface2);"><td colspan="5" style="font-size:10px;color:var(--muted);padding:6px;">True Expenses monthly total</td><td class="td-amt" style="padding:6px;font-weight:500;">$600.00</td></tr>
+
+      <tr style="background:var(--surface);border-top:2px solid var(--border);">
+        <td colspan="5" style="font-size:12px;font-weight:500;padding:12px 6px;">Total Monthly Living</td>
+        <td style="font-size:14px;font-weight:600;color:var(--amber);padding:12px 6px;font-family:'Fraunces',serif;">$2,326.96</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <div style="background:#1a1a1a;border-radius:10px;padding:12px 14px;margin-top:12px;font-size:11px;color:var(--muted);line-height:1.7;border:1px solid var(--border);">
+    <span style="color:var(--snow);">📌 Note:</span> All living expenses are funded from <strong style="color:var(--mir-color);">Miriam's checks</strong> (both 1st and 2nd). Rob's checks are dedicated to mortgage, debt minimums, and the primary snowball attack. Sinking funds (Car Repairs, Home Maintenance) are currently redirected monthly to the debt snowball.
+  </div>
+</div>
+
+<!-- SUBSCRIPTIONS -->
+<div id="tab-subscriptions" class="tab-content">
+  <div style="background:var(--surface2);border-radius:10px;padding:12px 14px;margin-bottom:14px;border:1px solid var(--border);">
+    <div style="font-size:11px;color:var(--snow);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;">Recurring Subscriptions</div>
+    <div style="font-size:11px;color:var(--muted);">All fields editable. Click any cell to edit. Add or delete rows freely. Saves to cloud.</div>
+  </div>
+  <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap;">
+    <button onclick="addSubRow()" style="background:var(--snow);color:#0a0d14;border:none;border-radius:20px;padding:7px 16px;font-family:'DM Mono',monospace;font-size:11px;font-weight:500;cursor:pointer;">+ Add Row</button>
+    <div style="margin-left:auto;text-align:right;">
+      <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;">Est. Monthly Cost</div>
+      <div id="sub-monthly-total" style="font-family:'Fraunces',serif;font-size:18px;color:var(--amber);font-weight:600;">$0.00</div>
+    </div>
+  </div>
+  <div style="overflow-x:auto;">
+  <table class="sub-table" id="sub-table">
+    <thead><tr>
+      <th style="min-width:160px;">Subscription</th>
+      <th style="min-width:90px;">Amount</th>
+      <th style="min-width:80px;">Frequency</th>
+      <th style="min-width:80px;">Due Date</th>
+      <th style="min-width:90px;">Date Sent</th>
+      <th style="min-width:110px;">Credit Card</th>
+      <th style="width:36px;"></th>
+    </tr></thead>
+    <tbody id="sub-tbody">
+      <tr id="sub-row-0">
+        <td><input class="sub-inp sub-name" data-key="sub-000-name" value="Adobe" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-000-amt" value="$19.99" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-000-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-000-due" value="13th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-000-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-000-cc" value="Navy Fed" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(0)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-1">
+        <td><input class="sub-inp sub-name" data-key="sub-001-name" value="Claude" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-001-amt" value="$20.00" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-001-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-001-due" value="27th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-001-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-001-cc" value="Navy Fed" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(1)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-2">
+        <td><input class="sub-inp sub-name" data-key="sub-002-name" value="Comcast" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-002-amt" value="$109.98" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-002-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-002-due" value="27th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-002-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-002-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(2)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-3">
+        <td><input class="sub-inp sub-name" data-key="sub-003-name" value="CVS" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-003-amt" value="$5.00" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-003-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-003-due" value="10th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-003-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-003-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(3)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-4">
+        <td><input class="sub-inp sub-name" data-key="sub-004-name" value="Disney Plus" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-004-amt" value="$19.99" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-004-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-004-due" value="12th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-004-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-004-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(4)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-5">
+        <td><input class="sub-inp sub-name" data-key="sub-005-name" value="eFax (Onlinefaxservice)" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-005-amt" value="$20.87" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-005-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-005-due" value="7th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-005-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-005-cc" value="Navy Fed" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(5)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-6">
+        <td><input class="sub-inp sub-name" data-key="sub-006-name" value="GLAM LAB" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-006-amt" value="$7.99" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-006-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-006-due" value="8th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-006-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-006-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(6)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-7">
+        <td><input class="sub-inp sub-name" data-key="sub-007-name" value="Google AVAS" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-007-amt" value="$11.99" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-007-type" onchange="saveSub(this)"><option >Monthly</option><option selected>Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-007-due" value="9th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-007-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-007-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(7)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-8">
+        <td><input class="sub-inp sub-name" data-key="sub-008-name" value="Google Simple App" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-008-amt" value="$29.99" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-008-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-008-due" value="27th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-008-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-008-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(8)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-9">
+        <td><input class="sub-inp sub-name" data-key="sub-009-name" value="HelloTech" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-009-amt" value="$19.99" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-009-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-009-due" value="20th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-009-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-009-cc" value="Navy Fed" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(9)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-10">
+        <td><input class="sub-inp sub-name" data-key="sub-010-name" value="Hulu" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-010-amt" value="$18.99" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-010-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-010-due" value="21st" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-010-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-010-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(10)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-11">
+        <td><input class="sub-inp sub-name" data-key="sub-011-name" value="Metrofax" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-011-amt" value="$4.00" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-011-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-011-due" value="28th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-011-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-011-cc" value="Navy Fed" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(11)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-12">
+        <td><input class="sub-inp sub-name" data-key="sub-012-name" value="Netflix" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-012-amt" value="$24.99" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-012-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-012-due" value="7th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-012-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-012-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(12)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-13">
+        <td><input class="sub-inp sub-name" data-key="sub-013-name" value="Nintendo" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-013-amt" value="$7.99" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-013-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-013-due" value="15th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-013-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-013-cc" value="Navy Fed" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(13)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-14">
+        <td><input class="sub-inp sub-name" data-key="sub-014-name" value="OpenAI (Miriam)" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-014-amt" value="$20.00" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-014-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-014-due" value="20th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-014-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-014-cc" value="Navy Fed" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(14)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-15">
+        <td><input class="sub-inp sub-name" data-key="sub-015-name" value="OpenAI (Rob)" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-015-amt" value="$20.00" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-015-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-015-due" value="20th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-015-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-015-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(15)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-16">
+        <td><input class="sub-inp sub-name" data-key="sub-016-name" value="Prime Sub" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-016-amt" value="$139.00" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-016-type" onchange="saveSub(this)"><option >Monthly</option><option selected>Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-016-due" value="Nov 13th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-016-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-016-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(16)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-17">
+        <td><input class="sub-inp sub-name" data-key="sub-017-name" value="Prime" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-017-amt" value="$49.96" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-017-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-017-due" value="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-017-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-017-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(17)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-18">
+        <td><input class="sub-inp sub-name" data-key="sub-018-name" value="SiriusXM" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-018-amt" value="$14.68" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-018-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-018-due" value="4th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-018-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-018-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(18)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-19">
+        <td><input class="sub-inp sub-name" data-key="sub-019-name" value="YouTube Premium" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-019-amt" value="$26.99" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-019-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-019-due" value="13th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-019-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-019-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(19)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-20">
+        <td><input class="sub-inp sub-name" data-key="sub-020-name" value="Zedge" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-020-amt" value="$4.99" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-020-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-020-due" value="30th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-020-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-020-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(20)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-21">
+        <td><input class="sub-inp sub-name" data-key="sub-021-name" value="Amazon Digital Services" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-021-amt" value="$11.99" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-021-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-021-due" value="25th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-021-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-021-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(21)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-22">
+        <td><input class="sub-inp sub-name" data-key="sub-022-name" value="Avast Mobile SEC Pro" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-022-amt" value="$11.99" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-022-type" onchange="saveSub(this)"><option >Monthly</option><option selected>Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-022-due" value="Jan 8th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-022-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-022-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(22)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-23">
+        <td><input class="sub-inp sub-name" data-key="sub-023-name" value="Prime Video Channel 1" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-023-amt" value="$8.99" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-023-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-023-due" value="8th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-023-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-023-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(23)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-24">
+        <td><input class="sub-inp sub-name" data-key="sub-024-name" value="Prime Video Channel 2" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-024-amt" value="$13.99" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-024-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-024-due" value="9th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-024-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-024-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(24)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-25">
+        <td><input class="sub-inp sub-name" data-key="sub-025-name" value="Life360" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-025-amt" value="$149.00" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-025-type" onchange="saveSub(this)"><option >Monthly</option><option selected>Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-025-due" value="Aug 16th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-025-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-025-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(25)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-26">
+        <td><input class="sub-inp sub-name" data-key="sub-026-name" value="Rocket Money" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-026-amt" value="$10.00" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-026-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-026-due" value="18th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-026-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-026-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(26)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-27">
+        <td><input class="sub-inp sub-name" data-key="sub-027-name" value="Kings Dominion" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-027-amt" value="$73.00" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-027-type" onchange="saveSub(this)"><option selected>Monthly</option><option >Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-027-due" value="4th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-027-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-027-cc" value="Navy Fed" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(27)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-28">
+        <td><input class="sub-inp sub-name" data-key="sub-028-name" value="Rentcast" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-028-amt" value="$144.00" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-028-type" onchange="saveSub(this)"><option >Monthly</option><option selected>Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-028-due" value="Jun 4th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-028-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-028-cc" value="Navy Fed" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(28)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-29">
+        <td><input class="sub-inp sub-name" data-key="sub-029-name" value="REI Hub Annual Sub" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-029-amt" value="$108.00" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-029-type" onchange="saveSub(this)"><option >Monthly</option><option selected>Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-029-due" value="Sept 18th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-029-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-029-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(29)">&#x2715;</button></td>
+      </tr>
+      <tr id="sub-row-30">
+        <td><input class="sub-inp sub-name" data-key="sub-030-name" value="TurboTenant" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-amt" data-key="sub-030-amt" value="$149.00" oninput="saveSub(this)"></td>
+        <td><select class="sub-type-sel" data-key="sub-030-type" onchange="saveSub(this)"><option >Monthly</option><option selected>Annual</option></select></td>
+        <td><input class="sub-inp sub-due" data-key="sub-030-due" value="Sept 9th" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-sent" data-key="sub-030-sent" value="" placeholder="—" oninput="saveSub(this)"></td>
+        <td><input class="sub-inp sub-cc" data-key="sub-030-cc" value="Wells Fargo" oninput="saveSub(this)"></td>
+        <td><button class="sub-del-btn" onclick="deleteSub(30)">&#x2715;</button></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <div style="font-size:10px;color:var(--muted);margin-top:10px;line-height:1.7;background:var(--surface);border-radius:8px;padding:10px 12px;border:1px solid var(--border);">
+    💡 Click any field to edit. <strong style="color:var(--snow);">+ Add Row</strong> for new entries. <strong style="color:var(--red);">&#x2715;</strong> to delete. Est. Monthly Cost divides annual subs by 12.
+  </div>
+</div>
 
 <!-- ══════════════════════════════════════════════════════════
      BY INCOME JUNE
@@ -813,8 +1244,13 @@
   <div style="background:#1a1f2e;border-radius:8px;padding:10px 12px;margin-top:12px;font-size:10px;color:var(--muted);line-height:1.7;border:1px solid var(--border);">
     <span style="color:var(--snow);">Legend:</span> <span style="color:var(--mir-color);">🔵 Miriam checks</span> · <span style="color:var(--rob-color);">🟡 Rob checks</span> · <span style="color:var(--dcf-color);">🟢 DCF checks</span> · <span style="color:#a78bfa;">🟣 Purple rows = extra snowball</span>
   </div>
+  <div style="background:var(--surface);border-radius:8px;padding:10px 14px;margin-top:8px;font-size:10px;border:1px solid var(--border);line-height:2.2;">
+    <span style="color:var(--snow);font-weight:500;letter-spacing:0.06em;">STATUS KEY &nbsp;&nbsp;</span>
+    <span style="background:#1e1800;border:1px solid #fbbf24;color:#fbbf24;border-radius:5px;padding:2px 8px;margin-right:8px;"><strong>S</strong> = Scheduled</span>
+    <span style="background:#0d2010;border:1px solid #34d399;color:#34d399;border-radius:5px;padding:2px 8px;margin-right:8px;"><strong>D</strong> = Done / Paid</span>
+    <span style="background:#1e0d0d;border:1px solid #f87171;color:#f87171;border-radius:5px;padding:2px 8px;"><strong>CH</strong> = Check / Verify</span>
+  </div>
 </div>
-
 
 <!-- ══════════════════════════════════════════════════════════
      BY INCOME JULY
@@ -968,8 +1404,13 @@
   <div style="background:#1a1f2e;border-radius:8px;padding:10px 12px;margin-top:12px;font-size:10px;color:var(--muted);line-height:1.7;border:1px solid var(--border);">
     <span style="color:var(--snow);">Legend:</span> <span style="color:var(--mir-color);">🔵 Miriam</span> · <span style="color:var(--rob-color);">🟡 Rob</span> · <span style="color:var(--dcf-color);">🟢 DCF</span> · <span style="color:#a78bfa;">🟣 Purple = extra snowball</span>
   </div>
+  <div style="background:var(--surface);border-radius:8px;padding:10px 14px;margin-top:8px;font-size:10px;border:1px solid var(--border);line-height:2.2;">
+    <span style="color:var(--snow);font-weight:500;letter-spacing:0.06em;">STATUS KEY &nbsp;&nbsp;</span>
+    <span style="background:#1e1800;border:1px solid #fbbf24;color:#fbbf24;border-radius:5px;padding:2px 8px;margin-right:8px;"><strong>S</strong> = Scheduled</span>
+    <span style="background:#0d2010;border:1px solid #34d399;color:#34d399;border-radius:5px;padding:2px 8px;margin-right:8px;"><strong>D</strong> = Done / Paid</span>
+    <span style="background:#1e0d0d;border:1px solid #f87171;color:#f87171;border-radius:5px;padding:2px 8px;"><strong>CH</strong> = Check / Verify</span>
+  </div>
 </div>
-
 
 <!-- ══════════════════════════════════════════════════════════
      BY INCOME AUGUST
@@ -1021,6 +1462,13 @@
       <td class="td-amt"><input class="amt-input" type="text" value="$3,767.63" data-key="amt-aug-mtg" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
       <td><select class="status-sel" data-key="aug-005" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
       <td><textarea class="notes-inp" data-key="note-aug-005" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="rob-row">
+      <td><div class="td-name">MEAT</div><div class="td-meta">Recurring monthly &middot; Aug 2026 - Jan 2027</div></td>
+      <td class="td-stream" style="color:var(--rob-color);">Rob Chk 1</td><td class="td-date">Monthly</td><td class="td-date">Aug 14</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$330.00" data-key="amt-aug-meat" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="aug-meat" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-aug-meat" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
     </tr>
     <tr class="rob-row">
       <td><div class="td-name">Citibank CC Min</div><div class="td-meta">Debt #1 · Min: $277.49</div></td>
@@ -1106,8 +1554,13 @@
   <div style="background:#1a1f2e;border-radius:8px;padding:10px 12px;margin-top:12px;font-size:10px;color:var(--muted);line-height:1.7;border:1px solid var(--border);">
     <span style="color:var(--snow);">Legend:</span> <span style="color:var(--mir-color);">🔵 Miriam</span> · <span style="color:var(--rob-color);">🟡 Rob</span> · <span style="color:var(--dcf-color);">🟢 DCF</span> · <span style="color:#a78bfa;">🟣 Purple = extra snowball</span>
   </div>
+  <div style="background:var(--surface);border-radius:8px;padding:10px 14px;margin-top:8px;font-size:10px;border:1px solid var(--border);line-height:2.2;">
+    <span style="color:var(--snow);font-weight:500;letter-spacing:0.06em;">STATUS KEY &nbsp;&nbsp;</span>
+    <span style="background:#1e1800;border:1px solid #fbbf24;color:#fbbf24;border-radius:5px;padding:2px 8px;margin-right:8px;"><strong>S</strong> = Scheduled</span>
+    <span style="background:#0d2010;border:1px solid #34d399;color:#34d399;border-radius:5px;padding:2px 8px;margin-right:8px;"><strong>D</strong> = Done / Paid</span>
+    <span style="background:#1e0d0d;border:1px solid #f87171;color:#f87171;border-radius:5px;padding:2px 8px;"><strong>CH</strong> = Check / Verify</span>
+  </div>
 </div>
-
 
 <!-- ══════════════════════════════════════════════════════════
      BY INCOME SEPTEMBER
@@ -1160,6 +1613,13 @@
       <td class="td-amt"><input class="amt-input" type="text" value="$3,767.63" data-key="amt-sep-mtg" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
       <td><select class="status-sel" data-key="sep-005" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
       <td><textarea class="notes-inp" data-key="note-sep-005" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="rob-row">
+      <td><div class="td-name">MEAT</div><div class="td-meta">Recurring monthly &middot; Aug 2026 - Jan 2027</div></td>
+      <td class="td-stream" style="color:var(--rob-color);">Rob Chk 1</td><td class="td-date">Monthly</td><td class="td-date">Sep 15</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$330.00" data-key="amt-sep-meat" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="sep-meat" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-sep-meat" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
     </tr>
     <tr class="rob-row">
       <td><div class="td-name">Citibank CC — FINAL PMT 🎉</div><div class="td-meta">Min: $277.49 · EST. PAYOFF THIS MONTH</div></td>
@@ -1245,6 +1705,12 @@
   <div style="background:#1a1f2e;border-radius:8px;padding:10px 12px;margin-top:12px;font-size:10px;color:var(--muted);line-height:1.7;border:1px solid var(--border);">
     <span style="color:var(--snow);">Legend:</span> <span style="color:var(--mir-color);">🔵 Miriam</span> · <span style="color:var(--rob-color);">🟡 Rob</span> · <span style="color:var(--dcf-color);">🟢 DCF</span> · <span style="color:#a78bfa;">🟣 Purple = extra snowball</span>
   </div>
+  <div style="background:var(--surface);border-radius:8px;padding:10px 14px;margin-top:8px;font-size:10px;border:1px solid var(--border);line-height:2.2;">
+    <span style="color:var(--snow);font-weight:500;letter-spacing:0.06em;">STATUS KEY &nbsp;&nbsp;</span>
+    <span style="background:#1e1800;border:1px solid #fbbf24;color:#fbbf24;border-radius:5px;padding:2px 8px;margin-right:8px;"><strong>S</strong> = Scheduled</span>
+    <span style="background:#0d2010;border:1px solid #34d399;color:#34d399;border-radius:5px;padding:2px 8px;margin-right:8px;"><strong>D</strong> = Done / Paid</span>
+    <span style="background:#1e0d0d;border:1px solid #f87171;color:#f87171;border-radius:5px;padding:2px 8px;"><strong>CH</strong> = Check / Verify</span>
+  </div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════
@@ -1298,6 +1764,13 @@
       <td class="td-amt"><input class="amt-input" type="text" value="$3,767.63" data-key="amt-oct-mtg" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
       <td><select class="status-sel" data-key="oct-005" onchange="setSel(this)"><option value="">–</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
       <td><textarea class="notes-inp" data-key="note-oct-005" placeholder="notes…" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="rob-row">
+      <td><div class="td-name">MEAT</div><div class="td-meta">Recurring monthly &middot; Aug 2026 - Jan 2027</div></td>
+      <td class="td-stream" style="color:var(--rob-color);">Rob Chk 1</td><td class="td-date">Monthly</td><td class="td-date">Oct 15</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$330.00" data-key="amt-oct-meat" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="oct-meat" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-oct-meat" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
     </tr>
     <tr class="snowball-row rob-row">
       <td><div class="td-name">Snowball → Passante</div><div class="td-meta">Freed Citibank funds → full attack on Passante</div></td>
@@ -1377,93 +1850,282 @@
   <div style="background:#1a1f2e;border-radius:8px;padding:10px 12px;margin-top:12px;font-size:10px;color:var(--muted);line-height:1.7;border:1px solid var(--border);">
     <span style="color:var(--snow);">Legend:</span> <span style="color:var(--mir-color);">🔵 Miriam</span> · <span style="color:var(--rob-color);">🟡 Rob</span> · <span style="color:var(--dcf-color);">🟢 DCF</span> · <span style="color:#a78bfa;">🟣 Purple = extra snowball</span>
   </div>
+  <div style="background:var(--surface);border-radius:8px;padding:10px 14px;margin-top:8px;font-size:10px;border:1px solid var(--border);line-height:2.2;">
+    <span style="color:var(--snow);font-weight:500;letter-spacing:0.06em;">STATUS KEY &nbsp;&nbsp;</span>
+    <span style="background:#1e1800;border:1px solid #fbbf24;color:#fbbf24;border-radius:5px;padding:2px 8px;margin-right:8px;"><strong>S</strong> = Scheduled</span>
+    <span style="background:#0d2010;border:1px solid #34d399;color:#34d399;border-radius:5px;padding:2px 8px;margin-right:8px;"><strong>D</strong> = Done / Paid</span>
+    <span style="background:#1e0d0d;border:1px solid #f87171;color:#f87171;border-radius:5px;padding:2px 8px;"><strong>CH</strong> = Check / Verify</span>
+  </div>
 </div>
 
-
-<!-- ══════════════════════════════════════════════════════════
-     LIVING EXPENSES
-══════════════════════════════════════════════════════════ -->
-<div id="tab-living" class="tab-content">
-  <p style="font-size:11px;color:var(--muted);margin-bottom:12px;">All living &amp; variable expenses — which check pays, when it's due, and when to send.</p>
+<!-- BY INCOME NOVEMBER 2026 -->
+<div id="tab-byincome-nov" class="tab-content">
+  <p style="font-size:11px;color:var(--muted);margin-bottom:12px;">November 2026 &middot; Passante under full attack. MEAT active.</p>
+  <div style="background:#0d2020;border-radius:10px;padding:10px 14px;margin-bottom:12px;border:1px solid #1a3e2e;font-size:11px;color:#2dd4bf;">&#128176; MEAT active ($330 via Rob Chk 1). Passante being demolished by full avalanche snowball.</div>
   <div style="overflow-x:auto;">
-  <table class="living-table">
-    <thead><tr><th style="min-width:130px;">Expense</th><th>Income Stream</th><th>Payday</th><th>Due / Timing</th><th>Send Date</th><th>Amount</th></tr></thead>
+  <table class="income-table">
+    <thead><tr><th style="min-width:130px;">Debt / Expense</th><th>Income Stream</th><th>Due Date</th><th>Send Date</th><th>Amount</th><th>Status</th><th style="min-width:110px;">Notes</th></tr></thead>
     <tbody>
-      <tr class="living-cat-hdr"><td colspan="6">🛒 Groceries</td></tr>
-      <tr><td class="td-name">Groceries — 1st half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 1</td><td class="td-date">8th</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$300.00</td></tr>
-      <tr><td class="td-name">Groceries — 2nd half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$300.00</td></tr>
-      <tr style="background:var(--surface2);"><td colspan="5" style="font-size:10px;color:var(--muted);padding:6px;">Monthly total</td><td class="td-amt" style="padding:6px;font-weight:500;">$600.00</td></tr>
-
-      <tr class="living-cat-hdr"><td colspan="6">🍽️ Dining Out <span style="font-size:9px;color:var(--amber);">(cap: $400/mo)</span></td></tr>
-      <tr><td class="td-name">Dining Out — 1st half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 1</td><td class="td-date">8th</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$200.00</td></tr>
-      <tr><td class="td-name">Dining Out — 2nd half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$200.00</td></tr>
-      <tr style="background:var(--surface2);"><td colspan="5" style="font-size:10px;color:var(--muted);padding:6px;">Monthly total (under $400 cap ✓)</td><td class="td-amt" style="padding:6px;font-weight:500;color:var(--green);">$400.00</td></tr>
-
-      <tr class="living-cat-hdr"><td colspan="6">⛽ Gas</td></tr>
-      <tr><td class="td-name">Gas — 1st half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 1</td><td class="td-date">8th</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$125.00</td></tr>
-      <tr><td class="td-name">Gas — 2nd half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$125.00</td></tr>
-      <tr style="background:var(--surface2);"><td colspan="5" style="font-size:10px;color:var(--muted);padding:6px;">Monthly total</td><td class="td-amt" style="padding:6px;font-weight:500;">$250.00</td></tr>
-
-      <tr class="living-cat-hdr"><td colspan="6">🥗 Work Lunch</td></tr>
-      <tr><td class="td-name">Work Lunch — 1st half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 1</td><td class="td-date">8th</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$80.00</td></tr>
-      <tr><td class="td-name">Work Lunch — 2nd half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Variable</td><td class="td-date">On payday</td><td class="td-amt">$80.00</td></tr>
-      <tr style="background:var(--surface2);"><td colspan="5" style="font-size:10px;color:var(--muted);padding:6px;">Monthly total</td><td class="td-amt" style="padding:6px;font-weight:500;">$160.00</td></tr>
-
-      <tr class="living-cat-hdr"><td colspan="6">✂️ Personal Care</td></tr>
-      <tr><td class="td-name">Lolita for Hair</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Due 4th</td><td class="td-date">On payday</td><td class="td-amt">$100.00</td></tr>
-
-      <tr class="living-cat-hdr"><td colspan="6">🎡 Entertainment / Family</td></tr>
-      <tr><td class="td-name">Kings Dominion</td><td class="td-stream">Beg. Cash</td><td class="td-date">1st of mo</td><td class="td-date">Due 2nd</td><td class="td-date">On 2nd</td><td class="td-amt">$73.00</td></tr>
-      <tr><td class="td-name">Urban Air</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Due 26th</td><td class="td-date">On payday</td><td class="td-amt">$43.96</td></tr>
-
-      <tr class="living-cat-hdr"><td colspan="6">💊 Health &amp; Wellness</td></tr>
-      <tr>
-        <td class="td-name">Z Med<div class="td-meta">Every 4 weeks · $325 flat · single payment per cycle · Miriam checks only</div></td>
-        <td class="td-stream" style="color:var(--mir-color);">Miriam Chk 1 or 2</td>
-        <td class="td-date">Every 4 wks</td>
-        <td class="td-date">Closest Miriam payday</td>
-        <td class="td-date">Recurring</td>
-        <td class="td-amt">$325.00</td>
-      </tr>
-      <tr style="background:#0d1525;">
-        <td colspan="6" style="font-size:10px;color:var(--muted);padding:6px 6px 10px;line-height:2;">
-          📅 <strong style="color:var(--mir-color);">Full schedule:</strong>&nbsp;
-          Jul 2 → <span style="color:var(--mir-color);">Mir Chk 1 (Jul 3)</span> &nbsp;·&nbsp;
-          Jul 30 → <span style="color:var(--mir-color);">Mir Chk 2 (Jul 17, early)</span> &nbsp;·&nbsp;
-          Aug 27 → <span style="color:var(--mir-color);">Mir Chk 2 (Aug 28)</span> &nbsp;·&nbsp;
-          Sep 24 → <span style="color:var(--mir-color);">Mir Chk 2 (Sep 25)</span> &nbsp;·&nbsp;
-          Oct 22 → <span style="color:var(--mir-color);">Mir Chk 2 (Oct 23)</span> &nbsp;·&nbsp;
-          Nov 19 → <span style="color:var(--mir-color);">Mir Chk 2 (~Nov 20)</span> &nbsp;·&nbsp;
-          Dec 17 → <span style="color:var(--mir-color);">Mir Chk 2 (~Dec 18)</span> &nbsp;·&nbsp;
-          Jan 14, 2027 → <span style="color:var(--mir-color);">Mir Chk 1 (~Jan 8)</span>
-        </td>
-      </tr>
-      <tr><td class="td-name">Therapy — 1st half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 1</td><td class="td-date">8th</td><td class="td-date">Mondays</td><td class="td-date">On payday</td><td class="td-amt">$50.00</td></tr>
-      <tr><td class="td-name">Therapy — 2nd half</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Mondays</td><td class="td-date">On payday</td><td class="td-amt">$50.00</td></tr>
-      <tr style="background:var(--surface2);"><td colspan="5" style="font-size:10px;color:var(--muted);padding:6px;">Health monthly total</td><td class="td-amt" style="padding:6px;font-weight:500;">$200.00</td></tr>
-
-      <tr class="living-cat-hdr"><td colspan="6">🎯 True Expenses (Sinking Funds)</td></tr>
-      <tr><td class="td-name">Car Repairs fund</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Monthly</td><td class="td-date">On payday</td><td class="td-amt">$150.00</td></tr>
-      <tr><td class="td-name">Home Maintenance fund</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Monthly</td><td class="td-date">On payday</td><td class="td-amt">$200.00</td></tr>
-      <tr><td class="td-name">Gifts / Holidays fund</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Monthly</td><td class="td-date">On payday</td><td class="td-amt">$150.00</td></tr>
-      <tr><td class="td-name">Medical Overflow fund</td><td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">22nd</td><td class="td-date">Monthly</td><td class="td-date">On payday</td><td class="td-amt">$100.00</td></tr>
-      <tr style="background:var(--surface2);"><td colspan="5" style="font-size:10px;color:var(--muted);padding:6px;">True Expenses monthly total</td><td class="td-amt" style="padding:6px;font-weight:500;">$600.00</td></tr>
-
-      <tr style="background:var(--surface);border-top:2px solid var(--border);">
-        <td colspan="5" style="font-size:12px;font-weight:500;padding:12px 6px;">Total Monthly Living</td>
-        <td style="font-size:14px;font-weight:600;color:var(--amber);padding:12px 6px;font-family:'Fraunces',serif;">$2,326.96</td>
-      </tr>
+    <tr class="stream-hdr buf"><td colspan="7">Beginning Cash &middot; Early-month buffer</td></tr>
+    <tr>
+      <td><div class="td-name">GoodLeap HVAC</div><div class="td-meta">Debt #4 &middot; Min: $137.23</div></td>
+      <td class="td-stream">Beg. Cash</td><td class="td-date">NOV 1</td><td class="td-date">NOV 1</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$137.23" data-key="amt-nov-good" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="nov-001" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-nov-001" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr>
+      <td><div class="td-name">Wells Fargo CC</div><div class="td-meta">Min: $150.00</div></td>
+      <td class="td-stream">Beg. Cash</td><td class="td-date">NOV 2</td><td class="td-date">NOV 2</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$150.00" data-key="amt-nov-wf" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="nov-002" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-nov-002" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="stream-hdr mir"><td colspan="7">Miriam Check 1 &middot; Payday Nov 6</td></tr>
+    <tr class="mir-row">
+      <td><div class="td-name">HELOC Minimum</div><div class="td-meta">Debt #6 &middot; $1,461.67 &middot; NavyFed fixed conversion in progress</div></td>
+      <td class="td-stream" style="color:var(--mir-color);">Miriam Chk 1</td><td class="td-date">Due 8th</td><td class="td-date">By Nov 6</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$1,461.67" data-key="amt-nov-heloc" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="nov-003" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-nov-003" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="stream-hdr rob"><td colspan="7">Rob Check 1 &middot; Payday Nov 14</td></tr>
+    <tr class="rob-row">
+      <td><div class="td-name">LoanDepot Mortgage</div><div class="td-meta">Due 1st &middot; grace to 15th</div></td>
+      <td class="td-stream" style="color:var(--rob-color);">Rob Chk 1</td><td class="td-date">Due 1st</td><td class="td-date">Nov 14</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$3,767.63" data-key="amt-nov-mtg" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="nov-005" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-nov-005" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="rob-row">
+      <td><div class="td-name">MEAT</div><div class="td-meta">Recurring monthly · Aug 2026 - Jan 2027</div></td>
+      <td class="td-stream" style="color:var(--rob-color);">Rob Chk 1</td><td class="td-date">Monthly</td><td class="td-date">Nov 14</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$330.00" data-key="amt-nov-meat" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="nov-meat" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-nov-meat" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="snowball-row rob-row">
+      <td><div class="td-name">Snowball &rarr; Passante</div><div class="td-meta">Priority #2 &middot; freed Citibank funds</div></td>
+      <td class="td-stream" style="color:var(--rob-color);">Rob Chk 1</td><td class="td-date">&#8212;</td><td class="td-date">Nov 14</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$2,500.00" data-key="amt-nov-snow-r1" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="nov-snow-r1" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-nov-snow-r1" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="stream-hdr dca"><td colspan="7">Income Check A (DCF) &middot; Deposits Nov 20</td></tr>
+    <tr class="dcf-row">
+      <td><div class="td-name">NavyFed</div><div class="td-meta">Debt #5 &middot; Min: $536.89</div></td>
+      <td class="td-stream" style="color:var(--dcf-color);">Check A</td><td class="td-date">Due 13th</td><td class="td-date">Nov 20</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$536.89" data-key="amt-nov-navy" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="nov-007" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-nov-007" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="snowball-row dcf-row">
+      <td><div class="td-name">Snowball &rarr; Passante</div><div class="td-meta">All extra DCF A to Passante</div></td>
+      <td class="td-stream" style="color:var(--dcf-color);">Check A</td><td class="td-date">&#8212;</td><td class="td-date">Nov 20</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$324.86" data-key="amt-nov-snow-a" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="nov-snow-a" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-nov-snow-a" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="stream-hdr mir"><td colspan="7">Miriam Check 2 &middot; Payday Nov 20</td></tr>
+    <tr class="mir-row">
+      <td><div class="td-name">Passante</div><div class="td-meta">Debt #2 &middot; Min: $324.86</div></td>
+      <td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">Due 1st</td><td class="td-date">Nov 20</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$324.86" data-key="amt-nov-pass" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="nov-009" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-nov-009" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="mir-row">
+      <td><div class="td-name">Z Med</div><div class="td-meta">Every 4 wks · due Nov 19 · cycle 6 of 8</div></td>
+      <td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">Due Nov 19</td><td class="td-date">Nov 20</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$325.00" data-key="amt-nov-zmed" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="nov-zmed" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-nov-zmed" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="snowball-row mir-row">
+      <td><div class="td-name">Snowball &rarr; Passante</div><div class="td-meta">Car Repairs + Home Maint redirect</div></td>
+      <td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">&#8212;</td><td class="td-date">Nov 20</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$350.00" data-key="amt-nov-snow-m2" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="nov-snow-m2" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-nov-snow-m2" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="stream-hdr dca"><td colspan="7">Income Check B (DCF) &middot; Deposits Nov 4</td></tr>
+    <tr class="snowball-row dcf-row">
+      <td><div class="td-name">Snowball &rarr; Passante</div><div class="td-meta">DCF Check B to Passante</div></td>
+      <td class="td-stream" style="color:var(--dcf-color);">Check B</td><td class="td-date">&#8212;</td><td class="td-date">Nov 4</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$400.00" data-key="amt-nov-snow-b" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="nov-snow-b" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-nov-snow-b" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="stream-hdr rob"><td colspan="7">Rob Check 2 &middot; Payday Nov 28</td></tr>
+    <tr class="rob-row">
+      <td><div class="td-name">LightStream</div><div class="td-meta">Min: $1,589.75 &middot; self-liquidating Oct 2026</div></td>
+      <td class="td-stream" style="color:var(--rob-color);">Rob Chk 2</td><td class="td-date">By 10th</td><td class="td-date">Nov 28</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$1,589.75" data-key="amt-nov-light" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="nov-011" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-nov-011" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="snowball-row rob-row">
+      <td><div class="td-name">Snowball &rarr; Passante</div><div class="td-meta">Rob Chk 2 full snowball</div></td>
+      <td class="td-stream" style="color:var(--rob-color);">Rob Chk 2</td><td class="td-date">&#8212;</td><td class="td-date">Nov 28</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$2,368.07" data-key="amt-nov-snow-r2" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="nov-snow-r2" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-nov-snow-r2" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
     </tbody>
   </table>
   </div>
-  <div style="background:#1a1a1a;border-radius:10px;padding:12px 14px;margin-top:12px;font-size:11px;color:var(--muted);line-height:1.7;border:1px solid var(--border);">
-    <span style="color:var(--snow);">📌 Note:</span> All living expenses are funded from <strong style="color:var(--mir-color);">Miriam's checks</strong> (both 1st and 2nd). Rob's checks are dedicated to mortgage, debt minimums, and the primary snowball attack. Sinking funds (Car Repairs, Home Maintenance) are currently redirected monthly to the debt snowball.
+  <div style="background:var(--surface2);border-radius:12px;padding:14px;border:1px solid var(--border);margin-top:8px;" id="summary-nov">
+    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:500;margin-bottom:8px;">
+      <span style="color:#e8edf5;">Monthly Total</span>
+      <span id="total-nov" style="color:var(--amber);font-family:'Fraunces',serif;font-size:16px;">calculating&#8230;</span>
+    </div>
+    <div style="font-size:10px;color:var(--muted);margin-top:4px;"><span style="color:#2dd4bf;">&#128176; MEAT $330 included &middot; Z Med cycle 6</span></div>
+  </div>
+  <div style="background:#1a1f2e;border-radius:8px;padding:10px 12px;margin-top:12px;font-size:10px;color:var(--muted);line-height:1.7;border:1px solid var(--border);">
+    <span style="color:var(--snow);">Legend:</span> <span style="color:var(--mir-color);">&#128309; Miriam</span> &middot; <span style="color:var(--rob-color);">&#128993; Rob</span> &middot; <span style="color:var(--dcf-color);">&#129001; DCF</span> &middot; <span style="color:#a78bfa;">&#128995; Purple = extra snowball</span>
+  </div>
+  <div style="background:var(--surface);border-radius:8px;padding:10px 14px;margin-top:8px;font-size:10px;border:1px solid var(--border);line-height:2.2;">
+    <span style="color:var(--snow);font-weight:500;letter-spacing:0.06em;">STATUS KEY &nbsp;&nbsp;</span>
+    <span style="background:#1e1800;border:1px solid #fbbf24;color:#fbbf24;border-radius:5px;padding:2px 8px;margin-right:8px;"><strong>S</strong> = Scheduled</span>
+    <span style="background:#0d2010;border:1px solid #34d399;color:#34d399;border-radius:5px;padding:2px 8px;margin-right:8px;"><strong>D</strong> = Done / Paid</span>
+    <span style="background:#1e0d0d;border:1px solid #f87171;color:#f87171;border-radius:5px;padding:2px 8px;"><strong>CH</strong> = Check / Verify</span>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════
-     JAVASCRIPT
-══════════════════════════════════════════════════════════ -->
+<!-- BY INCOME DECEMBER 2026 -->
+<div id="tab-byincome-dec" class="tab-content">
+  <p style="font-size:11px;color:var(--muted);margin-bottom:12px;">December 2026 &middot; Passante approaching payoff. 3rd Miriam check this month!</p>
+  <div style="background:#0d2020;border-radius:10px;padding:10px 14px;margin-bottom:12px;border:1px solid #1a3e2e;font-size:11px;color:#2dd4bf;">&#127873; December has a 3rd Miriam check &mdash; direct entirely to Passante for the knockout blow. MEAT active.</div>
+  <div style="overflow-x:auto;">
+  <table class="income-table">
+    <thead><tr><th style="min-width:130px;">Debt / Expense</th><th>Income Stream</th><th>Due Date</th><th>Send Date</th><th>Amount</th><th>Status</th><th style="min-width:110px;">Notes</th></tr></thead>
+    <tbody>
+    <tr class="stream-hdr buf"><td colspan="7">Beginning Cash &middot; Early-month buffer</td></tr>
+    <tr>
+      <td><div class="td-name">GoodLeap HVAC</div><div class="td-meta">Debt #4 &middot; Min: $137.23</div></td>
+      <td class="td-stream">Beg. Cash</td><td class="td-date">DEC 1</td><td class="td-date">DEC 1</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$137.23" data-key="amt-dec-good" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="dec-001" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-dec-001" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr>
+      <td><div class="td-name">Wells Fargo CC</div><div class="td-meta">Min: $150.00</div></td>
+      <td class="td-stream">Beg. Cash</td><td class="td-date">DEC 2</td><td class="td-date">DEC 2</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$150.00" data-key="amt-dec-wf" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="dec-002" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-dec-002" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="stream-hdr mir"><td colspan="7">Miriam Check 1 &middot; Payday Dec 4</td></tr>
+    <tr class="mir-row">
+      <td><div class="td-name">HELOC Minimum</div><div class="td-meta">Debt #6 &middot; $1,461.67 &middot; NavyFed fixed conversion in progress</div></td>
+      <td class="td-stream" style="color:var(--mir-color);">Miriam Chk 1</td><td class="td-date">Due 8th</td><td class="td-date">By Dec 4</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$1,461.67" data-key="amt-dec-heloc" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="dec-003" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-dec-003" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="stream-hdr rob"><td colspan="7">Rob Check 1 &middot; Payday Dec 12</td></tr>
+    <tr class="rob-row">
+      <td><div class="td-name">LoanDepot Mortgage</div><div class="td-meta">Due 1st &middot; grace to 15th</div></td>
+      <td class="td-stream" style="color:var(--rob-color);">Rob Chk 1</td><td class="td-date">Due 1st</td><td class="td-date">Dec 12</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$3,767.63" data-key="amt-dec-mtg" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="dec-005" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-dec-005" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="rob-row">
+      <td><div class="td-name">MEAT</div><div class="td-meta">Recurring monthly · Aug 2026 - Jan 2027</div></td>
+      <td class="td-stream" style="color:var(--rob-color);">Rob Chk 1</td><td class="td-date">Monthly</td><td class="td-date">Dec 12</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$330.00" data-key="amt-dec-meat" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="dec-meat" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-dec-meat" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="snowball-row rob-row">
+      <td><div class="td-name">Snowball &rarr; Passante</div><div class="td-meta">Priority #2 &middot; freed Citibank funds</div></td>
+      <td class="td-stream" style="color:var(--rob-color);">Rob Chk 1</td><td class="td-date">&#8212;</td><td class="td-date">Dec 12</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$2,500.00" data-key="amt-dec-snow-r1" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="dec-snow-r1" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-dec-snow-r1" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="stream-hdr dca"><td colspan="7">Income Check A (DCF) &middot; Deposits Dec 18</td></tr>
+    <tr class="dcf-row">
+      <td><div class="td-name">NavyFed</div><div class="td-meta">Debt #5 &middot; Min: $536.89</div></td>
+      <td class="td-stream" style="color:var(--dcf-color);">Check A</td><td class="td-date">Due 13th</td><td class="td-date">Dec 18</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$536.89" data-key="amt-dec-navy" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="dec-007" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-dec-007" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="snowball-row dcf-row">
+      <td><div class="td-name">Snowball &rarr; Passante</div><div class="td-meta">All extra DCF A to Passante</div></td>
+      <td class="td-stream" style="color:var(--dcf-color);">Check A</td><td class="td-date">&#8212;</td><td class="td-date">Dec 18</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$324.86" data-key="amt-dec-snow-a" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="dec-snow-a" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-dec-snow-a" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="stream-hdr mir"><td colspan="7">Miriam Check 2 &middot; Payday Dec 18</td></tr>
+    <tr class="mir-row">
+      <td><div class="td-name">Passante</div><div class="td-meta">Debt #2 &middot; Min: $324.86</div></td>
+      <td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">Due 1st</td><td class="td-date">Dec 18</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$324.86" data-key="amt-dec-pass" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="dec-009" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-dec-009" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="mir-row">
+      <td><div class="td-name">Z Med</div><div class="td-meta">Every 4 wks · due Dec 17 · cycle 7 of 8</div></td>
+      <td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">Due Dec 17</td><td class="td-date">Dec 18</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$325.00" data-key="amt-dec-zmed" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="dec-zmed" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-dec-zmed" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="snowball-row mir-row">
+      <td><div class="td-name">Snowball &rarr; Passante</div><div class="td-meta">Car Repairs + Home Maint redirect</div></td>
+      <td class="td-stream" style="color:var(--mir-color);">Miriam Chk 2</td><td class="td-date">&#8212;</td><td class="td-date">Dec 18</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$350.00" data-key="amt-dec-snow-m2" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="dec-snow-m2" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-dec-snow-m2" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="stream-hdr dca"><td colspan="7">Income Check B (DCF) &middot; Deposits Dec 4</td></tr>
+    <tr class="snowball-row dcf-row">
+      <td><div class="td-name">Snowball &rarr; Passante</div><div class="td-meta">DCF Check B to Passante</div></td>
+      <td class="td-stream" style="color:var(--dcf-color);">Check B</td><td class="td-date">&#8212;</td><td class="td-date">Dec 4</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$400.00" data-key="amt-dec-snow-b" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="dec-snow-b" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-dec-snow-b" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="stream-hdr rob"><td colspan="7">Rob Check 2 &middot; Payday Dec 31</td></tr>
+    <tr class="rob-row">
+      <td><div class="td-name">LightStream</div><div class="td-meta">Min: $1,589.75 &middot; self-liquidating Oct 2026</div></td>
+      <td class="td-stream" style="color:var(--rob-color);">Rob Chk 2</td><td class="td-date">By 10th</td><td class="td-date">Dec 31</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$1,589.75" data-key="amt-dec-light" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="dec-011" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-dec-011" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    <tr class="snowball-row rob-row">
+      <td><div class="td-name">Snowball &rarr; Passante</div><div class="td-meta">Rob Chk 2 full snowball</div></td>
+      <td class="td-stream" style="color:var(--rob-color);">Rob Chk 2</td><td class="td-date">&#8212;</td><td class="td-date">Dec 31</td>
+      <td class="td-amt"><input class="amt-input" type="text" value="$2,368.07" data-key="amt-dec-snow-r2" onchange="saveAmt(this)" onblur="fmtAmt(this)"></td>
+      <td><select class="status-sel" data-key="dec-snow-r2" onchange="setSel(this)"><option value="">&#8211;</option><option value="S">S</option><option value="D">D</option><option value="CH">CH</option></select></td>
+      <td><textarea class="notes-inp" data-key="note-dec-snow-r2" placeholder="notes&#8230;" oninput="saveNote(this)"></textarea></td>
+    </tr>
+    </tbody>
+  </table>
+  </div>
+  <div style="background:var(--surface2);border-radius:12px;padding:14px;border:1px solid var(--border);margin-top:8px;" id="summary-dec">
+    <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:500;margin-bottom:8px;">
+      <span style="color:#e8edf5;">Monthly Total</span>
+      <span id="total-dec" style="color:var(--amber);font-family:'Fraunces',serif;font-size:16px;">calculating&#8230;</span>
+    </div>
+    <div style="font-size:10px;color:var(--muted);margin-top:4px;"><span style="color:#2dd4bf;">&#128176; MEAT $330 included &middot; Z Med cycle 7</span></div>
+  </div>
+  <div style="background:#1a1f2e;border-radius:8px;padding:10px 12px;margin-top:12px;font-size:10px;color:var(--muted);line-height:1.7;border:1px solid var(--border);">
+    <span style="color:var(--snow);">Legend:</span> <span style="color:var(--mir-color);">&#128309; Miriam</span> &middot; <span style="color:var(--rob-color);">&#128993; Rob</span> &middot; <span style="color:var(--dcf-color);">&#129001; DCF</span> &middot; <span style="color:#a78bfa;">&#128995; Purple = extra snowball</span>
+  </div>
+  <div style="background:var(--surface);border-radius:8px;padding:10px 14px;margin-top:8px;font-size:10px;border:1px solid var(--border);line-height:2.2;">
+    <span style="color:var(--snow);font-weight:500;letter-spacing:0.06em;">STATUS KEY &nbsp;&nbsp;</span>
+    <span style="background:#1e1800;border:1px solid #fbbf24;color:#fbbf24;border-radius:5px;padding:2px 8px;margin-right:8px;"><strong>S</strong> = Scheduled</span>
+    <span style="background:#0d2010;border:1px solid #34d399;color:#34d399;border-radius:5px;padding:2px 8px;margin-right:8px;"><strong>D</strong> = Done / Paid</span>
+    <span style="background:#1e0d0d;border:1px solid #f87171;color:#f87171;border-radius:5px;padding:2px 8px;"><strong>CH</strong> = Check / Verify</span>
+  </div>
+</div>
+
 <script>
 const SUPA_URL = 'https://ywbzzncfalpjevrxserj.supabase.co';
 const SUPA_KEY = 'sb_publishable__GwcwVGKRMelHWgsHSqrxQ_v2wDTjm6';
@@ -1648,8 +2310,9 @@ function showTab(name, btn) {
   document.getElementById('tab-' + name).classList.add('active');
   if (btn) btn.classList.add('active');
   // Recalculate total for the newly shown tab
-  const tabIds = ['jun','jul','aug','sep','oct'];
+  const tabIds = ['jun','jul','aug','sep','oct','nov','dec'];
   if (tabIds.includes(name)) recalcTotal(name);
+  if (name === 'subscriptions') recalcSubTotal();
 }
 
 function parseAmt(val) {
@@ -1671,12 +2334,58 @@ function recalcTotal(tabId) {
 }
 
 function recalcAllTotals() {
-  ['jun','jul','aug','sep','oct'].forEach(t => recalcTotal(t));
+  ['jun','jul','aug','sep','oct','nov','dec'].forEach(t => recalcTotal(t));
+}
+
+
+// ── Subscriptions ──
+let subCounter = 35;
+function saveSub(el) {
+  if (!el.dataset.key) return;
+  showSyncBadge('syncing');
+  debounce(el.dataset.key, async () => {
+    const ok = await saveToCloud(el.dataset.key, el.value);
+    showSyncBadge(ok ? 'ok' : 'error');
+  }, 700);
+  recalcSubTotal();
+}
+function deleteSub(rowIdx) {
+  const r = document.getElementById('sub-row-' + rowIdx);
+  if (r) { r.remove(); recalcSubTotal(); }
+}
+function addSubRow() {
+  const id = subCounter++;
+  const k = 'sub-' + String(id).padStart(3,'0');
+  const tr = document.createElement('tr');
+  tr.id = 'sub-row-' + id;
+  tr.innerHTML = `<td><input class="sub-inp sub-name" data-key="${k}-name" value="" placeholder="Subscription name" oninput="saveSub(this)"></td>
+    <td><input class="sub-inp sub-amt" data-key="${k}-amt" value="" placeholder="$0.00" oninput="saveSub(this)"></td>
+    <td><select class="sub-type-sel" data-key="${k}-type" onchange="saveSub(this)"><option>Monthly</option><option>Annual</option></select></td>
+    <td><input class="sub-inp sub-due" data-key="${k}-due" value="" placeholder="e.g. 15th" oninput="saveSub(this)"></td>
+    <td><input class="sub-inp sub-sent" data-key="${k}-sent" value="" placeholder="&#8212;" oninput="saveSub(this)"></td>
+    <td><input class="sub-inp sub-cc" data-key="${k}-cc" value="" placeholder="Card / bank" oninput="saveSub(this)"></td>
+    <td><button class="sub-del-btn" onclick="deleteSub(${id})">&#x2715;</button></td>`;
+  document.getElementById('sub-tbody').appendChild(tr);
+  tr.querySelector('input').focus();
+}
+function recalcSubTotal() {
+  let monthly = 0;
+  document.querySelectorAll('#sub-tbody tr').forEach(row => {
+    const a = row.querySelector('.sub-amt');
+    const t = row.querySelector('.sub-type-sel');
+    if (!a) return;
+    const n = parseFloat((a.value||'').replace(/[$,]/g,''));
+    if (isNaN(n)) return;
+    const annual = t && (t.value === 'Annual' || t.value === 'Annually');
+    monthly += annual ? n/12 : n;
+  });
+  const el = document.getElementById('sub-monthly-total');
+  if (el) el.textContent = '$' + monthly.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   loadFromCloud();
-  setTimeout(recalcAllTotals, 300);
+  setTimeout(() => { recalcAllTotals(); recalcSubTotal(); }, 300);
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) loadFromCloud();
   });
@@ -1684,6 +2393,8 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 <div id="sync-badge" style="position:fixed;bottom:16px;right:16px;font-family:'DM Mono',monospace;font-size:10px;color:#34d399;opacity:0.4;transition:opacity 0.6s;pointer-events:none;z-index:9999;letter-spacing:0.05em;">☁ synced</div>
+
+
 
 </body>
 </html>
