@@ -243,6 +243,90 @@
   }
   .balance-pos { color: var(--green); }
   .balance-neg { color: var(--red); }
+
+  /* Calendar tab */
+  :root {
+    --mir-color: #60a5fa;
+    --rob-color: #fbbf24;
+    --dcf-color: #34d399;
+    --pink: #ec4899;
+  }
+  .cal-month { margin-bottom: 26px; }
+  .cal-month-title {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .cal-note {
+    font-size: 10px;
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+  .cal-note.buffer { background: #1e1800; color: var(--amber); border: 1px solid #3a3010; }
+  .cal-note.resume { background: #0d2020; color: var(--teal); border: 1px solid #1a3e2e; }
+  .cal-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(72px, 1fr));
+    gap: 3px;
+    min-width: 560px;
+  }
+  .cal-dow {
+    font-size: 9px;
+    color: var(--muted);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 0 4px;
+  }
+  .cal-day {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 4px 4px;
+    min-height: 62px;
+  }
+  .cal-day.empty { background: transparent; border-color: transparent; }
+  .cal-daynum { font-size: 9px; color: var(--muted); margin-bottom: 2px; }
+  .cal-chip {
+    display: block;
+    border-radius: 4px;
+    padding: 1px 4px;
+    margin-bottom: 2px;
+    font-size: 8px;
+    line-height: 1.4;
+    font-family: 'DM Mono', monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .cal-chip.pay-mir { background: rgba(96,165,250,0.16); color: var(--mir-color); font-weight: 500; }
+  .cal-chip.pay-rob { background: rgba(251,191,36,0.16); color: var(--rob-color); font-weight: 500; }
+  .cal-chip.pay-dcf { background: rgba(52,211,153,0.16); color: var(--dcf-color); font-weight: 500; }
+  .cal-chip.bill { background: rgba(136,136,136,0.14); color: #cfcfcf; }
+  .cal-chip.snow { background: rgba(236,72,153,0.16); color: var(--pink); font-weight: 600; }
+  .cal-legend {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    font-size: 10px;
+  }
+  .cal-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 5px 10px;
+  }
+  .cal-legend-dot { width: 9px; height: 9px; border-radius: 3px; flex-shrink: 0; }
+
 </style>
 </head>
 <body>
@@ -259,6 +343,7 @@
   <button class="tab-btn" onclick="showTab('categories')">Categories</button>
   <button class="tab-btn" onclick="showTab('subscriptions')">Subs</button>
   <button class="tab-btn" onclick="showTab('schedule')">Pay Schedule</button>
+  <button class="tab-btn" onclick="showTab('calendar')">Calendar</button>
 </div>
 
 <!-- SUMMARY TAB -->
@@ -883,6 +968,182 @@
 
   <div style="background:var(--surface2); border-radius:8px; padding:10px 12px; font-size:11px; color:var(--muted); border:1px solid var(--border);">
     * = 3-week delayed deposit per MA DCF EFT schedule (FY2027 predicted)
+  </div>
+</div>
+
+<!-- CALENDAR TAB -->
+<div id="tab-calendar" class="tab-content">
+  <div class="cal-legend">
+    <div class="cal-legend-item"><span class="cal-legend-dot" style="background:var(--mir-color);"></span>Miriam payday</div>
+    <div class="cal-legend-item"><span class="cal-legend-dot" style="background:var(--rob-color);"></span>Rob payday</div>
+    <div class="cal-legend-item"><span class="cal-legend-dot" style="background:var(--dcf-color);"></span>DCF Check A/B</div>
+    <div class="cal-legend-item"><span class="cal-legend-dot" style="background:#888;"></span>Debt minimum due</div>
+    <div class="cal-legend-item"><span class="cal-legend-dot" style="background:var(--pink);"></span>Recommended snowball amount</div>
+  </div>
+  <div class="cal-note resume" style="margin-bottom:20px;">📅 October 2026 – December 2027. Gray chips are debt minimums due; pink chips show the recommended extra snowball amount and target debt for that paycheck, once the avalanche resumes in January 2027. Sep–Dec 2026 dates are actual; Jan–Dec 2027 paycheck dates and snowball targets are projected from established patterns — confirm and adjust as real dates/balances come in.</div>
+  <div class="cal-month">
+    <div class="cal-month-title">October 2026</div>
+    <div class="cal-note buffer">⏸️ Buffer hold — no extra snowball this month (Citibank min-only; extra held as cash reserve)</div>
+    <div class="cal-scroll">
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day"><div class="cal-daynum">1</div><span class="cal-chip bill">GoodLeap $137</span><span class="cal-chip bill">Passante $325</span><span class="cal-chip bill">Mortgage $3,768</span></div><div class="cal-day"><div class="cal-daynum">2</div><span class="cal-chip bill">WF $150</span></div><div class="cal-day"><div class="cal-daynum">3</div></div><div class="cal-day"><div class="cal-daynum">4</div></div><div class="cal-day"><div class="cal-daynum">5</div></div><div class="cal-day"><div class="cal-daynum">6</div></div><div class="cal-day"><div class="cal-daynum">7</div></div><div class="cal-day"><div class="cal-daynum">8</div><span class="cal-chip bill">HELOC $1,462</span></div><div class="cal-day"><div class="cal-daynum">9</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-B</span></div><div class="cal-day"><div class="cal-daynum">10</div></div><div class="cal-day"><div class="cal-daynum">11</div></div><div class="cal-day"><div class="cal-daynum">12</div></div><div class="cal-day"><div class="cal-daynum">13</div><span class="cal-chip bill">NavyFed $537</span></div><div class="cal-day"><div class="cal-daynum">14</div></div><div class="cal-day"><div class="cal-daynum">15</div><span class="cal-chip pay-rob">Rob</span><span class="cal-chip bill">Citibank $158</span></div><div class="cal-day"><div class="cal-daynum">16</div></div><div class="cal-day"><div class="cal-daynum">17</div></div><div class="cal-day"><div class="cal-daynum">18</div></div><div class="cal-day"><div class="cal-daynum">19</div></div><div class="cal-day"><div class="cal-daynum">20</div></div><div class="cal-day"><div class="cal-daynum">21</div></div><div class="cal-day"><div class="cal-daynum">22</div></div><div class="cal-day"><div class="cal-daynum">23</div><span class="cal-chip pay-mir">Miriam</span></div><div class="cal-day"><div class="cal-daynum">24</div></div><div class="cal-day"><div class="cal-daynum">25</div></div><div class="cal-day"><div class="cal-daynum">26</div></div><div class="cal-day"><div class="cal-daynum">27</div></div><div class="cal-day"><div class="cal-daynum">28</div></div><div class="cal-day"><div class="cal-daynum">29</div></div><div class="cal-day"><div class="cal-daynum">30</div><span class="cal-chip pay-rob">Rob</span><span class="cal-chip pay-dcf">DCF-A</span></div><div class="cal-day"><div class="cal-daynum">31</div></div>
+    </div>
+    </div>
+  </div>
+
+  <div class="cal-month">
+    <div class="cal-month-title">November 2026</div>
+    <div class="cal-note buffer">⏸️ Buffer hold — no extra snowball this month (Citibank min-only; extra held as cash reserve)</div>
+    <div class="cal-scroll">
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day"><div class="cal-daynum">1</div><span class="cal-chip bill">GoodLeap $137</span><span class="cal-chip bill">Passante $325</span><span class="cal-chip bill">Mortgage $3,768</span></div><div class="cal-day"><div class="cal-daynum">2</div><span class="cal-chip bill">WF $150</span></div><div class="cal-day"><div class="cal-daynum">3</div></div><div class="cal-day"><div class="cal-daynum">4</div></div><div class="cal-day"><div class="cal-daynum">5</div></div><div class="cal-day"><div class="cal-daynum">6</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-B</span></div><div class="cal-day"><div class="cal-daynum">7</div></div><div class="cal-day"><div class="cal-daynum">8</div><span class="cal-chip bill">HELOC $1,462</span></div><div class="cal-day"><div class="cal-daynum">9</div></div><div class="cal-day"><div class="cal-daynum">10</div></div><div class="cal-day"><div class="cal-daynum">11</div></div><div class="cal-day"><div class="cal-daynum">12</div></div><div class="cal-day"><div class="cal-daynum">13</div><span class="cal-chip pay-rob">Rob</span><span class="cal-chip bill">NavyFed $537</span></div><div class="cal-day"><div class="cal-daynum">14</div></div><div class="cal-day"><div class="cal-daynum">15</div><span class="cal-chip bill">Citibank $158</span></div><div class="cal-day"><div class="cal-daynum">16</div></div><div class="cal-day"><div class="cal-daynum">17</div></div><div class="cal-day"><div class="cal-daynum">18</div></div><div class="cal-day"><div class="cal-daynum">19</div></div><div class="cal-day"><div class="cal-daynum">20</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-A</span></div><div class="cal-day"><div class="cal-daynum">21</div></div><div class="cal-day"><div class="cal-daynum">22</div></div><div class="cal-day"><div class="cal-daynum">23</div></div><div class="cal-day"><div class="cal-daynum">24</div></div><div class="cal-day"><div class="cal-daynum">25</div></div><div class="cal-day"><div class="cal-daynum">26</div></div><div class="cal-day"><div class="cal-daynum">27</div></div><div class="cal-day"><div class="cal-daynum">28</div></div><div class="cal-day"><div class="cal-daynum">29</div></div><div class="cal-day"><div class="cal-daynum">30</div><span class="cal-chip pay-rob">Rob</span></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div>
+    </div>
+    </div>
+  </div>
+
+  <div class="cal-month">
+    <div class="cal-month-title">December 2026</div>
+    <div class="cal-note buffer">⏸️ Buffer hold — no extra snowball this month (Citibank min-only; extra held as cash reserve)</div>
+    <div class="cal-scroll">
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day"><div class="cal-daynum">1</div><span class="cal-chip bill">GoodLeap $137</span><span class="cal-chip bill">Passante $325</span><span class="cal-chip bill">Mortgage $3,768</span></div><div class="cal-day"><div class="cal-daynum">2</div><span class="cal-chip bill">WF $150</span></div><div class="cal-day"><div class="cal-daynum">3</div></div><div class="cal-day"><div class="cal-daynum">4</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-B</span></div><div class="cal-day"><div class="cal-daynum">5</div></div><div class="cal-day"><div class="cal-daynum">6</div></div><div class="cal-day"><div class="cal-daynum">7</div></div><div class="cal-day"><div class="cal-daynum">8</div><span class="cal-chip bill">HELOC $1,462</span></div><div class="cal-day"><div class="cal-daynum">9</div></div><div class="cal-day"><div class="cal-daynum">10</div></div><div class="cal-day"><div class="cal-daynum">11</div></div><div class="cal-day"><div class="cal-daynum">12</div></div><div class="cal-day"><div class="cal-daynum">13</div><span class="cal-chip bill">NavyFed $537</span></div><div class="cal-day"><div class="cal-daynum">14</div></div><div class="cal-day"><div class="cal-daynum">15</div><span class="cal-chip pay-rob">Rob</span><span class="cal-chip bill">Citibank $158</span></div><div class="cal-day"><div class="cal-daynum">16</div></div><div class="cal-day"><div class="cal-daynum">17</div></div><div class="cal-day"><div class="cal-daynum">18</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-A</span></div><div class="cal-day"><div class="cal-daynum">19</div></div><div class="cal-day"><div class="cal-daynum">20</div></div><div class="cal-day"><div class="cal-daynum">21</div></div><div class="cal-day"><div class="cal-daynum">22</div></div><div class="cal-day"><div class="cal-daynum">23</div></div><div class="cal-day"><div class="cal-daynum">24</div></div><div class="cal-day"><div class="cal-daynum">25</div></div><div class="cal-day"><div class="cal-daynum">26</div></div><div class="cal-day"><div class="cal-daynum">27</div></div><div class="cal-day"><div class="cal-daynum">28</div></div><div class="cal-day"><div class="cal-daynum">29</div></div><div class="cal-day"><div class="cal-daynum">30</div></div><div class="cal-day"><div class="cal-daynum">31</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-rob">Rob</span><span class="cal-chip pay-dcf">DCF-B</span></div><div class="cal-day empty"></div><div class="cal-day empty"></div>
+    </div>
+    </div>
+  </div>
+
+  <div class="cal-month">
+    <div class="cal-month-title">January 2027</div>
+    <div class="cal-note resume">▶️ Avalanche resumes — pink = recommended extra snowball amount &amp; target debt</div>
+    <div class="cal-scroll">
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day"><div class="cal-daynum">1</div><span class="cal-chip bill">GoodLeap $137</span><span class="cal-chip bill">Passante $325</span><span class="cal-chip bill">Mortgage $3,768</span></div><div class="cal-day"><div class="cal-daynum">2</div><span class="cal-chip bill">WF $150</span></div><div class="cal-day"><div class="cal-daynum">3</div></div><div class="cal-day"><div class="cal-daynum">4</div></div><div class="cal-day"><div class="cal-daynum">5</div></div><div class="cal-day"><div class="cal-daynum">6</div></div><div class="cal-day"><div class="cal-daynum">7</div></div><div class="cal-day"><div class="cal-daynum">8</div><span class="cal-chip bill">HELOC $1,462</span></div><div class="cal-day"><div class="cal-daynum">9</div></div><div class="cal-day"><div class="cal-daynum">10</div></div><div class="cal-day"><div class="cal-daynum">11</div></div><div class="cal-day"><div class="cal-daynum">12</div></div><div class="cal-day"><div class="cal-daynum">13</div><span class="cal-chip bill">NavyFed $537</span></div><div class="cal-day"><div class="cal-daynum">14</div></div><div class="cal-day"><div class="cal-daynum">15</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-rob">Rob</span><span class="cal-chip pay-dcf">DCF-A</span><span class="cal-chip snow">+$2,500→Citibank</span><span class="cal-chip snow">+$325→Citibank</span><span class="cal-chip bill">Citibank $158 FINAL</span></div><div class="cal-day"><div class="cal-daynum">16</div></div><div class="cal-day"><div class="cal-daynum">17</div></div><div class="cal-day"><div class="cal-daynum">18</div></div><div class="cal-day"><div class="cal-daynum">19</div></div><div class="cal-day"><div class="cal-daynum">20</div></div><div class="cal-day"><div class="cal-daynum">21</div></div><div class="cal-day"><div class="cal-daynum">22</div></div><div class="cal-day"><div class="cal-daynum">23</div></div><div class="cal-day"><div class="cal-daynum">24</div></div><div class="cal-day"><div class="cal-daynum">25</div></div><div class="cal-day"><div class="cal-daynum">26</div></div><div class="cal-day"><div class="cal-daynum">27</div></div><div class="cal-day"><div class="cal-daynum">28</div></div><div class="cal-day"><div class="cal-daynum">29</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-rob">Rob</span><span class="cal-chip pay-dcf">DCF-B</span><span class="cal-chip snow">+$350→Citibank</span><span class="cal-chip snow">+$1,895→Citibank FINAL</span><span class="cal-chip snow">+$473→Passante</span><span class="cal-chip snow">+$400→Passante</span></div><div class="cal-day"><div class="cal-daynum">30</div></div><div class="cal-day"><div class="cal-daynum">31</div></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div>
+    </div>
+    </div>
+  </div>
+
+  <div class="cal-month">
+    <div class="cal-month-title">February 2027</div>
+    
+    <div class="cal-scroll">
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day empty"></div><div class="cal-day"><div class="cal-daynum">1</div><span class="cal-chip bill">GoodLeap $137</span><span class="cal-chip bill">Passante $325</span><span class="cal-chip bill">Mortgage $3,768</span></div><div class="cal-day"><div class="cal-daynum">2</div><span class="cal-chip bill">WF $150</span></div><div class="cal-day"><div class="cal-daynum">3</div></div><div class="cal-day"><div class="cal-daynum">4</div></div><div class="cal-day"><div class="cal-daynum">5</div></div><div class="cal-day"><div class="cal-daynum">6</div></div><div class="cal-day"><div class="cal-daynum">7</div></div><div class="cal-day"><div class="cal-daynum">8</div><span class="cal-chip bill">HELOC $1,462</span></div><div class="cal-day"><div class="cal-daynum">9</div></div><div class="cal-day"><div class="cal-daynum">10</div></div><div class="cal-day"><div class="cal-daynum">11</div></div><div class="cal-day"><div class="cal-daynum">12</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-A</span><span class="cal-chip snow">+$325→Passante</span></div><div class="cal-day"><div class="cal-daynum">13</div><span class="cal-chip bill">NavyFed $537</span></div><div class="cal-day"><div class="cal-daynum">14</div></div><div class="cal-day"><div class="cal-daynum">15</div><span class="cal-chip pay-rob">Rob</span><span class="cal-chip snow">+$2,500→Passante</span></div><div class="cal-day"><div class="cal-daynum">16</div></div><div class="cal-day"><div class="cal-daynum">17</div></div><div class="cal-day"><div class="cal-daynum">18</div></div><div class="cal-day"><div class="cal-daynum">19</div></div><div class="cal-day"><div class="cal-daynum">20</div></div><div class="cal-day"><div class="cal-daynum">21</div></div><div class="cal-day"><div class="cal-daynum">22</div></div><div class="cal-day"><div class="cal-daynum">23</div></div><div class="cal-day"><div class="cal-daynum">24</div></div><div class="cal-day"><div class="cal-daynum">25</div></div><div class="cal-day"><div class="cal-daynum">26</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-rob">Rob</span><span class="cal-chip pay-dcf">DCF-B</span><span class="cal-chip snow">+$350→Passante</span><span class="cal-chip snow">+$2,368→Passante</span><span class="cal-chip snow">+$400→Passante</span></div><div class="cal-day"><div class="cal-daynum">27</div></div><div class="cal-day"><div class="cal-daynum">28</div></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div>
+    </div>
+    </div>
+  </div>
+
+  <div class="cal-month">
+    <div class="cal-month-title">March 2027</div>
+    
+    <div class="cal-scroll">
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day empty"></div><div class="cal-day"><div class="cal-daynum">1</div><span class="cal-chip bill">GoodLeap $137</span><span class="cal-chip bill">Passante $325 FINAL</span><span class="cal-chip bill">Mortgage $3,768</span></div><div class="cal-day"><div class="cal-daynum">2</div><span class="cal-chip bill">WF $150</span></div><div class="cal-day"><div class="cal-daynum">3</div></div><div class="cal-day"><div class="cal-daynum">4</div></div><div class="cal-day"><div class="cal-daynum">5</div></div><div class="cal-day"><div class="cal-daynum">6</div></div><div class="cal-day"><div class="cal-daynum">7</div></div><div class="cal-day"><div class="cal-daynum">8</div><span class="cal-chip bill">HELOC $1,462</span></div><div class="cal-day"><div class="cal-daynum">9</div></div><div class="cal-day"><div class="cal-daynum">10</div></div><div class="cal-day"><div class="cal-daynum">11</div></div><div class="cal-day"><div class="cal-daynum">12</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-A</span><span class="cal-chip snow">+$325→Passante</span></div><div class="cal-day"><div class="cal-daynum">13</div><span class="cal-chip bill">NavyFed $537</span></div><div class="cal-day"><div class="cal-daynum">14</div></div><div class="cal-day"><div class="cal-daynum">15</div><span class="cal-chip pay-rob">Rob</span><span class="cal-chip snow">+$881→Passante FINAL</span><span class="cal-chip snow">+$1,619→Wells Fargo</span></div><div class="cal-day"><div class="cal-daynum">16</div></div><div class="cal-day"><div class="cal-daynum">17</div></div><div class="cal-day"><div class="cal-daynum">18</div></div><div class="cal-day"><div class="cal-daynum">19</div></div><div class="cal-day"><div class="cal-daynum">20</div></div><div class="cal-day"><div class="cal-daynum">21</div></div><div class="cal-day"><div class="cal-daynum">22</div></div><div class="cal-day"><div class="cal-daynum">23</div></div><div class="cal-day"><div class="cal-daynum">24</div></div><div class="cal-day"><div class="cal-daynum">25</div></div><div class="cal-day"><div class="cal-daynum">26</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-B</span><span class="cal-chip snow">+$350→Wells Fargo</span><span class="cal-chip snow">+$400→Wells Fargo</span></div><div class="cal-day"><div class="cal-daynum">27</div></div><div class="cal-day"><div class="cal-daynum">28</div></div><div class="cal-day"><div class="cal-daynum">29</div></div><div class="cal-day"><div class="cal-daynum">30</div></div><div class="cal-day"><div class="cal-daynum">31</div><span class="cal-chip pay-rob">Rob</span><span class="cal-chip snow">+$2,368→Wells Fargo</span></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div>
+    </div>
+    </div>
+  </div>
+
+  <div class="cal-month">
+    <div class="cal-month-title">April 2027</div>
+    
+    <div class="cal-scroll">
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day"><div class="cal-daynum">1</div><span class="cal-chip bill">GoodLeap $137</span><span class="cal-chip bill">Mortgage $3,768</span></div><div class="cal-day"><div class="cal-daynum">2</div><span class="cal-chip bill">WF $150 FINAL</span></div><div class="cal-day"><div class="cal-daynum">3</div></div><div class="cal-day"><div class="cal-daynum">4</div></div><div class="cal-day"><div class="cal-daynum">5</div></div><div class="cal-day"><div class="cal-daynum">6</div></div><div class="cal-day"><div class="cal-daynum">7</div></div><div class="cal-day"><div class="cal-daynum">8</div><span class="cal-chip bill">HELOC $1,462</span></div><div class="cal-day"><div class="cal-daynum">9</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-A</span><span class="cal-chip snow">+$325→Wells Fargo</span></div><div class="cal-day"><div class="cal-daynum">10</div></div><div class="cal-day"><div class="cal-daynum">11</div></div><div class="cal-day"><div class="cal-daynum">12</div></div><div class="cal-day"><div class="cal-daynum">13</div><span class="cal-chip bill">NavyFed $537</span></div><div class="cal-day"><div class="cal-daynum">14</div></div><div class="cal-day"><div class="cal-daynum">15</div><span class="cal-chip pay-rob">Rob</span><span class="cal-chip snow">+$2,337→Wells Fargo FINAL</span><span class="cal-chip snow">+$163→GoodLeap</span></div><div class="cal-day"><div class="cal-daynum">16</div></div><div class="cal-day"><div class="cal-daynum">17</div></div><div class="cal-day"><div class="cal-daynum">18</div></div><div class="cal-day"><div class="cal-daynum">19</div></div><div class="cal-day"><div class="cal-daynum">20</div></div><div class="cal-day"><div class="cal-daynum">21</div></div><div class="cal-day"><div class="cal-daynum">22</div></div><div class="cal-day"><div class="cal-daynum">23</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-B</span><span class="cal-chip snow">+$350→GoodLeap</span><span class="cal-chip snow">+$400→GoodLeap</span></div><div class="cal-day"><div class="cal-daynum">24</div></div><div class="cal-day"><div class="cal-daynum">25</div></div><div class="cal-day"><div class="cal-daynum">26</div></div><div class="cal-day"><div class="cal-daynum">27</div></div><div class="cal-day"><div class="cal-daynum">28</div></div><div class="cal-day"><div class="cal-daynum">29</div></div><div class="cal-day"><div class="cal-daynum">30</div><span class="cal-chip pay-rob">Rob</span><span class="cal-chip snow">+$2,368→GoodLeap</span></div><div class="cal-day empty"></div>
+    </div>
+    </div>
+  </div>
+
+  <div class="cal-month">
+    <div class="cal-month-title">May 2027</div>
+    
+    <div class="cal-scroll">
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day"><div class="cal-daynum">1</div><span class="cal-chip bill">GoodLeap $137</span><span class="cal-chip bill">Mortgage $3,768</span></div><div class="cal-day"><div class="cal-daynum">2</div></div><div class="cal-day"><div class="cal-daynum">3</div></div><div class="cal-day"><div class="cal-daynum">4</div></div><div class="cal-day"><div class="cal-daynum">5</div></div><div class="cal-day"><div class="cal-daynum">6</div></div><div class="cal-day"><div class="cal-daynum">7</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-A</span><span class="cal-chip snow">+$325→GoodLeap</span></div><div class="cal-day"><div class="cal-daynum">8</div><span class="cal-chip bill">HELOC $1,462</span></div><div class="cal-day"><div class="cal-daynum">9</div></div><div class="cal-day"><div class="cal-daynum">10</div></div><div class="cal-day"><div class="cal-daynum">11</div></div><div class="cal-day"><div class="cal-daynum">12</div></div><div class="cal-day"><div class="cal-daynum">13</div><span class="cal-chip bill">NavyFed $537</span></div><div class="cal-day"><div class="cal-daynum">14</div><span class="cal-chip pay-rob">Rob</span><span class="cal-chip snow">+$2,500→GoodLeap</span></div><div class="cal-day"><div class="cal-daynum">15</div></div><div class="cal-day"><div class="cal-daynum">16</div></div><div class="cal-day"><div class="cal-daynum">17</div></div><div class="cal-day"><div class="cal-daynum">18</div></div><div class="cal-day"><div class="cal-daynum">19</div></div><div class="cal-day"><div class="cal-daynum">20</div></div><div class="cal-day"><div class="cal-daynum">21</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-B</span><span class="cal-chip snow">+$350→GoodLeap</span><span class="cal-chip snow">+$400→GoodLeap</span></div><div class="cal-day"><div class="cal-daynum">22</div></div><div class="cal-day"><div class="cal-daynum">23</div></div><div class="cal-day"><div class="cal-daynum">24</div></div><div class="cal-day"><div class="cal-daynum">25</div></div><div class="cal-day"><div class="cal-daynum">26</div></div><div class="cal-day"><div class="cal-daynum">27</div></div><div class="cal-day"><div class="cal-daynum">28</div></div><div class="cal-day"><div class="cal-daynum">29</div></div><div class="cal-day"><div class="cal-daynum">30</div></div><div class="cal-day"><div class="cal-daynum">31</div><span class="cal-chip pay-rob">Rob</span><span class="cal-chip snow">+$2,368→GoodLeap</span></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div>
+    </div>
+    </div>
+  </div>
+
+  <div class="cal-month">
+    <div class="cal-month-title">June 2027</div>
+    
+    <div class="cal-scroll">
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day"><div class="cal-daynum">1</div><span class="cal-chip bill">GoodLeap $137 FINAL</span><span class="cal-chip bill">Mortgage $3,768</span></div><div class="cal-day"><div class="cal-daynum">2</div></div><div class="cal-day"><div class="cal-daynum">3</div></div><div class="cal-day"><div class="cal-daynum">4</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-A</span><span class="cal-chip snow">+$325→GoodLeap</span></div><div class="cal-day"><div class="cal-daynum">5</div></div><div class="cal-day"><div class="cal-daynum">6</div></div><div class="cal-day"><div class="cal-daynum">7</div></div><div class="cal-day"><div class="cal-daynum">8</div><span class="cal-chip bill">HELOC $1,462</span></div><div class="cal-day"><div class="cal-daynum">9</div></div><div class="cal-day"><div class="cal-daynum">10</div></div><div class="cal-day"><div class="cal-daynum">11</div></div><div class="cal-day"><div class="cal-daynum">12</div></div><div class="cal-day"><div class="cal-daynum">13</div><span class="cal-chip bill">NavyFed $537</span></div><div class="cal-day"><div class="cal-daynum">14</div></div><div class="cal-day"><div class="cal-daynum">15</div><span class="cal-chip pay-rob">Rob</span><span class="cal-chip snow">+$2,500→GoodLeap</span></div><div class="cal-day"><div class="cal-daynum">16</div></div><div class="cal-day"><div class="cal-daynum">17</div></div><div class="cal-day"><div class="cal-daynum">18</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-B</span><span class="cal-chip snow">+$350→GoodLeap</span><span class="cal-chip snow">+$266→GoodLeap FINAL</span><span class="cal-chip snow">+$134→NavyFed</span></div><div class="cal-day"><div class="cal-daynum">19</div></div><div class="cal-day"><div class="cal-daynum">20</div></div><div class="cal-day"><div class="cal-daynum">21</div></div><div class="cal-day"><div class="cal-daynum">22</div></div><div class="cal-day"><div class="cal-daynum">23</div></div><div class="cal-day"><div class="cal-daynum">24</div></div><div class="cal-day"><div class="cal-daynum">25</div></div><div class="cal-day"><div class="cal-daynum">26</div></div><div class="cal-day"><div class="cal-daynum">27</div></div><div class="cal-day"><div class="cal-daynum">28</div></div><div class="cal-day"><div class="cal-daynum">29</div></div><div class="cal-day"><div class="cal-daynum">30</div><span class="cal-chip pay-rob">Rob</span><span class="cal-chip snow">+$2,368→NavyFed</span></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div>
+    </div>
+    </div>
+  </div>
+
+  <div class="cal-month">
+    <div class="cal-month-title">July 2027</div>
+    
+    <div class="cal-scroll">
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day"><div class="cal-daynum">1</div><span class="cal-chip bill">Mortgage $3,768</span></div><div class="cal-day"><div class="cal-daynum">2</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-A</span><span class="cal-chip snow">+$325→NavyFed</span></div><div class="cal-day"><div class="cal-daynum">3</div></div><div class="cal-day"><div class="cal-daynum">4</div></div><div class="cal-day"><div class="cal-daynum">5</div></div><div class="cal-day"><div class="cal-daynum">6</div></div><div class="cal-day"><div class="cal-daynum">7</div></div><div class="cal-day"><div class="cal-daynum">8</div><span class="cal-chip bill">HELOC $1,462</span></div><div class="cal-day"><div class="cal-daynum">9</div></div><div class="cal-day"><div class="cal-daynum">10</div></div><div class="cal-day"><div class="cal-daynum">11</div></div><div class="cal-day"><div class="cal-daynum">12</div></div><div class="cal-day"><div class="cal-daynum">13</div><span class="cal-chip bill">NavyFed $537</span></div><div class="cal-day"><div class="cal-daynum">14</div></div><div class="cal-day"><div class="cal-daynum">15</div><span class="cal-chip pay-rob">Rob</span><span class="cal-chip snow">+$2,500→NavyFed</span></div><div class="cal-day"><div class="cal-daynum">16</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-B</span><span class="cal-chip snow">+$350→NavyFed</span><span class="cal-chip snow">+$400→NavyFed</span></div><div class="cal-day"><div class="cal-daynum">17</div></div><div class="cal-day"><div class="cal-daynum">18</div></div><div class="cal-day"><div class="cal-daynum">19</div></div><div class="cal-day"><div class="cal-daynum">20</div></div><div class="cal-day"><div class="cal-daynum">21</div></div><div class="cal-day"><div class="cal-daynum">22</div></div><div class="cal-day"><div class="cal-daynum">23</div></div><div class="cal-day"><div class="cal-daynum">24</div></div><div class="cal-day"><div class="cal-daynum">25</div></div><div class="cal-day"><div class="cal-daynum">26</div></div><div class="cal-day"><div class="cal-daynum">27</div></div><div class="cal-day"><div class="cal-daynum">28</div></div><div class="cal-day"><div class="cal-daynum">29</div></div><div class="cal-day"><div class="cal-daynum">30</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-rob">Rob</span><span class="cal-chip pay-dcf">DCF-A</span><span class="cal-chip snow">+$350→NavyFed</span><span class="cal-chip snow">+$2,368→NavyFed</span><span class="cal-chip snow">+$350→NavyFed</span></div><div class="cal-day"><div class="cal-daynum">31</div></div>
+    </div>
+    </div>
+  </div>
+
+  <div class="cal-month">
+    <div class="cal-month-title">August 2027</div>
+    
+    <div class="cal-scroll">
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day"><div class="cal-daynum">1</div><span class="cal-chip bill">Mortgage $3,768</span></div><div class="cal-day"><div class="cal-daynum">2</div></div><div class="cal-day"><div class="cal-daynum">3</div></div><div class="cal-day"><div class="cal-daynum">4</div></div><div class="cal-day"><div class="cal-daynum">5</div></div><div class="cal-day"><div class="cal-daynum">6</div></div><div class="cal-day"><div class="cal-daynum">7</div></div><div class="cal-day"><div class="cal-daynum">8</div><span class="cal-chip bill">HELOC $1,462</span></div><div class="cal-day"><div class="cal-daynum">9</div></div><div class="cal-day"><div class="cal-daynum">10</div></div><div class="cal-day"><div class="cal-daynum">11</div></div><div class="cal-day"><div class="cal-daynum">12</div></div><div class="cal-day"><div class="cal-daynum">13</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-rob">Rob</span><span class="cal-chip pay-dcf">DCF-B</span><span class="cal-chip snow">+$2,500→NavyFed</span><span class="cal-chip snow">+$400→NavyFed</span><span class="cal-chip bill">NavyFed $537</span></div><div class="cal-day"><div class="cal-daynum">14</div></div><div class="cal-day"><div class="cal-daynum">15</div></div><div class="cal-day"><div class="cal-daynum">16</div></div><div class="cal-day"><div class="cal-daynum">17</div></div><div class="cal-day"><div class="cal-daynum">18</div></div><div class="cal-day"><div class="cal-daynum">19</div></div><div class="cal-day"><div class="cal-daynum">20</div></div><div class="cal-day"><div class="cal-daynum">21</div></div><div class="cal-day"><div class="cal-daynum">22</div></div><div class="cal-day"><div class="cal-daynum">23</div></div><div class="cal-day"><div class="cal-daynum">24</div></div><div class="cal-day"><div class="cal-daynum">25</div></div><div class="cal-day"><div class="cal-daynum">26</div></div><div class="cal-day"><div class="cal-daynum">27</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-A</span><span class="cal-chip snow">+$350→NavyFed</span><span class="cal-chip snow">+$325→NavyFed</span></div><div class="cal-day"><div class="cal-daynum">28</div></div><div class="cal-day"><div class="cal-daynum">29</div></div><div class="cal-day"><div class="cal-daynum">30</div></div><div class="cal-day"><div class="cal-daynum">31</div><span class="cal-chip pay-rob">Rob</span><span class="cal-chip snow">+$2,368→NavyFed</span></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div>
+    </div>
+    </div>
+  </div>
+
+  <div class="cal-month">
+    <div class="cal-month-title">September 2027</div>
+    
+    <div class="cal-scroll">
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day"><div class="cal-daynum">1</div><span class="cal-chip bill">Mortgage $3,768</span></div><div class="cal-day"><div class="cal-daynum">2</div></div><div class="cal-day"><div class="cal-daynum">3</div></div><div class="cal-day"><div class="cal-daynum">4</div></div><div class="cal-day"><div class="cal-daynum">5</div></div><div class="cal-day"><div class="cal-daynum">6</div></div><div class="cal-day"><div class="cal-daynum">7</div></div><div class="cal-day"><div class="cal-daynum">8</div><span class="cal-chip bill">HELOC $1,462</span></div><div class="cal-day"><div class="cal-daynum">9</div></div><div class="cal-day"><div class="cal-daynum">10</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-B</span><span class="cal-chip snow">+$400→NavyFed</span></div><div class="cal-day"><div class="cal-daynum">11</div></div><div class="cal-day"><div class="cal-daynum">12</div></div><div class="cal-day"><div class="cal-daynum">13</div><span class="cal-chip bill">NavyFed $537 FINAL</span></div><div class="cal-day"><div class="cal-daynum">14</div></div><div class="cal-day"><div class="cal-daynum">15</div><span class="cal-chip pay-rob">Rob</span><span class="cal-chip snow">+$2,500→NavyFed</span></div><div class="cal-day"><div class="cal-daynum">16</div></div><div class="cal-day"><div class="cal-daynum">17</div></div><div class="cal-day"><div class="cal-daynum">18</div></div><div class="cal-day"><div class="cal-daynum">19</div></div><div class="cal-day"><div class="cal-daynum">20</div></div><div class="cal-day"><div class="cal-daynum">21</div></div><div class="cal-day"><div class="cal-daynum">22</div></div><div class="cal-day"><div class="cal-daynum">23</div></div><div class="cal-day"><div class="cal-daynum">24</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-A</span><span class="cal-chip snow">+$350→NavyFed</span><span class="cal-chip snow">+$325→NavyFed</span></div><div class="cal-day"><div class="cal-daynum">25</div></div><div class="cal-day"><div class="cal-daynum">26</div></div><div class="cal-day"><div class="cal-daynum">27</div></div><div class="cal-day"><div class="cal-daynum">28</div></div><div class="cal-day"><div class="cal-daynum">29</div></div><div class="cal-day"><div class="cal-daynum">30</div><span class="cal-chip pay-rob">Rob</span><span class="cal-chip snow">+$1,176→NavyFed FINAL</span><span class="cal-chip snow">+$1,192→HELOC</span></div><div class="cal-day empty"></div><div class="cal-day empty"></div>
+    </div>
+    </div>
+  </div>
+
+  <div class="cal-month">
+    <div class="cal-month-title">October 2027</div>
+    
+    <div class="cal-scroll">
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day"><div class="cal-daynum">1</div><span class="cal-chip bill">Mortgage $3,768</span></div><div class="cal-day"><div class="cal-daynum">2</div></div><div class="cal-day"><div class="cal-daynum">3</div></div><div class="cal-day"><div class="cal-daynum">4</div></div><div class="cal-day"><div class="cal-daynum">5</div></div><div class="cal-day"><div class="cal-daynum">6</div></div><div class="cal-day"><div class="cal-daynum">7</div></div><div class="cal-day"><div class="cal-daynum">8</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-B</span><span class="cal-chip snow">+$400→HELOC</span><span class="cal-chip bill">HELOC $1,462</span></div><div class="cal-day"><div class="cal-daynum">9</div></div><div class="cal-day"><div class="cal-daynum">10</div></div><div class="cal-day"><div class="cal-daynum">11</div></div><div class="cal-day"><div class="cal-daynum">12</div></div><div class="cal-day"><div class="cal-daynum">13</div></div><div class="cal-day"><div class="cal-daynum">14</div></div><div class="cal-day"><div class="cal-daynum">15</div><span class="cal-chip pay-rob">Rob</span><span class="cal-chip snow">+$2,500→HELOC</span></div><div class="cal-day"><div class="cal-daynum">16</div></div><div class="cal-day"><div class="cal-daynum">17</div></div><div class="cal-day"><div class="cal-daynum">18</div></div><div class="cal-day"><div class="cal-daynum">19</div></div><div class="cal-day"><div class="cal-daynum">20</div></div><div class="cal-day"><div class="cal-daynum">21</div></div><div class="cal-day"><div class="cal-daynum">22</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-A</span><span class="cal-chip snow">+$350→HELOC</span><span class="cal-chip snow">+$325→HELOC</span></div><div class="cal-day"><div class="cal-daynum">23</div></div><div class="cal-day"><div class="cal-daynum">24</div></div><div class="cal-day"><div class="cal-daynum">25</div></div><div class="cal-day"><div class="cal-daynum">26</div></div><div class="cal-day"><div class="cal-daynum">27</div></div><div class="cal-day"><div class="cal-daynum">28</div></div><div class="cal-day"><div class="cal-daynum">29</div><span class="cal-chip pay-rob">Rob</span><span class="cal-chip snow">+$2,368→HELOC</span></div><div class="cal-day"><div class="cal-daynum">30</div></div><div class="cal-day"><div class="cal-daynum">31</div></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div>
+    </div>
+    </div>
+  </div>
+
+  <div class="cal-month">
+    <div class="cal-month-title">November 2027</div>
+    
+    <div class="cal-scroll">
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day empty"></div><div class="cal-day"><div class="cal-daynum">1</div><span class="cal-chip bill">Mortgage $3,768</span></div><div class="cal-day"><div class="cal-daynum">2</div></div><div class="cal-day"><div class="cal-daynum">3</div></div><div class="cal-day"><div class="cal-daynum">4</div></div><div class="cal-day"><div class="cal-daynum">5</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-B</span><span class="cal-chip snow">+$400→HELOC</span></div><div class="cal-day"><div class="cal-daynum">6</div></div><div class="cal-day"><div class="cal-daynum">7</div></div><div class="cal-day"><div class="cal-daynum">8</div><span class="cal-chip bill">HELOC $1,462</span></div><div class="cal-day"><div class="cal-daynum">9</div></div><div class="cal-day"><div class="cal-daynum">10</div></div><div class="cal-day"><div class="cal-daynum">11</div></div><div class="cal-day"><div class="cal-daynum">12</div></div><div class="cal-day"><div class="cal-daynum">13</div></div><div class="cal-day"><div class="cal-daynum">14</div></div><div class="cal-day"><div class="cal-daynum">15</div><span class="cal-chip pay-rob">Rob</span><span class="cal-chip snow">+$2,500→HELOC</span></div><div class="cal-day"><div class="cal-daynum">16</div></div><div class="cal-day"><div class="cal-daynum">17</div></div><div class="cal-day"><div class="cal-daynum">18</div></div><div class="cal-day"><div class="cal-daynum">19</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-A</span><span class="cal-chip snow">+$350→HELOC</span><span class="cal-chip snow">+$325→HELOC</span></div><div class="cal-day"><div class="cal-daynum">20</div></div><div class="cal-day"><div class="cal-daynum">21</div></div><div class="cal-day"><div class="cal-daynum">22</div></div><div class="cal-day"><div class="cal-daynum">23</div></div><div class="cal-day"><div class="cal-daynum">24</div></div><div class="cal-day"><div class="cal-daynum">25</div></div><div class="cal-day"><div class="cal-daynum">26</div></div><div class="cal-day"><div class="cal-daynum">27</div></div><div class="cal-day"><div class="cal-daynum">28</div></div><div class="cal-day"><div class="cal-daynum">29</div></div><div class="cal-day"><div class="cal-daynum">30</div><span class="cal-chip pay-rob">Rob</span><span class="cal-chip snow">+$2,368→HELOC</span></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div>
+    </div>
+    </div>
+  </div>
+
+  <div class="cal-month">
+    <div class="cal-month-title">December 2027</div>
+    
+    <div class="cal-scroll">
+    <div class="cal-grid">
+      <div class="cal-dow">Sun</div><div class="cal-dow">Mon</div><div class="cal-dow">Tue</div><div class="cal-dow">Wed</div><div class="cal-dow">Thu</div><div class="cal-dow">Fri</div><div class="cal-dow">Sat</div>
+      <div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day empty"></div><div class="cal-day"><div class="cal-daynum">1</div><span class="cal-chip bill">Mortgage $3,768</span></div><div class="cal-day"><div class="cal-daynum">2</div></div><div class="cal-day"><div class="cal-daynum">3</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-B</span><span class="cal-chip snow">+$400→HELOC</span></div><div class="cal-day"><div class="cal-daynum">4</div></div><div class="cal-day"><div class="cal-daynum">5</div></div><div class="cal-day"><div class="cal-daynum">6</div></div><div class="cal-day"><div class="cal-daynum">7</div></div><div class="cal-day"><div class="cal-daynum">8</div><span class="cal-chip bill">HELOC $1,462</span></div><div class="cal-day"><div class="cal-daynum">9</div></div><div class="cal-day"><div class="cal-daynum">10</div></div><div class="cal-day"><div class="cal-daynum">11</div></div><div class="cal-day"><div class="cal-daynum">12</div></div><div class="cal-day"><div class="cal-daynum">13</div></div><div class="cal-day"><div class="cal-daynum">14</div></div><div class="cal-day"><div class="cal-daynum">15</div><span class="cal-chip pay-rob">Rob</span><span class="cal-chip snow">+$2,500→HELOC</span></div><div class="cal-day"><div class="cal-daynum">16</div></div><div class="cal-day"><div class="cal-daynum">17</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-dcf">DCF-A</span><span class="cal-chip snow">+$350→HELOC</span><span class="cal-chip snow">+$325→HELOC</span></div><div class="cal-day"><div class="cal-daynum">18</div></div><div class="cal-day"><div class="cal-daynum">19</div></div><div class="cal-day"><div class="cal-daynum">20</div></div><div class="cal-day"><div class="cal-daynum">21</div></div><div class="cal-day"><div class="cal-daynum">22</div></div><div class="cal-day"><div class="cal-daynum">23</div></div><div class="cal-day"><div class="cal-daynum">24</div></div><div class="cal-day"><div class="cal-daynum">25</div></div><div class="cal-day"><div class="cal-daynum">26</div></div><div class="cal-day"><div class="cal-daynum">27</div></div><div class="cal-day"><div class="cal-daynum">28</div></div><div class="cal-day"><div class="cal-daynum">29</div></div><div class="cal-day"><div class="cal-daynum">30</div></div><div class="cal-day"><div class="cal-daynum">31</div><span class="cal-chip pay-mir">Miriam</span><span class="cal-chip pay-rob">Rob</span><span class="cal-chip pay-dcf">DCF-B</span><span class="cal-chip snow">+$350→HELOC</span><span class="cal-chip snow">+$2,368→HELOC</span><span class="cal-chip snow">+$350→HELOC</span></div><div class="cal-day empty"></div>
+    </div>
+    </div>
   </div>
 </div>
 
